@@ -213,4 +213,23 @@ footer {
     main {
         padding: 1rem 0.5rem;
     }
+    
+    .activity-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+/* Activity Buttons Styles */
+.activity-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.activity-buttons button {
+    min-width: 150px;
+    flex: 1;
+    max-width: 200px;
 }
