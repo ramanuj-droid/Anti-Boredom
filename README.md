@@ -28,6 +28,8 @@ Antu-Boredom is your ultimate hub to play mini-games, explore fun facts, take qu
 git clone https://github.com/your-username/anti-boredom.git
 cd anti-boredom
 
+Add your folder here if you want to add any game don't alter the main page
+
 git checkout -b Branch name
 git add .
 git commit -m your description
