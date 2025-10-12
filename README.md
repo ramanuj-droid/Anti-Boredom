@@ -15,6 +15,14 @@ Antu-Boredom is your ultimate hub to play mini-games, explore fun facts, take qu
 
 ---
 
+---
+
+## **Demo**
+
+- ![Random meme generator](./media/demo-random-meme.gif)
+
+---
+
 ## **Tech Stack**
 
 - **Frontend:** HTML, CSS, JavaScript (React.js optional),Tailwind CSS etc
