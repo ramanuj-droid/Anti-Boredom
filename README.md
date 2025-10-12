@@ -7,7 +7,7 @@ Antu-Boredom is your ultimate hub to play mini-games, explore fun facts, take qu
 
 ## **Features**
 
-- **Mini Games:** Tic-Tac-Toe, Snake, Rock-Paper-Scissors, Memory Game, and more.
+- **Mini Games:** Mines, Snake, flag guess, Memory Game, and more.
 - **Random Fun:** Jokes, memes, quotes, and interesting facts.
 - **Learn Something New:** Quick tips, vocabulary, trivia, and small challenges.
 - **Boredom Quiz:** Random suggestions for what to do next.
@@ -32,7 +32,7 @@ git checkout -b Branch name
 git add .
 git commit -m your description
 git push origin branch name
-
+```
 ---
 ## **Contribution**
 
