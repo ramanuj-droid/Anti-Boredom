@@ -19,7 +19,7 @@ Antu-Boredom is your ultimate hub to play mini-games, explore fun facts, take qu
 
 ## **Demo**
 
-- ![Random meme generator](./media/demo-random-meme.gif)
+![Random meme generator](./media/demo-random-meme.gif)
 
 ---
 
