@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Random Facts Widget</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🧠 Random Facts</h1>
+      <p>Discover fascinating facts from around the world!</p>
+    </header>
+
+    <div class="fact-widget">
+      <div class="fact-container">
+        <div class="fact-icon">💡</div>
+        <div id="fact-text" class="fact-text">
+          Click the button below to discover an amazing random fact!
+        </div>
+      </div>
+      
+      <button id="fact-btn" class="fact-button">
+        <span class="button-text">Get Random Fact</span>
+        <span class="button-icon">🎲</span>
+      </button>
+      
+      <div class="fact-counter">
+        <span>Facts discovered: <span id="fact-count">0</span></span>
+      </div>
+    </div>
+
+    <div class="navigation">
+      <a href="../index.html" class="back-btn">
+        <span>⬅️</span> Back to Anti-Boredom
+      </a>
+    </div>
+  </div>
+
+  <script src="index.js"></script>
+</body>
+</html>
