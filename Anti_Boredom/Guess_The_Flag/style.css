@@ -1,0 +1,81 @@
+body {
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  color: white;
+  font-family: 'Poppins', sans-serif;
+  text-align: center;
+  height: 100vh;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.game-container {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 30px;
+  border-radius: 20px;
+  width: 350px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+}
+
+h1 {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+}
+
+#flag-container {
+  margin: 15px 0;
+}
+
+#flag {
+  width: 200px;
+  height: 120px;
+  border-radius: 10px;
+  border: 3px solid white;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.option-btn {
+  background-color: #ffffff;
+  color: #2a5298;
+  font-weight: 600;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.option-btn:hover {
+  background-color: #2a5298;
+  color: white;
+}
+
+#result {
+  margin-top: 15px;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+#next-btn {
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  background-color: #f5c518;
+  color: #2a2a2a;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+#next-btn:hover {
+  background-color: #ffd700;
+}
