@@ -34,12 +34,12 @@ git commit -m your description
 git push origin branch name
 ```
 ---
-## **Contribution**
+## **How to Contribute**
 
 We welcome contributions of all kinds! You can:
 
--Add a new mini-game or feature
--Add fun facts, jokes, or quizzes
--Improve styling or UI/UX
--Fix bugs or improve performance
+- **Add a new mini-game or feature**
+- **Add fun facts, jokes, or quizzes**
+- **Improve styling or UI/UX**
+- **Fix bugs or improve performance**
 
