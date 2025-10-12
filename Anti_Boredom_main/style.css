@@ -1,0 +1,216 @@
+:root {
+    /* Light Theme Colors */
+    --bg-color: #f0f8ff;
+    --text-color: #333;
+    --header-bg: #4caf50;
+    --header-text: white;
+    --button-bg: #4caf50;
+    --button-hover: #45a049;
+    --footer-bg: #333;
+    --footer-text: white;
+    --section-bg: rgba(255, 255, 255, 0.8);
+    --shadow: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] {
+    /* Dark Theme Colors */
+    --bg-color: #1a1a2e;
+    --text-color: #e6e6e6;
+    --header-bg: #16213e;
+    --header-text: #e6e6e6;
+    --button-bg: #0f3460;
+    --button-hover: #1a5a9a;
+    --footer-bg: #0d0d1a;
+    --footer-text: #e6e6e6;
+    --section-bg: rgba(30, 30, 46, 0.8);
+    --shadow: rgba(0, 0, 0, 0.3);
+}
+
+* {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    text-align: center;
+    background: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+}
+
+/* Theme Toggle Styles */
+.theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+#themeBtn {
+    background: var(--button-bg);
+    border: none;
+    border-radius: 50px;
+    padding: 12px;
+    cursor: pointer;
+    font-size: 1.5rem;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px var(--shadow);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+#themeBtn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px var(--shadow);
+}
+
+#themeBtn .moon {
+    display: none;
+}
+
+[data-theme="dark"] #themeBtn .sun {
+    display: none;
+}
+
+[data-theme="dark"] #themeBtn .moon {
+    display: block;
+}
+
+header {
+    background: var(--header-bg);
+    color: var(--header-text);
+    padding: 3rem 1rem;
+    box-shadow: 0 4px 15px var(--shadow);
+}
+
+main {
+    padding: 2rem 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+section {
+    margin: 2.5rem 0;
+    padding: 2rem;
+    background: var(--section-bg);
+    border-radius: 15px;
+    box-shadow: 0 4px 15px var(--shadow);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--shadow);
+}
+
+section h2 {
+    color: var(--header-bg);
+    margin-bottom: 1rem;
+    font-size: 1.8rem;
+}
+
+[data-theme="dark"] section h2 {
+    color: var(--button-hover);
+}
+
+section p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+button {
+    padding: 0.8rem 2rem;
+    margin-top: 1rem;
+    cursor: pointer;
+    border: none;
+    background-color: var(--button-bg);
+    color: white;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px var(--shadow);
+}
+
+button:hover {
+    background-color: var(--button-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px var(--shadow);
+}
+
+footer {
+    background: var(--footer-bg);
+    color: var(--footer-text);
+    padding: 1.5rem;
+    margin-top: 2rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .theme-toggle {
+        top: 15px;
+        right: 15px;
+    }
+    
+    #themeBtn {
+        width: 50px;
+        height: 50px;
+        font-size: 1.2rem;
+    }
+    
+    header {
+        padding: 2rem 1rem;
+    }
+    
+    header h1 {
+        font-size: 1.8rem;
+    }
+    
+    section {
+        padding: 1.5rem;
+        margin: 2rem 1rem;
+    }
+    
+    section h2 {
+        font-size: 1.5rem;
+    }
+    
+    button {
+        padding: 0.7rem 1.5rem;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .theme-toggle {
+        top: 10px;
+        right: 10px;
+    }
+    
+    #themeBtn {
+        width: 45px;
+        height: 45px;
+        font-size: 1.1rem;
+    }
+    
+    header {
+        padding: 1.5rem 1rem;
+    }
+    
+    header h1 {
+        font-size: 1.5rem;
+    }
+    
+    section {
+        padding: 1rem;
+        margin: 1.5rem 0.5rem;
+    }
+    
+    main {
+        padding: 1rem 0.5rem;
+    }
+}
