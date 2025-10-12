@@ -17,13 +17,13 @@ Antu-Boredom is your ultimate hub to play mini-games, explore fun facts, take qu
 
 ## **Tech Stack**
 
-- **Frontend:** HTML, CSS, JavaScript (React.js optional)
+- **Frontend:** HTML, CSS, JavaScript (React.js optional),Tailwind CSS etc
 - **Deployment:** VERCEL
 ---
 
 ## **Getting Started**
-
-1. Clone the repository:  
+1. Fork the repository
+2. Clone the repository:  
 ```bash
 git clone https://github.com/your-username/anti-boredom.git
 cd anti-boredom
