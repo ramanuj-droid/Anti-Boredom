@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sports Live - Anti-Boredom</title>
+    <!-- Sports-specific styles -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Main application styles for consistent theming -->
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <!-- Theme Toggle Button -->
+    <div class="theme-toggle">
+        <button id="themeBtn" aria-label="Toggle theme">
+            <span class="sun">☀️</span>
+            <span class="moon">🌙</span>
+        </button>
+    </div>
+
+    <!-- Back Button -->
+    <div class="back-button">
+        <button onclick="window.location.href='../index.html'" aria-label="Back to home">
+            ← Back to Home
+        </button>
+    </div>
+
+    <header>
+        <h1>🏆 Sports Live Updates</h1>
+        <p>Stay updated with live scores and match information</p>
+        <div class="api-status" id="apiStatus">
+            <span class="status-indicator">🟢</span>
+            <span class="status-text">Using Real Sports APIs</span>
+        </div>
+        <div class="last-updated">
+            Last updated: <span id="lastUpdated">Loading...</span>
+        </div>
+    </header>
+
+    <main>
+        <!-- Sports Categories Navigation -->
+        <section class="sports-categories">
+            <h2>Select Sport</h2>
+            <!-- Sport category selection buttons -->
+            <div class="category-buttons">
+                <button class="category-btn active" data-sport="football" onclick="switchSport('football')">
+                    ⚽ Football
+                </button>
+                <button class="category-btn" data-sport="cricket" onclick="switchSport('cricket')">
+                    🏏 Cricket
+                </button>
+                <button class="category-btn" data-sport="basketball" onclick="switchSport('basketball')">
+                    🏀 Basketball
+                </button>
+                <button class="category-btn" data-sport="tennis" onclick="switchSport('tennis')">
+                    🎾 Tennis
+                </button>
+            </div>
+        </section>
+
+        <!-- Live Scores Section -->
+        <section class="live-scores">
+            <div class="section-header">
+                <h2 id="currentSportTitle">⚽ Football Live Scores</h2>
+                <button id="refreshBtn" onclick="refreshScores()" class="refresh-btn">
+                    🔄 Refresh
+                </button>
+            </div>
+            
+            <div class="loading" id="loadingIndicator">
+                <div class="spinner"></div>
+                <p>Loading live scores...</p>
+            </div>
+
+            <div id="scoresContainer" class="scores-container">
+                <!-- Live scores will be populated here -->
+            </div>
+        </section>
+
+        <!-- Match Details Modal -->
+        <div id="matchModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <div id="matchDetails">
+                    <!-- Match details will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Section -->
+        <section class="stats-section">
+            <h2>📊 Quick Stats</h2>
+            <div class="stats-grid" id="statsGrid">
+                <!-- Stats will be populated here -->
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Anti-Boredom Sports Live</p>
+        <p class="disclaimer">Sports data provided for entertainment purposes</p>
+    </footer>
+
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+    <script src="../script.js"></script>
+</body>
+</html>
