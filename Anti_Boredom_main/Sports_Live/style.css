@@ -1,0 +1,508 @@
+/**
+ * Sports Live Updates - Stylesheet
+ * 
+ * Custom styles for the Sports Live Updates feature
+ * Extends the main application theme with sports-specific components
+ * 
+ * Components:
+ * - Navigation and back button
+ * - Sports category selection
+ * - Live match cards with animations
+ * - Modal dialogs for match details
+ * - API status indicators
+ * - Responsive design for all devices
+ */
+
+/* ===== NAVIGATION COMPONENTS ===== */
+
+/* Back Button */
+.back-button {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
+}
+
+.back-button button {
+    background: var(--button-bg);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px var(--shadow);
+}
+
+.back-button button:hover {
+    background: var(--button-hover);
+    transform: translateY(-2px);
+}
+
+/* Header Enhancements */
+.api-status {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.status-indicator {
+    font-size: 0.8rem;
+    animation: pulse-status 2s infinite;
+}
+
+.status-text {
+    font-weight: 500;
+}
+
+@keyframes pulse-status {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+.last-updated {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    opacity: 0.8;
+    font-style: italic;
+}
+
+/* Sports Categories */
+.sports-categories {
+    margin-bottom: 2rem;
+}
+
+.category-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+}
+
+.category-btn {
+    padding: 12px 24px;
+    border: 2px solid var(--button-bg);
+    background: transparent;
+    color: var(--button-bg);
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    min-width: 120px;
+}
+
+.category-btn:hover {
+    background: var(--button-bg);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.category-btn.active {
+    background: var(--button-bg);
+    color: white;
+    box-shadow: 0 4px 15px var(--shadow);
+}
+
+/* Live Scores Section */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.refresh-btn {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    border-radius: 20px;
+    background: var(--header-bg);
+    animation: none;
+}
+
+.refresh-btn:hover {
+    transform: translateY(-2px);
+}
+
+/* Removed spinning animation as requested */
+
+/* Loading Indicator */
+.loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+    color: var(--text-color);
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid var(--shadow);
+    border-top: 4px solid var(--button-bg);
+    border-radius: 50%;
+    animation: spin-loading 1s linear infinite;
+    margin-bottom: 1rem;
+}
+
+@keyframes spin-loading {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Scores Container */
+.scores-container {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.match-card {
+    background: var(--section-bg);
+    border-radius: 15px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 15px var(--shadow);
+    border: 1px solid var(--shadow);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.match-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px var(--shadow);
+}
+
+.match-card.live {
+    border-left: 4px solid #ff4444;
+}
+
+.match-card.live::before {
+    content: "LIVE";
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #ff4444;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 10px;
+    font-size: 0.7rem;
+    font-weight: bold;
+    animation: pulse 2s infinite;
+    z-index: 10;
+}
+
+/* Hide the match status when it's a live match to avoid duplication */
+.match-card.live .match-status {
+    display: none;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+.match-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.match-time {
+    font-size: 0.9rem;
+    color: var(--text-color);
+    opacity: 0.7;
+}
+
+.match-status {
+    font-size: 0.8rem;
+    padding: 4px 8px;
+    border-radius: 10px;
+    background: var(--button-bg);
+    color: white;
+}
+
+.teams {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 1rem 0;
+}
+
+.team {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+}
+
+.team-name {
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.team-score {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--button-bg);
+}
+
+.vs {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--text-color);
+    opacity: 0.5;
+    margin: 0 1rem;
+}
+
+.match-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: var(--text-color);
+    opacity: 0.8;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background-color: var(--section-bg);
+    margin: 5% auto;
+    padding: 2rem;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 10px 30px var(--shadow);
+}
+
+.close {
+    color: var(--text-color);
+    float: right;
+    font-size: 2rem;
+    font-weight: bold;
+    cursor: pointer;
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+}
+
+.close:hover {
+    opacity: 0.7;
+}
+
+/* Match Detail Styles */
+.match-detail-score {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: var(--section-bg);
+    border-radius: 10px;
+}
+
+.team-detail {
+    text-align: center;
+    flex: 1;
+}
+
+.team-detail h3 {
+    margin-bottom: 1rem;
+    color: var(--text-color);
+    font-size: 1.2rem;
+}
+
+.score-large {
+    font-size: 3rem;
+    font-weight: bold;
+    color: var(--button-bg);
+    margin-bottom: 0.5rem;
+}
+
+.vs-large {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--text-color);
+    opacity: 0.5;
+    margin: 0 1rem;
+}
+
+.match-meta {
+    background: var(--section-bg);
+    padding: 1.5rem;
+    border-radius: 10px;
+    margin: 1rem 0;
+}
+
+.match-meta p {
+    margin: 0.5rem 0;
+    font-size: 1rem;
+}
+
+.match-actions {
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+/* Statistics Section */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.stat-card {
+    background: var(--section-bg);
+    border-radius: 10px;
+    padding: 1.5rem;
+    text-align: center;
+    box-shadow: 0 4px 10px var(--shadow);
+    border: 1px solid var(--shadow);
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--button-bg);
+    display: block;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: var(--text-color);
+    opacity: 0.8;
+    margin-top: 0.5rem;
+}
+
+/* No Data Message */
+.no-data {
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-color);
+    opacity: 0.7;
+}
+
+.no-data h3 {
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+/* Footer Disclaimer */
+.disclaimer {
+    font-size: 0.8rem;
+    opacity: 0.7;
+    margin-top: 0.5rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .back-button {
+        top: 15px;
+        left: 15px;
+    }
+    
+    .back-button button {
+        padding: 8px 16px;
+        font-size: 0.8rem;
+    }
+    
+    .category-buttons {
+        gap: 10px;
+    }
+    
+    .category-btn {
+        padding: 10px 16px;
+        font-size: 0.9rem;
+        min-width: 100px;
+    }
+    
+    .section-header {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+    }
+    
+    .scores-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .teams {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .vs {
+        transform: rotate(90deg);
+        margin: 0.5rem 0;
+    }
+    
+    .modal-content {
+        margin: 10% auto;
+        width: 95%;
+        padding: 1.5rem;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+}
+
+@media (max-width: 480px) {
+    .back-button {
+        top: 10px;
+        left: 10px;
+    }
+    
+    .category-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .category-btn {
+        width: 100%;
+        max-width: 200px;
+    }
+    
+    .match-card {
+        padding: 1rem;
+    }
+    
+    .team-score {
+        font-size: 1.5rem;
+    }
+    
+    .modal-content {
+        margin: 15% auto;
+        padding: 1rem;
+    }
+}

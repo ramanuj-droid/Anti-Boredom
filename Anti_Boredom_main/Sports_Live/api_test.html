@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Test - Live Proof</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #1a1a2e;
+            color: white;
+        }
+        .test-section {
+            background: #16213e;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            border-left: 4px solid #4caf50;
+        }
+        .api-response {
+            background: #0f3460;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .status {
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+        .success { background: #4caf50; }
+        .error { background: #f44336; }
+        .loading { background: #ff9800; }
+        button {
+            background: #4caf50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #45a049; }
+        .timestamp { color: #888; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+    <h1>🏆 Live Sports API Test - PROOF OF REAL DATA</h1>
+    <p>This page demonstrates that we're fetching REAL live sports data from actual APIs.</p>
+
+    <div class="test-section">
+        <h2>⚽ Football API Test</h2>
+        <button onclick="testFootballAPI()">Test Football API</button>
+        <div id="footballStatus" class="status loading">Ready to test...</div>
+        <div id="footballResponse" class="api-response">Click the button to fetch real football data...</div>
+    </div>
+
+    <div class="test-section">
+        <h2>🏀 Basketball API Test</h2>
+        <button onclick="testBasketballAPI()">Test Basketball API</button>
+        <div id="basketballStatus" class="status loading">Ready to test...</div>
+        <div id="basketballResponse" class="api-response">Click the button to fetch real basketball data...</div>
+    </div>
+
+    <div class="test-section">
+        <h2>🏏 Cricket API Test</h2>
+        <button onclick="testCricketAPI()">Test Cricket API</button>
+        <div id="cricketStatus" class="status loading">Ready to test...</div>
+        <div id="cricketResponse" class="api-response">Click the button to fetch real cricket data...</div>
+    </div>
+
+    <div class="test-section">
+        <h2>📊 Network Monitoring</h2>
+        <p><strong>Instructions to verify real API calls:</strong></p>
+        <ol>
+            <li>Open Browser Developer Tools (F12)</li>
+            <li>Go to <strong>Network</strong> tab</li>
+            <li>Click any "Test API" button above</li>
+            <li>Watch the Network tab - you'll see real HTTP requests to external APIs</li>
+            <li>Check the Response tab to see actual sports data</li>
+        </ol>
+    </div>
+
+    <script>
+        // Test Football API
+        async function testFootballAPI() {
+            const statusEl = document.getElementById('footballStatus');
+            const responseEl = document.getElementById('footballResponse');
+            
+            statusEl.textContent = '🔄 Fetching real football data...';
+            statusEl.className = 'status loading';
+            
+            try {
+                const response = await fetch('https://www.thesportsdb.com/api/v1/json/3/latestsoccer.php');
+                const data = await response.json();
+                
+                statusEl.textContent = '✅ SUCCESS - Real football data received!';
+                statusEl.className = 'status success';
+                
+                const timestamp = new Date().toLocaleTimeString();
+                responseEl.innerHTML = `<div class="timestamp">Fetched at: ${timestamp}</div>` +
+                    `<strong>API URL:</strong> ${response.url}\n` +
+                    `<strong>Status:</strong> ${response.status} ${response.statusText}\n` +
+                    `<strong>Data Preview:</strong>\n` +
+                    JSON.stringify(data, null, 2).substring(0, 1000) + '...';
+                
+            } catch (error) {
+                statusEl.textContent = '❌ API Error (but fallback data available)';
+                statusEl.className = 'status error';
+                responseEl.textContent = `Error: ${error.message}`;
+            }
+        }
+
+        // Test Basketball API
+        async function testBasketballAPI() {
+            const statusEl = document.getElementById('basketballStatus');
+            const responseEl = document.getElementById('basketballResponse');
+            
+            statusEl.textContent = '🔄 Fetching real basketball data...';
+            statusEl.className = 'status loading';
+            
+            try {
+                // Try current season games
+                const response = await fetch('https://www.balldontlie.io/api/v1/games?seasons[]=2023&per_page=5');
+                const data = await response.json();
+                
+                statusEl.textContent = '✅ SUCCESS - Real basketball data received!';
+                statusEl.className = 'status success';
+                
+                const timestamp = new Date().toLocaleTimeString();
+                responseEl.innerHTML = `<div class="timestamp">Fetched at: ${timestamp}</div>` +
+                    `<strong>API URL:</strong> ${response.url}\n` +
+                    `<strong>Status:</strong> ${response.status} ${response.statusText}\n` +
+                    `<strong>Data Preview:</strong>\n` +
+                    JSON.stringify(data, null, 2).substring(0, 1000) + '...';
+                
+            } catch (error) {
+                statusEl.textContent = '❌ API Error (but fallback data available)';
+                statusEl.className = 'status error';
+                responseEl.textContent = `Error: ${error.message}`;
+            }
+        }
+
+        // Test Cricket API
+        async function testCricketAPI() {
+            const statusEl = document.getElementById('cricketStatus');
+            const responseEl = document.getElementById('cricketResponse');
+            
+            statusEl.textContent = '🔄 Fetching real cricket data...';
+            statusEl.className = 'status loading';
+            
+            try {
+                const response = await fetch('https://www.thesportsdb.com/api/v1/json/3/searchevents.php?e=Cricket');
+                const data = await response.json();
+                
+                statusEl.textContent = '✅ SUCCESS - Real cricket data received!';
+                statusEl.className = 'status success';
+                
+                const timestamp = new Date().toLocaleTimeString();
+                responseEl.innerHTML = `<div class="timestamp">Fetched at: ${timestamp}</div>` +
+                    `<strong>API URL:</strong> ${response.url}\n` +
+                    `<strong>Status:</strong> ${response.status} ${response.statusText}\n` +
+                    `<strong>Data Preview:</strong>\n` +
+                    JSON.stringify(data, null, 2).substring(0, 1000) + '...';
+                
+            } catch (error) {
+                statusEl.textContent = '❌ API Error (but fallback data available)';
+                statusEl.className = 'status error';
+                responseEl.textContent = `Error: ${error.message}`;
+            }
+        }
+
+        // Auto-test on page load to show immediate proof
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                testFootballAPI();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
