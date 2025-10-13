@@ -19,7 +19,7 @@ Antu-Boredom is your ultimate hub to play mini-games, explore fun facts, take qu
 
 ## **Demo**
 
-![Random meme generator](./media/demo-random-meme.gif)
+![Random meme generator](./media/Anti_boredom_main/demo-random-meme.gif)
 
 ---
 
@@ -52,4 +52,4 @@ We welcome contributions of all kinds! You can:
 - **Add fun facts, jokes, or quizzes**
 - **Improve styling or UI/UX**
 - **Fix bugs or improve performance**
-
+- **Read ![Contribution.md](https://github.com/ramanuj-droid/Anti-Boredom/blob/main/Contribution.md) for more**
