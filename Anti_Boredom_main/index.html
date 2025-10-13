@@ -1,61 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anti-Boredom</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <!-- Theme Toggle Button -->
-    <div class="theme-toggle">
-        <button id="themeBtn" aria-label="Toggle theme">
-            <span class="sun">☀️</span>
-            <span class="moon">🌙</span>
-        </button>
-    </div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+@import url('https://fonts.googleapis.com/css2?family=BBH+Sans+Bogle&family=Noto+Sans+JP:wght@100..900&display=swap');
+/* enable smooth in-page scrolling */
+html { scroll-behavior: smooth; }
+</style>
+    <title>ANTI-BOREDOM</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+  <div id="top" class="container">
+      <h1>ANTI-BOREDOM</h1>
+      <p class="subtitle">
+        The #1 website for curing your boredom, everything from games to jokes -
+        here<br />
+        at one spot!
+      </p>
 
-    <header>
-        <h1>Anti-Boredom 🎉</h1>
-        <p>Play games, learn something new, or just have fun!</p>
-    </header>
+      <div class="cards">
+        <div class="card reveal">
+          <div class="card-content">
+            <h3>Games</h3>
+            <p>Quick browser games and small challenges to kill boredom and train your reflexes.</p>
+            <button type="button" class="btn card-btn" data-title="Games">Open</button>
+          </div>
+        </div>
 
-    <main>
-        <section id="games">
-            <h2>Mini Games</h2>
-            <p>Try Tic-Tac-Toe, Memory Game, or Rock-Paper-Scissors.</p>
-            <button onclick="alert('Game coming soon!')">Play Now</button>
-        </section>
+        <div class="card reveal">
+          <div class="card-content">
+            <h3>Sports</h3>
+            <p>Live scores, highlights and short updates so you never miss the action.</p>
+            <button type="button" class="btn card-btn" data-title="Sports">Open</button>
+          </div>
+        </div>
 
-        <section id="fun">
-            <h2>Random Fun</h2>
-            <p>Jokes, quotes, and fun facts to beat boredom.</p>
-            <div class="activity-buttons">
-                <button onclick="window.location.href='Random_Facts/index.html'">Random Facts</button>
-                <button onclick="alert('More fun content coming soon!')">Surprise Me!</button>
-            </div>
-        </section>
+        <div class="card reveal">
+          <div class="card-content">
+            <h3>Media</h3>
+            <p>Short clips, demos and curated media to entertain and inspire.</p>
+            <button type="button" class="btn card-btn" data-title="Media">Open</button>
+          </div>
+        </div>
 
-        <section id="sports">
-            <h2>🏆 Sports Live Updates</h2>
-            <p>Get live scores and updates from Football, Cricket, Basketball, and Tennis.</p>
-            <div class="activity-buttons">
-                <button onclick="window.location.href='Sports_Live/index.html'">View Live Scores</button>
-                <button onclick="alert('More sports features coming soon!')">Sports News</button>
-            </div>
-        </section>
+        <div class="card reveal">
+          <div class="card-content">
+            <h3>Random Facts</h3>
+            <p>Fun facts and trivia to learn something new in under a minute.</p>
+            <button type="button" class="btn card-btn" data-title="Random Facts">Open</button>
+          </div>
+        </div>
 
-        <section id="learn">
-            <h2>Learn Something New</h2>
-            <p>Quick tips, trivia, or new words every day.</p>
-            <button onclick="alert('Learning content coming soon!')">Learn Now</button>
-        </section>
-    </main>
+        <div class="card reveal">
+          <div class="card-content">
+            <h3>Guess the Flag</h3>
+            <p>A quick geography game: identify the flag and earn virtual bragging rights.</p>
+            <button type="button" class="btn card-btn" data-title="Guess the Flag">Open</button>
+          </div>
+        </div>
+      </div>
 
-    <footer>
-        <p>&copy; 2025 Anti-Boredom</p>
-    </footer>
+    <script>
+      // Modal logic for card buttons
+      document.addEventListener('DOMContentLoaded', function () {
+        const modal = document.getElementById('modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalBody = document.getElementById('modal-body');
 
-    <script src="script.js"></script>
-</body>
+        function openModal(title) {
+          modalTitle.textContent = title || 'Coming soon';
+          modalBody.textContent = 'This feature is coming soon — stay tuned!';
+          modal.setAttribute('aria-hidden', 'false');
+          modal.classList.add('open');
+        }
+
+        function closeModal() {
+          modal.setAttribute('aria-hidden', 'true');
+          modal.classList.remove('open');
+        }
+
+        document.querySelectorAll('.card-btn').forEach(btn => {
+          btn.addEventListener('click', () => openModal(btn.dataset.title));
+        });
+
+        document.querySelectorAll('[data-close]').forEach(el => el.addEventListener('click', closeModal));
+
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') closeModal();
+        });
+
+        // Reveal on scroll using IntersectionObserver
+        const reveals = document.querySelectorAll('.reveal');
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              // optionally unobserve to run once
+              io.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.12 });
+
+        reveals.forEach(r => io.observe(r));
+      });
+    </script>
+  </body>
 </html>
