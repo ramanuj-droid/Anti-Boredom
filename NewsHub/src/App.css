@@ -1,0 +1,88 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+:root{
+  --bg: #f6f8fa;
+}
+
+*{box-sizing:border-box}
+html,body,#root{
+  height:100%;
+  margin:0;
+}
+body{
+  font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  background: var(--bg);
+  color: #0f172a;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+.app-body{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+}
+
+/* keep main area readable on small screens */
+main{
+  width:100%;
+  flex:1;
+}
+.Header {
+  width: 100%;
+  background: linear-gradient(90deg, #ff7a00, #ff9f40);
+  color: white;
+  padding: 1.5rem 0;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  transition: all 0.3s ease-in-out;
+}
+
+.Header h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin: 0;
+  text-transform: uppercase;
+  font-family: 'Poppins', sans-serif;
+  animation: fadeInDown 0.6s ease-in-out;
+  width: 100%;
+}
+
+/* Hover Effect */
+.Header:hover {
+  background: linear-gradient(90deg, #ff8c1a, #ffa94d);
+}
+
+/* Simple entrance animation */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .Header {
+    padding: 1rem 0;
+  }
+
+  .Header h1 {
+    font-size: 1.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .Header h1 {
+    font-size: 1.5rem;
+    letter-spacing: 0.5px;
+  }
+}
