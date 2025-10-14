@@ -1,4 +1,3 @@
-
 * {
   margin: 0;
   padding: 0;
@@ -16,6 +15,65 @@ body {
   position: relative;
 }
 
+/* Top-right theme toggle button */
+.theme-toggle {
+  position: fixed;
+  top: 14px;
+  right: 14px;
+  z-index: 1000;
+  width: 56px;
+  height: 30px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.12);
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(6px);
+  transition: transform 0.15s ease, background 0.2s ease, box-shadow 0.2s ease;
+  padding: 0;
+  line-height: 0;
+  font-size: 0; /* hide inner emoji text; thumb renders emoji */
+}
+.theme-toggle:hover {
+  transform: translateY(-2px);
+}
+.theme-toggle::after {
+  content: "🌙";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.92);
+  color: #111;
+  font-size: 16px; /* ensure emoji is visible (button has font-size: 0) */
+  line-height: 1;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  transform: translateX(0);
+  transition: transform 0.2s ease;
+}
+body[data-theme="light"] .theme-toggle::after {
+  content: "☀️";
+  transform: translateX(26px);
+}
+.theme-changing {
+  animation: pulse 0.3s ease;
+}
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.94);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 /* Grid background */
 body::before {
   content: "";
@@ -31,6 +89,47 @@ body::before {
     linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
   background-size: 120px 120px;
   pointer-events: none;
+}
+
+/* Light theme (non-destructive overrides) */
+body[data-theme="light"] {
+  background: linear-gradient(to bottom, #f7f7f9 0%, #e7e9ef 100%);
+}
+body[data-theme="light"]::before {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.06) 1px, transparent 1px);
+}
+body[data-theme="light"] h1,
+body[data-theme="light"] .card-content,
+body[data-theme="light"] .modal-content,
+body[data-theme="light"] .modal-close {
+  color: #111827;
+}
+body[data-theme="light"] .subtitle {
+  color: #4b5563;
+}
+body[data-theme="light"] .card-content p {
+  color: rgba(17, 24, 39, 0.92);
+}
+body[data-theme="light"] .btn,
+body[data-theme="light"] .theme-toggle {
+  background: rgba(0, 0, 0, 0.06);
+  color: #111827;
+  border-color: rgba(0, 0, 0, 0.12);
+}
+body[data-theme="light"] .btn:hover,
+body[data-theme="light"] .theme-toggle:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+body[data-theme="light"] .modal-overlay {
+  background: rgba(0, 0, 0, 0.35);
+}
+body[data-theme="light"] .modal-content {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.9),
+    rgba(240, 242, 248, 0.95)
+  );
 }
 
 .container {
@@ -75,7 +174,8 @@ h1 {
   position: relative;
   transition: transform 0.3s ease;
   /* soft outer + inner shadows for depth */
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45), inset 0 -14px 30px rgba(0,0,0,0.12);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45),
+    inset 0 -14px 30px rgba(0, 0, 0, 0.12);
 }
 
 .card::before {
@@ -95,9 +195,12 @@ h1 {
   pointer-events: none;
   mix-blend-mode: overlay;
   opacity: 0.14;
-  background-image: 
-    repeating-linear-gradient(135deg, rgba(255,255,255,0.02) 0 1px, transparent 1px 6px),
-    linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));
+  background-image: repeating-linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.02) 0 1px,
+      transparent 1px 6px
+    ),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(0, 0, 0, 0.02));
 }
 
 .card-content {
@@ -175,7 +278,8 @@ h1 {
 
 .card:hover {
   transform: translateY(-12px) scale(1.04) !important;
-  box-shadow: 0 30px 60px rgba(0,0,0,0.55), inset 0 -6px 20px rgba(0,0,0,0.06);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.55),
+    inset 0 -6px 20px rgba(0, 0, 0, 0.06);
 }
 
 @media (max-width: 768px) {
@@ -192,7 +296,8 @@ h1 {
 .reveal {
   opacity: 0;
   transform: translateY(18px) scale(0.995);
-  transition: opacity 520ms cubic-bezier(.2,.9,.2,1), transform 520ms cubic-bezier(.2,.9,.2,1);
+  transition: opacity 520ms cubic-bezier(0.2, 0.9, 0.2, 1),
+    transform 520ms cubic-bezier(0.2, 0.9, 0.2, 1);
 }
 .reveal.visible {
   opacity: 1;
@@ -207,19 +312,25 @@ h1 {
   place-items: center;
   pointer-events: none;
 }
-.modal.open { pointer-events: auto; }
+.modal.open {
+  pointer-events: auto;
+}
 .modal-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.5);
 }
 .modal-content {
   position: relative;
-  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(0,0,0,0.06));
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.03),
+    rgba(0, 0, 0, 0.06)
+  );
   border-radius: 12px;
   padding: 22px;
   width: min(520px, 92%);
-  box-shadow: 0 24px 60px rgba(0,0,0,0.6);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
   z-index: 60;
   color: #fff;
   text-align: center;
