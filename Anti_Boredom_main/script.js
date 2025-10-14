@@ -1,46 +1,52 @@
 // Theme toggle functionality
-const themeBtn = document.getElementById('themeBtn');
-const body = document.body;
+(function initThemeToggle() {
+  const themeBtn = document.getElementById("themeBtn");
+  const body = document.body;
 
-const savedTheme = localStorage.getItem('theme');
-const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  if (!body) return;
 
-// Set initial theme
-if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
-    body.setAttribute('data-theme', 'dark');
-} else {
-    body.setAttribute('data-theme', 'light');
-}
+  const savedTheme = localStorage.getItem("theme");
+  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
 
-// Toggle theme function
-function toggleTheme() {
-    const currentTheme = body.getAttribute('data-theme');
-    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-    
-    body.setAttribute('data-theme', newTheme);
-    localStorage.setItem('theme', newTheme);
-    
-    // Add animation class
-    themeBtn.classList.add('theme-changing');
-    setTimeout(() => {
-        themeBtn.classList.remove('theme-changing');
-    }, 300);
-}
+  // Set initial theme
+  const initialTheme =
+    savedTheme === "dark" || (!savedTheme && prefersDark) ? "dark" : "light";
+  body.setAttribute("data-theme", initialTheme);
 
-// Event listener
-themeBtn.addEventListener('click', toggleTheme);
+  function syncIcon(theme) {
+    if (!themeBtn) return;
+    themeBtn.textContent = theme === "dark" ? "☀️" : "🌙";
+  }
 
+  syncIcon(initialTheme);
 
-document.addEventListener('DOMContentLoaded', function() {
-    const buttons = document.querySelectorAll('button');
-    
-    buttons.forEach(button => {
-        button.addEventListener('click', function(e) {
-            // Add click animation
-            e.target.style.transform = 'scale(0.95)';
-            setTimeout(() => {
-                e.target.style.transform = '';
-            }, 150);
-        });
+  function toggleTheme() {
+    const currentTheme = body.getAttribute("data-theme");
+    const newTheme = currentTheme === "light" ? "dark" : "light";
+
+    body.setAttribute("data-theme", newTheme);
+    localStorage.setItem("theme", newTheme);
+    syncIcon(newTheme);
+
+    if (themeBtn) {
+      themeBtn.classList.add("theme-changing");
+      setTimeout(() => themeBtn.classList.remove("theme-changing"), 300);
+    }
+  }
+
+  if (themeBtn) themeBtn.addEventListener("click", toggleTheme);
+})();
+
+document.addEventListener("DOMContentLoaded", function () {
+  const buttons = document.querySelectorAll("button");
+
+  buttons.forEach((button) => {
+    button.addEventListener("click", function (e) {
+      // Add click animation
+      e.target.style.transform = "scale(0.95)";
+      setTimeout(() => {
+        e.target.style.transform = "";
+      }, 150);
     });
+  });
 });
