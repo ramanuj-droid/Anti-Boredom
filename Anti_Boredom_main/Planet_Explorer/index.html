@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planet Explorer - Solar System Sandbox</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🔭 Planet Explorer</h1>
+            <p>Interactive Solar System Sandbox</p>
+            <div class="controls">
+                <button id="playPause" class="control-btn">⏸️ Pause</button>
+                <button id="speedControl" class="control-btn">🚀 Speed: 1x</button>
+                <button id="resetView" class="control-btn">🔄 Reset</button>
+            </div>
+            <div class="advanced-controls">
+                <button id="showOrbits" class="control-btn">👁️ Hide Orbits</button>
+                <button id="realScale" class="control-btn">📏 Real Scale</button>
+                <button id="followPlanet" class="control-btn">🎯 Follow Mode</button>
+            </div>
+        </header>
+
+        <div class="solar-system" id="solarSystem">
+            <div class="sun" id="sun">
+                <img src="planets/sun.png" alt="Sun" class="planet-image">
+            </div>
+
+            <!-- Mercury -->
+            <div class="orbit mercury-orbit">
+                <div class="planet mercury" data-planet="mercury">
+                    <img src="planets/Mercury.png" alt="Mercury" class="planet-image">
+                </div>
+            </div>
+
+            <!-- Venus -->
+            <div class="orbit venus-orbit">
+                <div class="planet venus" data-planet="venus">
+                    <img src="planets/Venus.png" alt="Venus" class="planet-image">
+                </div>
+            </div>
+
+            <!-- Earth -->
+            <div class="orbit earth-orbit">
+                <div class="planet earth" data-planet="earth">
+                    <img src="planets/earth.png" alt="Earth" class="planet-image">
+                </div>
+            </div>
+
+            <!-- Mars -->
+            <div class="orbit mars-orbit">
+                <div class="planet mars" data-planet="mars">
+                    <img src="planets/mars.png" alt="Mars" class="planet-image">
+                </div>
+            </div>
+
+            <!-- Jupiter -->
+            <div class="orbit jupiter-orbit">
+                <div class="planet jupiter" data-planet="jupiter">
+                    <img src="planets/jupiter.png" alt="Jupiter" class="planet-image">
+                </div>
+            </div>
+
+            <!-- Saturn -->
+            <div class="orbit saturn-orbit">
+                <div class="planet saturn" data-planet="saturn">
+                    <img src="planets/Saturn.png" alt="Saturn" class="planet-image">
+                </div>
+            </div>
+
+            <!-- Uranus -->
+            <div class="orbit uranus-orbit">
+                <div class="planet uranus" data-planet="uranus">
+                    <img src="planets/uranus.png" alt="Uranus" class="planet-image">
+                </div>
+            </div>
+
+            <!-- Neptune -->
+            <div class="orbit neptune-orbit">
+                <div class="planet neptune" data-planet="neptune">
+                    <img src="planets/Neptune.png" alt="Neptune" class="planet-image">
+                </div>
+            </div>
+        </div>
+
+        <!-- Planet Info Modal -->
+        <div class="planet-info" id="planetInfo">
+            <div class="modal-overlay" id="modalOverlay"></div>
+            <div class="info-card">
+                <div class="card-left">
+                    <div class="card-header">
+                        <h2 id="planetName"></h2>
+                        <div class="planet-icon" id="planetIcon"></div>
+                    </div>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="label">Distance from Sun</span>
+                            <span class="value" id="distance"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">Diameter</span>
+                            <span class="value" id="diameter"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">Day Length</span>
+                            <span class="value" id="dayLength"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">Year Length</span>
+                            <span class="value" id="yearLength"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-right">
+                    <div class="fun-facts">
+                        <h3>✨ Fun Facts</h3>
+                        <div class="facts-matrix" id="funFactsList"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Background Stars -->
+        <div class="stars" id="stars"></div>
+
+        <!-- Asteroid Belt -->
+        <div class="asteroid-belt" id="asteroidBelt"></div>
+
+
+
+
+
+        <!-- Planet Trails -->
+        <svg class="planet-trails" id="planetTrails" width="800" height="800">
+            <!-- Trails will be drawn here -->
+        </svg>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
