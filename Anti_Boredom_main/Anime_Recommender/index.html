@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime Mood Recommender</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: #1a1a2e;
+            color: #e0e0e0;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+        .container {
+            width: 100%;
+            max-width: 900px;
+            text-align: center;
+        }
+        header h1 {
+            font-size: 2.5rem;
+            color: #f7b32b;
+        }
+        .mood-selector {
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .mood-btn {
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: #fff;
+            background-color: #162447;
+            border: 2px solid #f7b32b;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .mood-btn:hover {
+            background-color: #f7b32b;
+            color: #1a1a2e;
+        }
+        .recommendation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 25px;
+        }
+        .anime-card {
+            background-color: #1f4068;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .anime-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 25px rgba(247, 179, 43, 0.5);
+        }
+        .anime-card img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+        .anime-info {
+            padding: 15px;
+            text-align: left;
+        }
+        .anime-info h3 {
+            margin: 0 0 10px 0;
+            font-size: 1.1rem;
+            color: #e0e0e0;
+        }
+        .anime-info p {
+            margin: 0;
+            font-size: 0.85rem;
+            color: #b0b0b0;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+
+    <main class="container">
+        <header>
+            <h1>How are you feeling today? 🤔</h1>
+            <p>Select a mood to get your personalized anime recommendations!</p>
+        </header>
+        <section id="mood-selector" class="mood-selector">
+            <button class="mood-btn" data-mood="happy">😊 Happy</button>
+            <button class="mood-btn" data-mood="adventurous">🤠 Adventurous</button>
+            <button class="mood-btn" data-mood="sad">😢 Sad</button>
+            <button class="mood-btn" data-mood="bored">😴 Bored</button>
+        </section>
+        <section id="recommendation-output" class="recommendation-grid"></section>
+    </main>
+
+    <script>
+        // Image sources from a CDN (Content Delivery Network) which are reliable.
+        const animeData = {
+            happy: [
+                { title: "Natsume's Book of Friends", cover: "https://cdn.myanimelist.net/images/anime/11/39717.jpg", description: "A heartwarming and gentle series about a boy who can see spirits (yokai)." },
+                { title: "K-On!", cover: "https://cdn.myanimelist.net/images/anime/10/76120.jpg", description: "A slice-of-life comedy about a group of high school girls who form a light music club." }
+            ],
+            adventurous: [
+                { title: "One Piece", cover: "https://cdn.myanimelist.net/images/anime/6/73245.jpg", description: "Follow Monkey D. Luffy and his pirate crew in their search for the ultimate treasure, the 'One Piece'." },
+                { title: "Attack on Titan", cover: "https://cdn.myanimelist.net/images/anime/10/47347.jpg", description: "In a world surrounded by enormous walls, a young man vows to retake the world from giant man-eating Titans." }
+            ],
+            sad: [
+                { title: "Your Lie in April", cover: "https://cdn.myanimelist.net/images/anime/3/67177.jpg", description: "A former piano prodigy's world is turned upside down after meeting a free-spirited violinist." },
+                { title: "Anohana: The Flower We Saw That Day", cover: "https://cdn.myanimelist.net/images/anime/5/79697.jpg", description: "A group of childhood friends tries to find peace after one of them dies in an accident." }
+            ],
+            bored: [
+                { title: "Gintama", cover: "https://cdn.myanimelist.net/images/anime/10/73274.jpg", description: "A samurai works as a freelancer alongside his friends in an alternate-history Japan after it's been conquered by aliens." },
+                { title: "Nichijou - My Ordinary Life", cover: "https://cdn.myanimelist.net/images/anime/3/75617.jpg", description: "An absurdist comedy series that follows the daily lives of a group of high school students and their bizarre town." }
+            ]
+        };
+
+        const moodButtons = document.querySelectorAll(".mood-btn");
+        const recommendationOutput = document.getElementById("recommendation-output");
+
+        function displayRecommendations(mood) {
+            recommendationOutput.innerHTML = "";
+            const animes = animeData[mood];
+            if (!animes) return;
+
+            animes.forEach(anime => {
+                const card = document.createElement("div");
+                card.className = "anime-card";
+                card.innerHTML = `
+                    <img src="${anime.cover}" alt="${anime.title} Cover Art">
+                    <div class="anime-info">
+                        <h3>${anime.title}</h3>
+                        <p>${anime.description}</p>
+                    </div>`;
+                recommendationOutput.appendChild(card);
+            });
+        }
+
+        moodButtons.forEach(button => {
+            button.addEventListener("click", () => {
+                displayRecommendations(button.dataset.mood);
+            });
+        });
+    </script>
+</body>
+</html>
