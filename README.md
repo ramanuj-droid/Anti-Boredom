@@ -1,11 +1,11 @@
-## ╔═══════════════════════════════════════════════════════════════╗
-## ║               ✨ A N T I - B O R E D O M ✨                  ║
-## ╚═══════════════════════════════════════════════════════════════╝
+## ╔════════════════════════════════════════════════════╗
+##                ✨ A N T I - B O R E D O M ✨                  
+## ╚════════════════════════════════════════════════════╝
 
 **Beat boredom anytime!**
 Anti-Boredom is your ultimate hub to play mini-games, explore fun facts, take quick quizzes, and learn something new — all in one place. Perfect for a quick break or when you just want to have fun\!
 
-## ║🌟 F E A T U R E S ║
+## ║ 🌟 Features ║
 
   * **Mini Games:** Mines, Snake, flag guess, Memory Game, and more.
   * **Random Fun:** Jokes, memes, quotes, and interesting facts.
@@ -13,7 +13,7 @@ Anti-Boredom is your ultimate hub to play mini-games, explore fun facts, take qu
   * **Boredom Quiz:** Random suggestions for what to do next.
   * **Responsive Design:** Works on desktop and mobile.
 
-## ║ 📂 F O L D E R    S T R U C T U R E ║
+## ║ 📂 Folder Structure ║
 
 All games and features reside in their own dedicated folders for easy maintenance and contribution.
 
@@ -35,7 +35,7 @@ All games and features reside in their own dedicated folders for easy maintenanc
 └── Contribution.md
 ```
 
-## ║ 🎮 P R O J E C T S   &   M I N I - G A M E S ║
+## ║ 🎮 Projects & Mini-Games ║
 
 | Folder/Project Name     | Description                                                                  |
 | ----------------------- | ---------------------------------------------------------------------------- |
@@ -49,7 +49,7 @@ All games and features reside in their own dedicated folders for easy maintenanc
 
 *NOTE: Please replace the bold placeholder text above with your final, officia  summaries.*
 
-## ║ 💻 T E C H S T A C K   &   D E M O ║
+## ║ 💻 Techstack   &   Demo ║
 
   * **Frontend:** HTML, CSS, JavaScript (React.js optional), Tailwind CSS, etc.
   * **Deployment:** VERCEL
@@ -88,7 +88,7 @@ git push origin Branch-name
 
   * **Contribution Note:** Add your project folder here if you want to add any game; **do not** alter the core files in the `Anti_Boredom_main` folder.
 
-## ║ 🤝 H O W   T O   C O N T R I B U T E ║
+## ║ 🤝 How To Contribute ║
 
 We welcome contributions of all kinds! You can:
 
@@ -98,7 +98,7 @@ We welcome contributions of all kinds! You can:
   * Fix bugs or improve performance.
   * Read the [Contribution Guide](https://github.com/ramanuj-droid/Anti-Boredom/blob/main/Contribution.md) for detailed steps.
 
-## ║ 🧑‍💻 C O N T R I B U T O R S ║
+## ║ 🧑‍💻 Contributors ║
 
 Thank you to all the wonderful people who have contributed to Anti-Boredom!
 
