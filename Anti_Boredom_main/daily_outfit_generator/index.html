@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Daily Outfit — PixelWing</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-theme="dark">
+<div class="container">
+
+  <header>
+    <div>
+      <h1>Daily Outfit</h1>
+      <div class="sub">A fresh outfit suggestion each day — deterministic & local</div>
+    </div>
+    <div class="row">
+      <label class="muted" style="margin-right:8px;font-size:13px">Occasion</label>
+      <select id="occasionSelect" aria-label="occasion">
+        <option value="all">All</option>
+        <option value="casual">Casual</option>
+        <option value="formal">Formal</option>
+        <option value="party">Party</option>
+        <option value="sporty">Sporty</option>
+      </select>
+      <button id="themeToggle" class="ghost">Toggle Theme</button>
+    </div>
+  </header>
+
+  <!-- main card -->
+  <main class="card">
+    <div class="outfit-card">
+      <div class="visual" id="visual">
+        <div class="emoji" id="visualEmoji">👕</div>
+        <div class="label" id="visualLabel">Casual Day</div>
+      </div>
+
+      <div class="meta">
+        <h2 id="outfitTitle">Cozy Casual — Denim & Tee</h2>
+        <div class="chips" id="chips">
+          <!-- chips injected -->
+        </div>
+
+        <div class="desc" id="outfitDesc">A comfy cotton tee, relaxed denim, and white sneakers. Great for college, coffee, or a short meetup.</div>
+
+        <div class="controls" style="margin-top:8px">
+          <button id="favBtn" class="btn">Add to favorites ★</button>
+          <button id="nextBtn" class="ghost">Next suggestion</button>
+          <button id="copyBtn" class="ghost">Copy</button>
+          <button id="shareBtn" class="ghost">Share</button>
+        </div>
+
+        <div style="margin-top:12px" class="small"><strong>Today's date:</strong> <span id="todayLabel"></span> · <span id="seedNote" class="muted"></span></div>
+      </div>
+    </div>
+
+    <!-- extra details -->
+    <div style="margin-top:14px; display:flex; gap:12px; flex-wrap:wrap">
+      <div class="chip">Top: <span id="topItem"></span></div>
+      <div class="chip">Bottom: <span id="bottomItem"></span></div>
+      <div class="chip">Shoes: <span id="shoesItem"></span></div>
+      <div class="chip">Accessory: <span id="accItem"></span></div>
+      <div class="chip">Occasion: <span id="occItem"></span></div>
+    </div>
+  </main>
+
+  <!-- sidebar: favorites -->
+  <aside class="sidebar">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <strong>Favorites</strong>
+        <button id="clearFavs" class="ghost">Clear</button>
+      </div>
+      <div id="favList" class="fav-list">
+        <!-- favorites -->
+      </div>
+      <div id="noFavs" class="small muted" style="margin-top:8px">No favorites yet — save outfits you like!</div>
+    </div>
+
+    <div class="card" style="margin-top:12px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <strong>Quick Tools</strong>
+        <span class="small muted">local only</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <button id="randomBtn" class="btn">Random (temp)</button>
+        <button id="todayBtn" class="ghost">Show today's</button>
+        <button id="openAll" class="ghost">Browse all outfits</button>
+      </div>
+    </div>
+  </aside>
+
+  <footer>Made with ❤️</footer>
+</div>
+<script src="script.js"></script>
+</body>
+</html>
