@@ -56,7 +56,7 @@ All games and features reside in their own dedicated folders for easy maintenanc
 
 ## **Demo**
  
-## ║ 🚀 G E T T I N G   S T A R T E D ║
+## ║ 🚀 Getting   Started ║
 
 1.  **Fork** the repository to your own GitHub account.
 2.  **Clone** the repository to your local machine:
