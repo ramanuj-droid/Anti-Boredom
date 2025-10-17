@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manga Mood Recommender</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .manga-card {
+            transform: scale(0.95);
+            opacity: 0;
+            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+        }
+        .manga-card.visible {
+            transform: scale(1);
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white flex items-center justify-center min-h-screen p-4">
+
+    <div class="w-full max-w-md mx-auto">
+        <header class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-white mb-2">Manga Mood Recommender</h1>
+            <p class="text-gray-400">Select a mood to get a manga recommendation.</p>
+        </header>
+
+        <!-- Mood Buttons -->
+        <div class="flex flex-wrap justify-center gap-3 mb-8">
+            <button data-mood="cozy" class="mood-btn bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-5 rounded-full transition-transform transform hover:scale-105 shadow-lg">
+                Cozy
+            </button>
+            <button data-mood="dark" class="mood-btn bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-5 rounded-full transition-transform transform hover:scale-105 shadow-lg">
+                Dark
+            </button>
+            <button data-mood="romantic" class="mood-btn bg-pink-500 hover:bg-pink-600 text-white font-semibold py-2 px-5 rounded-full transition-transform transform hover:scale-105 shadow-lg">
+                Romantic
+            </button>
+            <button data-mood="hype" class="mood-btn bg-amber-500 hover:bg-amber-600 text-white font-semibold py-2 px-5 rounded-full transition-transform transform hover:scale-105 shadow-lg">
+                Hype
+            </button>
+            <button data-mood="surprise" class="mood-btn bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-5 rounded-full transition-transform transform hover:scale-105 shadow-lg col-span-2 sm:col-span-1">
+                ✨ Surprise Me
+            </button>
+        </div>
+
+        <!-- Manga Recommendation Card -->
+        <div id="recommendation" class="manga-card bg-gray-800 p-6 rounded-2xl shadow-2xl border border-gray-700/50">
+            <div id="placeholder" class="text-center text-gray-500">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-16 h-16 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <p>Your recommendation will appear here.</p>
+            </div>
+            <div id="manga-content" class="hidden flex flex-col sm:flex-row items-center sm:items-start gap-6">
+                <img id="manga-cover" src="" alt="Manga Cover" class="w-36 h-52 object-cover rounded-lg shadow-md flex-shrink-0">
+                <div class="text-center sm:text-left">
+                    <h2 id="manga-title" class="text-2xl font-bold mb-2"></h2>
+                    <p id="manga-description" class="text-gray-300 text-sm"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const mangaData = {
+            cozy: [
+                {
+                    title: "Yuru Camp (Laid-Back Camp)",
+                    cover_url: "https://placehold.co/144x208/2d3748/e2e8f0?text=Yuru+Camp",
+                    description: "A relaxing series about a group of high school girls who enjoy camping. It's filled with beautiful scenery, tasty food, and heartwarming friendships."
+                },
+                {
+                    title: "Natsume's Book of Friends",
+                    cover_url: "https://placehold.co/144x208/2d3748/e2e8f0?text=Natsume",
+                    description: "A kind, lonely boy who can see spirits (yokai) inherits a book from his grandmother that allows him to command them. A gentle, touching, and sometimes bittersweet story."
+                },
+            ],
+            dark: [
+                {
+                    title: "Berserk",
+                    cover_url: "https://placehold.co/144x208/1a202c/e2e8f0?text=Berserk",
+                    description: "A grimdark fantasy epic following the lone mercenary Guts. It explores themes of free will, causality, and human nature in a brutal, unforgiving world."
+                },
+                {
+                    title: "Chainsaw Man",
+                    cover_url: "https://placehold.co/144x208/1a202c/e2e8f0?text=Chainsaw+Man",
+                    description: "A poor young man makes a deal with a devil to become Chainsaw Man. It's a wild, violent, and surprisingly emotional ride with dark humor and unforgettable characters."
+                },
+            ],
+            romantic: [
+                {
+                    title: "Wotakoi: Love Is Hard for Otaku",
+                    cover_url: "https://placehold.co/144x208/2d3748/e2e8f0?text=Wotakoi",
+                    description: "A hilarious and relatable romantic comedy about the relationship between two office workers who are secretly huge nerds (otaku). It's a refreshing take on adult romance."
+                },
+                {
+                    title: "Horimiya",
+                    cover_url: "https://placehold.co/144x208/2d3748/e2e8f0?text=Horimiya",
+                    description: "A sweet story about two high schoolers who reveal their hidden, true selves to each other. It's a fast-paced, wholesome romance that skips unnecessary drama."
+                },
+            ],
+            hype: [
+                {
+                    title: "Jujutsu Kaisen",
+                    cover_url: "https://placehold.co/144x208/1a202c/e2e8f0?text=Jujutsu+Kaisen",
+                    description: "A modern shonen with a high-energy plot, incredible action sequences, and a compelling power system based on Cursed Energy. Pure, unadulterated hype."
+                },
+                {
+                    title: "Haikyuu!!",
+                    cover_url: "https://placehold.co/144x208/1a202c/e2e8f0?text=Haikyuu!!",
+                    description: "An incredibly inspiring and hype-inducing sports manga about a high school volleyball team. The character development and thrilling matches will have you on the edge of your seat."
+                },
+            ]
+        };
+
+        const moodButtons = document.querySelectorAll('.mood-btn');
+        const recommendationCard = document.getElementById('recommendation');
+        const placeholder = document.getElementById('placeholder');
+        const mangaContent = document.getElementById('manga-content');
+        const mangaCover = document.getElementById('manga-cover');
+        const mangaTitle = document.getElementById('manga-title');
+        const mangaDescription = document.getElementById('manga-description');
+
+        const showRecommendation = (mood) => {
+            // Hide current content to reset animation
+            recommendationCard.classList.remove('visible');
+            
+            setTimeout(() => {
+                const mangaList = mangaData[mood];
+                const randomIndex = Math.floor(Math.random() * mangaList.length);
+                const randomManga = mangaList[randomIndex];
+
+                mangaCover.src = randomManga.cover_url;
+                mangaCover.alt = `${randomManga.title} Cover`;
+                mangaTitle.textContent = randomManga.title;
+                mangaDescription.textContent = randomManga.description;
+
+                placeholder.classList.add('hidden');
+                mangaContent.classList.remove('hidden');
+
+                // Show new content with animation
+                recommendationCard.classList.add('visible');
+            }, 150); // A small delay to allow the card to hide before showing new content
+        };
+
+        moodButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                let mood = button.dataset.mood;
+                
+                if (mood === 'surprise') {
+                    const moods = Object.keys(mangaData);
+                    const randomMoodIndex = Math.floor(Math.random() * moods.length);
+                    mood = moods[randomMoodIndex];
+                }
+                
+                showRecommendation(mood);
+            });
+        });
+
+    </script>
+</body>
+</html>
