@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Roast Machine</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1>📸 Photo Roast Machine</h1>
+        <p class="subtitle">Upload a photo and get a totally random, funny roast.</p>
+
+        <div class="roast-machine">
+            <div class="image-display">
+                <img id="image-preview" src="" alt="Your uploaded photo will appear here.">
+                <p id="placeholder-text">Your photo here</p>
+            </div>
+
+            <p id="roast-text">Your roast is cookin'...</p>
+
+            <div class="controls">
+                <input type="file" id="file-input" accept="image/*" style="display: none;">
+                <button id="upload-btn">Upload Photo</button>
+                <button id="reroll-btn">Get a New Roast</button>
+            </div>
+             <a href="https://github.com/ramanuj-droid/Anti-Boredom" target="_blank" class="star-link">⭐ Star the Repo! ⭐</a>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #121212;
+    color: #e0e0e0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.container {
+    text-align: center;
+    max-width: 500px;
+    width: 100%;
+}
+
+h1 {
+    font-size: 2.5rem;
+    color: #ffffff;
+}
+
+.subtitle {
+    color: #888;
+    margin-bottom: 2rem;
+}
+
+.roast-machine {
+    background-color: #1e1e1e;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.image-display {
+    width: 100%;
+    height: 300px;
+    border: 2px dashed #444;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+#image-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: none; /* Hidden by default */
+}
+
+#placeholder-text {
+    color: #666;
+    font-weight: bold;
+}
+
+#roast-text {
+    font-size: 1.5rem;
+    font-weight: 700;
+    min-height: 80px; /* Prevents layout shift */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #a7d129; /* A fun, vibrant color */
+}
+
+.controls {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 1.5rem;
+}
+
+button {
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+#upload-btn {
+    background-color: #6c5ce7;
+    color: white;
+}
+
+#upload-btn:hover {
+    background-color: #5847d0;
+}
+
+#reroll-btn {
+    background-color: #333;
+    color: white;
+}
+
+#reroll-btn:hover {
+    background-color: #444;
+}
+
+.star-link {
+    display: inline-block;
+    margin-top: 2rem;
+    text-decoration: none;
+    color: #e0e0e0;
+    font-weight: bold;
+    transition: transform 0.2s ease;
+}
+
+.star-link:hover {
+    transform: scale(1.1);
+}
