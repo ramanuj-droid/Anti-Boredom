@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="A fun, modern Book Library with search, filters, ratings, favourites, and more." />
+  <title>Book Library • Anti-Boredom</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>📚</text></svg>">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="min-h-screen bg-amber-50 text-stone-800 dark:bg-stone-900 dark:text-stone-100 transition-colors">
+  <header class="border-b border-amber-200/70 dark:border-stone-700 bg-gradient-to-br from-amber-400 via-yellow-400 to-orange-400 dark:from-amber-950 dark:via-yellow-950 dark:to-orange-950 relative overflow-hidden">
+  
+    <div class="absolute inset-0 opacity-60 dark:opacity-70">
+     
+      <div class="absolute top-2 left-4 w-3 h-20 bg-gradient-to-b from-amber-950 to-yellow-950 rounded-sm shadow-xl border border-amber-900"></div>
+      <div class="absolute top-4 left-8 w-2 h-18 bg-gradient-to-b from-yellow-950 to-orange-950 rounded-sm shadow-lg border border-yellow-900"></div>
+      <div class="absolute top-1 left-12 w-2 h-22 bg-gradient-to-b from-orange-950 to-red-950 rounded-sm shadow-xl border border-orange-900"></div>
+      <div class="absolute top-6 left-16 w-3 h-16 bg-gradient-to-b from-red-950 to-pink-950 rounded-sm shadow-lg border border-red-900"></div>
+      <div class="absolute top-3 left-20 w-2 h-20 bg-gradient-to-b from-amber-900 to-yellow-900 rounded-sm shadow-xl border border-amber-800"></div>
+      <div class="absolute top-5 left-24 w-2 h-18 bg-gradient-to-b from-yellow-900 to-orange-900 rounded-sm shadow-lg border border-yellow-800"></div>
+      <div class="absolute top-2 left-28 w-3 h-19 bg-gradient-to-b from-orange-900 to-red-900 rounded-sm shadow-xl border border-orange-800"></div>
+      
+      <div class="absolute top-2 right-4 w-3 h-20 bg-gradient-to-b from-amber-950 to-yellow-950 rounded-sm shadow-xl border border-amber-900"></div>
+      <div class="absolute top-4 right-8 w-2 h-18 bg-gradient-to-b from-yellow-950 to-orange-950 rounded-sm shadow-lg border border-yellow-900"></div>
+      <div class="absolute top-1 right-12 w-2 h-22 bg-gradient-to-b from-orange-950 to-red-950 rounded-sm shadow-xl border border-orange-900"></div>
+      <div class="absolute top-6 right-16 w-3 h-16 bg-gradient-to-b from-red-950 to-pink-950 rounded-sm shadow-lg border border-red-900"></div>
+      <div class="absolute top-3 right-20 w-2 h-20 bg-gradient-to-b from-amber-900 to-yellow-900 rounded-sm shadow-xl border border-amber-800"></div>
+      <div class="absolute top-5 right-24 w-2 h-18 bg-gradient-to-b from-yellow-900 to-orange-900 rounded-sm shadow-lg border border-yellow-800"></div>
+      <div class="absolute top-2 right-28 w-3 h-19 bg-gradient-to-b from-orange-900 to-red-900 rounded-sm shadow-xl border border-orange-800"></div>
+      
+      <!-- Dark wooden texture elements -->
+      <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-amber-900 to-transparent opacity-60"></div>
+      <div class="absolute top-4 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-yellow-900 to-transparent opacity-50"></div>
+      <div class="absolute top-8 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-orange-900 to-transparent opacity-50"></div>
+      <div class="absolute top-12 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-amber-800 to-transparent opacity-50"></div>
+      
+      <!-- Vintage book icons with dark brownish sepia -->
+      <div class="absolute top-6 left-1/4 text-3xl opacity-40 filter sepia brightness-50 contrast-125">📖</div>
+      <div class="absolute top-10 right-1/4 text-2xl opacity-35 filter sepia brightness-50 contrast-125">📚</div>
+      <div class="absolute top-4 left-1/3 text-2xl opacity-45 filter sepia brightness-50 contrast-125">📗</div>
+      <div class="absolute top-8 right-1/3 text-2xl opacity-40 filter sepia brightness-50 contrast-125">📘</div>
+      <div class="absolute top-3 left-2/3 text-2xl opacity-35 filter sepia brightness-50 contrast-125">📙</div>
+      <div class="absolute top-12 right-1/5 text-2xl opacity-40 filter sepia brightness-50 contrast-125">📕</div>
+      
+      <!-- Dark wooden library elements -->
+      <div class="absolute top-8 left-1/2 transform -translate-x-1/2 text-sm opacity-25 font-serif text-amber-950 italic">"In a library, you are at the heart of all things"</div>
+      <div class="absolute top-14 left-1/6 text-xs opacity-20 font-serif text-amber-950 font-bold">LIBRARY</div>
+      <div class="absolute top-14 right-1/6 text-xs opacity-20 font-serif text-amber-950 font-bold">EST. 2024</div>
+      
+      <!-- Dark wooden decorative borders -->
+      <div class="absolute top-1 left-1/2 transform -translate-x-1/2 w-20 h-1 bg-gradient-to-r from-transparent via-amber-900 to-transparent opacity-60 rounded-full"></div>
+      <div class="absolute bottom-2 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-transparent via-orange-900 to-transparent opacity-60 rounded-full"></div>
+      
+      <!-- Dark wood grain texture simulation -->
+      <div class="absolute top-6 left-1/2 transform -translate-x-1/2 w-32 h-0.5 bg-gradient-to-r from-transparent via-yellow-800 via-amber-800 via-orange-800 to-transparent opacity-30"></div>
+      <div class="absolute top-10 left-1/2 transform -translate-x-1/2 w-28 h-0.5 bg-gradient-to-r from-transparent via-amber-700 via-yellow-700 via-orange-700 to-transparent opacity-30"></div>
+    </div>
+    
+    <div class="max-w-6xl mx-auto px-4 py-16 relative">
+      <div class="text-center">
+        <h1 class="text-4xl md:text-5xl font-bold flex items-center justify-center gap-3 mb-4 text-amber-950 dark:text-amber-100 drop-shadow-xl">
+          <span class="text-4xl filter drop-shadow-xl">📚</span>
+          <span class="text-amber-950 dark:text-amber-100 font-serif tracking-wide">Book Library</span>
+        </h1>
+        <p class="text-lg md:text-xl text-amber-900 dark:text-amber-200 font-medium max-w-2xl mx-auto leading-relaxed italic">
+          Discover, sort, and enjoy your next read
+        </p>
+      </div>
+
+      <div class="mt-5 grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div class="relative">
+          <label class="text-xs text-amber-800/80 dark:text-amber-200/80">Search</label>
+          <input id="search" autocomplete="off" placeholder="Search title or author" class="w-full mt-1 rounded-xl border border-amber-300/60 dark:border-stone-600 bg-white dark:bg-stone-800 px-3 py-2 outline-none focus:ring-2 focus:ring-amber-400" />
+          <div id="suggestions" class="absolute z-20 mt-1 w-full hidden rounded-xl border border-amber-300/60 dark:border-stone-600 bg-white dark:bg-stone-800 shadow-xl"></div>
+        </div>
+        <div>
+          <label class="text-xs text-amber-800/80 dark:text-amber-200/80">Sort</label>
+          <select id="sort" class="w-full mt-1 rounded-xl border border-amber-300/60 dark:border-stone-600 bg-white dark:bg-stone-800 px-3 py-2">
+            <option value="">Select</option>
+            <option value="title-asc">Title (A–Z)</option>
+            <option value="title-desc">Title (Z–A)</option>
+            <option value="rating-desc">Rating (High–Low)</option>
+            <option value="rating-asc">Rating (Low–High)</option>
+          </select>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="text-xs text-amber-800/80 dark:text-amber-200/80">Author</label>
+            <select id="filterAuthor" class="w-full mt-1 rounded-xl border border-amber-300/60 dark:border-stone-600 bg-white dark:bg-stone-800 px-3 py-2">
+              <option value="">All authors</option>
+    </select>
+          </div>
+          <div>
+            <label class="text-xs text-amber-800/80 dark:text-amber-200/80">Genre</label>
+            <select id="filterGenre" class="w-full mt-1 rounded-xl border border-amber-300/60 dark:border-stone-600 bg-white dark:bg-stone-800 px-3 py-2">
+              <option value="">All genres</option>
+              <option value="fantasy">Fantasy</option>
+              <option value="romance">Romance</option>
+              <option value="mystery">Mystery</option>
+              <option value="science_fiction">Sci‑Fi</option>
+              <option value="history">History</option>
+    </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-4 flex items-center gap-3">
+        <button id="tabAll" class="px-3 py-1.5 rounded-lg text-sm border border-amber-300/60 dark:border-stone-600 bg-white dark:bg-stone-800 hover:bg-amber-100 dark:hover:bg-stone-700 transition">All</button>
+        <button id="tabFav" class="px-3 py-1.5 rounded-lg text-sm border border-amber-300/60 dark:border-stone-600 bg-white dark:bg-stone-800 hover:bg-amber-100 dark:hover:bg-stone-700 transition">❤️ Favourites</button>
+        <div id="loader" class="ml-auto hidden text-sm">📖 Loading…</div>
+      </div>
+    </div>
+  </header>
+
+  <section class="max-w-6xl mx-auto px-4 mt-6">
+    <div id="bookOfDay" class="hidden rounded-2xl border border-amber-300/60 dark:border-stone-700 bg-white dark:bg-stone-800 p-4 shadow-sm"></div>
+  </section>
+
+  <main class="max-w-6xl mx-auto px-4 py-6">
+    <div id="book-container" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4"></div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

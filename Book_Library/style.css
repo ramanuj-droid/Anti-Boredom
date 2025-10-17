@@ -1,0 +1,171 @@
+/* Custom styles for Book Library - Tailwind handles most styling */
+
+/* Ensure suggestions dropdown works properly */
+#suggestions {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+/* Smooth transitions for theme toggle */
+* {
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+/* Custom scrollbar for suggestions */
+#suggestions::-webkit-scrollbar {
+  width: 6px;
+}
+
+#suggestions::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+#suggestions::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+#suggestions::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Flip card for summary on hover */
+.flip { perspective: 1000px; }
+.flip-inner { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform .6s; }
+.flip:hover .flip-inner { transform: rotateY(180deg); }
+.flip-front, .flip-back { position: absolute; inset: 0; backface-visibility: hidden; border-radius: 1rem; }
+.flip-back { transform: rotateY(180deg); overflow: hidden; }
+
+/* Summary back styling */
+.summary-header { background: linear-gradient(180deg, rgba(250, 204, 21, .25), rgba(250, 204, 21, .08)); border-bottom: 1px solid rgba(250, 204, 21, .35); }
+.summary-container { height: 100%; display:flex; flex-direction:column; }
+.summary-scroll { overflow: auto; position: relative; scrollbar-gutter: stable; }
+.summary-scroll::-webkit-scrollbar { width: 6px; }
+.summary-scroll::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 4px; }
+.summary-scroll::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
+.summary-text { font-size: 12.5px; line-height: 1.6; color: #374151; text-align: justify; hyphens: auto; text-wrap: pretty; }
+.dark .summary-text { color: #e5e7eb; }
+.summary-fade { pointer-events:none; position:absolute; left:0; right:0; bottom:0; height:32px; background: linear-gradient(180deg, rgba(255,255,255,0), rgba(255,255,255,1)); }
+.dark .summary-fade { background: linear-gradient(180deg, rgba(24,24,27,0), rgba(24,24,27,1)); }
+.chip { display:inline-block; font-size:11px; padding:2px 8px; border-radius:999px; border:1px solid rgba(250, 204, 21, .4); background: rgba(250, 204, 21, .12); color:#92400e; margin-right:6px; margin-bottom:6px; }
+.dark .chip { color:#fbbf24; border-color: rgba(251, 191, 36, .35); background: rgba(251, 191, 36, .08); }
+
+/* Keep inner content away from edges for a crisp boundary */
+.summary-shell { height:100%; border-radius: 0.75rem; border:1px solid rgba(250, 204, 21, .35); box-shadow: inset 0 1px 0 rgba(255,255,255,.35); }
+.dark .summary-shell { border-color: rgba(120,113,108,.5); box-shadow: inset 0 1px 0 rgba(0,0,0,.2); }
+
+/* Book image enhancements */
+.book-cover-container {
+  position: relative;
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+}
+
+.book-cover-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.book-cover-container:hover::before {
+  opacity: 1;
+}
+
+/* Loading state for images */
+.book-cover-loading {
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  opacity: 0.8;
+}
+
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Book card text improvements */
+.book-card-title {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.3;
+}
+
+.book-card-author {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Book Cover Wrapper - Fixed and Isolated */
+.book-cover-wrapper {
+  position: relative;
+  height: 240px; /* Fixed height to prevent overflow */
+  margin-bottom: 1rem;
+  overflow: hidden;
+  border-radius: 0.75rem;
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+}
+
+.book-cover-wrapper .flip {
+  height: 100%;
+  width: 100%;
+}
+
+.book-cover-wrapper .flip-inner {
+  height: 100%;
+  width: 100%;
+}
+
+/* Book Info Wrapper - Separate and Protected */
+.book-info-wrapper {
+  position: relative;
+  z-index: 20;
+  background: inherit;
+  padding: 0.5rem 0.25rem 0;
+  border-top: 2px solid rgba(250, 204, 21, 0.15);
+  margin-top: 0.5rem;
+  min-height: 5rem;
+}
+
+.dark .book-info-wrapper {
+  border-top: 2px solid rgba(120, 113, 108, 0.25);
+}
+
+/* Ensure images are visible and properly sized */
+.book-cover-wrapper img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  display: block !important;
+  background-color: #fef3c7 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* Ensure flip front container is visible */
+.flip-front {
+  background: linear-gradient(135deg, #fef3c7, #fde68a) !important;
+  position: relative !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Prevent any overflow from cover to info section */
+.book-cover-wrapper {
+  isolation: isolate;
+}
+
+.book-info-wrapper {
+  isolation: isolate;
+}
+
