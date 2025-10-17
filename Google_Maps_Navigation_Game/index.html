@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>City Sprint - Map Navigation Game</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #007BFF;
+            --secondary-color: #6c757d;
+            --background-color: #f4f7f6;
+            --container-bg: #ffffff;
+            --text-color: #333;
+            --success-color: #28a745;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        #game-wrapper {
+            width: 95%;
+            max-width: 1000px;
+            background: var(--container-bg);
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        h1 {
+            margin: 0;
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+        
+        #stats-bar {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 15px;
+            width: 100%;
+        }
+
+        .stat-item, #objective {
+            background-color: var(--background-color);
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            flex-grow: 1;
+        }
+        
+        #objective {
+            background-color: #e6f2ff;
+            color: var(--primary-color);
+        }
+
+        #map {
+            width: 100%;
+            height: 500px; /* Adjust height for better mobile experience */
+            border: 2px solid #eee;
+            border-radius: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 600;
+            color: var(--secondary-color);
+        }
+
+        #controls {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 10px;
+            width: 200px;
+            margin: 0 auto;
+        }
+
+        .control-btn {
+            font-size: 28px;
+            border: none;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+            padding: 10px;
+        }
+
+        .control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+        }
+
+        .control-btn:active {
+            transform: translateY(1px);
+            box-shadow: none;
+        }
+        
+        #up { grid-column: 2 / 3; grid-row: 1 / 2; }
+        #left { grid-column: 1 / 2; grid-row: 2 / 3; }
+        #down { grid-column: 2 / 3; grid-row: 2 / 3; }
+        #right { grid-column: 3 / 4; grid-row: 2 / 3; }
+
+        /* End Game Modal */
+        #modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: none; /* Initially hidden */
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        #modal-content {
+            background: var(--container-bg);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        #modal-content h2 {
+            color: var(--success-color);
+            margin-top: 0;
+        }
+
+        #play-again-btn {
+            background-color: var(--success-color);
+            color: white;
+            padding: 12px 25px;
+            font-size: 16px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.2s;
+        }
+
+        #play-again-btn:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="game-wrapper">
+        <h1>City Sprint 🏃‍♂️💨</h1>
+        <div id="stats-bar">
+            <div class="stat-item">Score: <span id="score">0</span></div>
+            <div class="stat-item">Time: <span id="timer">0s</span></div>
+        </div>
+        <div id="objective">Find: <span id="objective-text">The Eiffel Tower</span></div>
+        <div id="map">
+             <!-- Instructions will be shown here until the map loads -->
+            Please enter your Google Maps API Key in the script to play.
+        </div>
+        <div id="controls">
+            <button id="up" class="control-btn">↑</button>
+            <button id="left" class="control-btn">←</button>
+            <button id="down" class="control-btn">↓</button>
+            <button id="right" class="control-btn">→</button>
+        </div>
+    </div>
+    
+    <!-- End Game Modal -->
+    <div id="modal-overlay">
+        <div id="modal-content">
+            <h2>🎉 You Did It! 🎉</h2>
+            <p id="final-stats"></p>
+            <button id="play-again-btn">Play Again</button>
+        </div>
+    </div>
+    
+    <script>
+        // Game state variables
+        let map, player, timerInterval;
+        let score = 0;
+        let seconds = 0;
+        let currentLandmarkIndex = 0;
+
+        // Player configuration
+        const PLAYER_SPEED = 0.0001; // How fast the player moves
+        
+        // Landmarks for the game (Paris, France)
+        const landmarks = [
+            { lat: 48.8584, lng: 2.2945, name: "The Eiffel Tower" },
+            { lat: 48.8606, lng: 2.3376, name: "The Louvre Museum" },
+            { lat: 48.8530, lng: 2.3499, name: "Notre-Dame Cathedral" },
+            { lat: 48.8738, lng: 2.2950, name: "Arc de Triomphe" }
+        ];
+
+        // This function will be called by the Google Maps script once it's loaded
+        function initGame() {
+            // FIX: Define PLAYER_ICON here, after the 'google' object is available.
+            const PLAYER_ICON = {
+                path: 'M7.5,15.5 C9.5,18.5 12.5,18.5 14.5,15.5 L11,12.5 Z M11,12.5 L7.5,15.5 M11,12.5 L14.5,15.5 M11,12.5 V6 M11,0 A2,2 0 1,1 11,4 A2,2 0 0,1 11,0 Z M4,6 L18,6',
+                fillColor: '#007BFF',
+                fillOpacity: 1,
+                strokeColor: '#ffffff',
+                strokeWeight: 2,
+                scale: 2,
+                anchor: new google.maps.Point(11, 11),
+            };
+
+            const startLocation = { lat: 48.862, lng: 2.32 }; // Central Paris
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: startLocation,
+                zoom: 15,
+                disableDefaultUI: true,
+                keyboardShortcuts: false,
+                styles: [ // Custom styles to simplify the map
+                    { featureType: 'poi', stylers: [{ visibility: 'off' }] },
+                    { featureType: 'transit', stylers: [{ visibility: 'off' }] },
+                    { featureType: "road", elementType: "labels", stylers: [{ visibility: "off" }] }
+                ]
+            });
+
+            player = new google.maps.Marker({
+                position: startLocation,
+                map: map,
+                icon: PLAYER_ICON
+            });
+
+            setupLandmarks();
+            setupControls();
+            startTimer();
+            updateObjectiveText();
+        }
+
+        // Place landmark markers on the map
+        function setupLandmarks() {
+            landmarks.forEach((landmark, index) => {
+                landmark.marker = new google.maps.Marker({
+                    position: landmark,
+                    map: map,
+                    label: { text: '📍', fontSize: '20px' },
+                });
+                // Make the first landmark bounce
+                if (index === 0) {
+                    landmark.marker.setAnimation(google.maps.Animation.BOUNCE);
+                }
+            });
+        }
+        
+        // Set up keyboard and on-screen button controls
+        function setupControls() {
+            document.addEventListener('keydown', handleKeyPress);
+            document.getElementById('up').addEventListener('click', () => movePlayer(0, PLAYER_SPEED));
+            document.getElementById('down').addEventListener('click', () => movePlayer(0, -PLAYER_SPEED));
+            document.getElementById('left').addEventListener('click', () => movePlayer(-PLAYER_SPEED, 0));
+            document.getElementById('right').addEventListener('click', () => movePlayer(PLAYER_SPEED, 0));
+            document.getElementById('play-again-btn').addEventListener('click', () => location.reload());
+        }
+
+        // Handle keyboard input for player movement
+        function handleKeyPress(e) {
+            e.preventDefault();
+            switch (e.key) {
+                case 'ArrowUp': case 'w': movePlayer(0, PLAYER_SPEED); break;
+                case 'ArrowDown': case 's': movePlayer(0, -PLAYER_SPEED); break;
+                case 'ArrowLeft': case 'a': movePlayer(-PLAYER_SPEED, 0); break;
+                case 'ArrowRight': case 'd': movePlayer(PLAYER_SPEED, 0); break;
+            }
+        }
+        
+        // Move the player and check for landmark collision
+        function movePlayer(lngChange, latChange) {
+            const currentPos = player.getPosition();
+            const newPos = new google.maps.LatLng(currentPos.lat() + latChange, currentPos.lng() + lngChange);
+            player.setPosition(newPos);
+            map.panTo(newPos); // Keep player centered
+            checkCollision();
+        }
+
+        // Check if the player has reached the current landmark
+        function checkCollision() {
+            if (currentLandmarkIndex >= landmarks.length) return; // Game already won
+
+            const playerPos = player.getPosition();
+            const targetLandmark = landmarks[currentLandmarkIndex];
+            const targetPos = targetLandmark.marker.getPosition();
+            
+            // Calculate distance using the geometry library
+            const distance = google.maps.geometry.spherical.computeDistanceBetween(playerPos, targetPos);
+
+            if (distance < 20) { // 20-meter radius for "capture"
+                handleLandmarkReached(targetLandmark);
+            }
+        }
+        
+        // Logic for when a landmark is reached
+        function handleLandmarkReached(landmark) {
+            // Update score
+            score += 100;
+            document.getElementById('score').innerText = score;
+
+            // Update landmark marker
+            landmark.marker.setAnimation(null);
+            landmark.marker.setLabel({ text: '✅', fontSize: '20px' });
+            
+            currentLandmarkIndex++;
+            
+            if (currentLandmarkIndex < landmarks.length) {
+                // Set next target
+                const nextLandmark = landmarks[currentLandmarkIndex];
+                nextLandmark.marker.setAnimation(google.maps.Animation.BOUNCE);
+                updateObjectiveText();
+            } else {
+                endGame();
+            }
+        }
+        
+        // Update the objective text display
+        function updateObjectiveText() {
+            const objectiveSpan = document.getElementById('objective-text');
+            objectiveSpan.innerText = landmarks[currentLandmarkIndex].name;
+        }
+
+        // Start and manage the game timer
+        function startTimer() {
+            const timerEl = document.getElementById('timer');
+            timerInterval = setInterval(() => {
+                seconds++;
+                timerEl.innerText = `${seconds}s`;
+            }, 1000);
+        }
+
+        // End the game and show the summary modal
+        function endGame() {
+            clearInterval(timerInterval);
+            const modal = document.getElementById('modal-overlay');
+            const finalStats = document.getElementById('final-stats');
+            finalStats.innerText = `Your final score is ${score} in ${seconds} seconds!`;
+            modal.style.display = 'flex';
+        }
+
+        // --- SCRIPT LOADER ---
+        // This function dynamically loads the Google Maps script
+        // to prevent the race condition errors.
+        function loadGoogleMapsScript() {
+            // ===================================================================
+            //   PASTE YOUR GOOGLE MAPS API KEY IN THE QUOTES BELOW
+            //   Get one here: https://console.cloud.google.com/
+            // ===================================================================
+            const apiKey = "PASTE_YOUR_API_KEY_HERE"; 
+
+            // If the key is still the placeholder, don't load the script.
+            if (apiKey === "PASTE_YOUR_API_KEY_HERE" || apiKey === "") {
+                 document.getElementById('map').innerText = "API Key needed! Please paste your key into the script to start the game.";
+                return;
+            }
+
+            // Make initGame globally available for the callback
+            window.initGame = initGame;
+
+            // Create the script element
+            const script = document.createElement('script');
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&callback=initGame&libraries=geometry`;
+            script.async = true;
+            script.defer = true;
+            
+            // Handle loading errors (e.g., invalid API key)
+            script.onerror = function() {
+                document.getElementById('map').innerText = "Error: Could not load Google Maps. Please check that your API key is correct and valid.";
+            };
+
+            // Add the script to the document's head
+            document.head.appendChild(script);
+        }
+
+        // Start the process
+        loadGoogleMapsScript();
+    </script>
+
+</body>
+</html>
+
