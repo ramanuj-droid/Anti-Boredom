@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mini Mystery</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="container">
+      <header class="header">
+        <a class="back-link" href="../index.html" aria-label="Back to hub">← Back</a>
+        <h1 class="title">Solve a Mini‑Mystery</h1>
+        <p class="subtitle">Read the clue, pick the answer, then try another.</p>
+      </header>
+
+      <section id="mystery-card" class="card" aria-live="polite">
+        <div class="prompt">
+          <p id="mystery-text">Loading mystery…</p>
+        </div>
+        <div id="options" class="options" role="group" aria-label="Answer choices"></div>
+        <div id="feedback" class="feedback" aria-live="polite"></div>
+        <div class="actions">
+          <button id="nextBtn" class="btn" type="button">Try another</button>
+        </div>
+      </section>
+    </main>
+
+    <script src="script.js" defer></script>
+  </body>
+  </html>
+
+

@@ -1,0 +1,47 @@
+[
+  {
+    "id": 1,
+    "text": "A man pushes his car to a hotel and tells the owner he’s bankrupt. Why?",
+    "options": [
+      "He ran out of gas and can't pay",
+      "He is playing Monopoly and landed on the hotel",
+      "He is a taxi driver with no passengers",
+      "He crashed into the hotel"
+    ],
+    "answer": 1,
+    "explanation": "It's a classic riddle: in Monopoly, landing on someone else's hotel can bankrupt you."
+  },
+  {
+    "id": 2,
+    "text": "A room has a window facing north. A bear walks by the window. What color is the bear?",
+    "options": ["Brown", "Black", "White", "It can't be determined"],
+    "answer": 2,
+    "explanation": "Only at the North Pole can all windows face south. The bear would be a polar bear: white."
+  },
+  {
+    "id": 3,
+    "text": "You see a boat filled with people. It hasn’t sunk, yet you don’t see a single person on board. Why?",
+    "options": [
+      "They are below deck",
+      "It's a ghost ship",
+      "Everyone on board is married",
+      "It's a reflection"
+    ],
+    "answer": 2,
+    "explanation": "'Single' is the keyword: everyone is married, so you don't see a single person."
+  },
+  {
+    "id": 4,
+    "text": "A doctor and a bus driver love the same woman. The bus driver must go on a week-long trip. He leaves the woman with seven apples. Why?",
+    "options": [
+      "Apples are her favorite",
+      "To keep her healthy",
+      "An apple a day keeps the doctor away",
+      "He runs a fruit stand"
+    ],
+    "answer": 2,
+    "explanation": "A playful pun: 'An apple a day keeps the doctor away.'"
+  }
+]
+
+
