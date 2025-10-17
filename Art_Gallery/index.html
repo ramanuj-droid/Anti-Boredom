@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relaxing Art Gallery</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@300&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="gallery-container">
+        <header class="gallery-header">
+            <h1>Relaxing Art Gallery</h1>
+            <p>Explore and appreciate art when you’re bored.</p>
+            <button id="uploadButton" class="upload-btn">Upload Your Art</button>
+        </header>
+
+        <main class="art-display">
+            <button id="prevButton" class="nav-button prev-button">&larr;</button>
+            
+            <div id="artPiece" class="art-piece">
+                <img id="artImage" src="" alt="Artwork">
+                <div class="art-info">
+                    <h2 id="artTitle"></h2>
+                    <p id="artDetails"></p>
+                </div>
+            </div>
+
+            <button id="nextButton" class="nav-button next-button">&rarr;</button>
+        </main>
+    </div>
+
+    <div id="uploadModal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <button id="closeModal" class="close-button">&times;</button>
+            <h2>Add Your Artwork</h2>
+            <form id="uploadForm">
+                <label for="titleInput">Title:</label>
+                <input type="text" id="titleInput" required placeholder="e.g., 'Sunset View'">
+
+                <label for="artistInput">Artist Name:</label>
+                <input type="text" id="artistInput" required placeholder="e.g., 'Your Name'">
+                
+                <label for="yearInput">Year:</label>
+                <input type="number" id="yearInput" required placeholder="e.g., 2025">
+
+                <label for="fileInput">Image File:</label>
+                <input type="file" id="fileInput" accept="image/*" required>
+                
+                <button type="submit" class="submit-btn">Add to Gallery</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
