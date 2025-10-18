@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini Circuit Simulator</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="app-container">
+        <header class="app-header">
+            <h1>Mini Circuit Simulator</h1>
+            <p>Build basic circuits and see real-time voltage and current behavior.</p>
+        </header>
+
+        <!-- The iframe embeds the powerful CircuitJS simulator directly into our page -->
+        <div class="simulator-wrapper">
+            <iframe src="https://www.falstad.com/circuit/circuitjs.html" title="CircuitJS Simulator"
+                class="simulator-frame">
+            </iframe>
+        </div>
+
+        <footer class="app-footer">
+            <p><strong>How to use:</strong> Right-click on the blank space to add components (resistors, switches,
+                etc.). Drag from the component ends to draw wires.</p>
+        </footer>
+    </div>
+
+</body>
+
+</html>
