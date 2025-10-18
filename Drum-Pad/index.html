@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DRUM PAD</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tone.js for audio synthesis -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles for the drum machine */
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent; /* Disable tap highlight on mobile */
+        }
+
+        /* --- Keyframe for RGB color cycle --- */
+        @keyframes rgb-cycle {
+            0%   { background-color: #ff4747; } /* Red */
+            25%  { background-color: #fce803; } /* Yellow */
+            50%  { background-color: #47ff47; } /* Green */
+            75%  { background-color: #479fff; } /* Blue */
+            100% { background-color: #ff47ff; } /* Magenta */
+        }
+
+        /* --- Base Theme Colors --- */
+        .theme-graffiti .drum-pad { background-color: #3b82f6; border-color: #60a5fa; color: #eff6ff;}
+        .theme-urban .drum-pad { background-color: #8b5cf6; border-color: #a78bfa; color: #f5f3ff; }
+        .theme-concrete .drum-pad { background-color: #4b5563; border-color: #6b7280; color: #f3f4f6; }
+        .theme-stencil .drum-pad { background-color: #ef4444; border-color: #f87171; color: #fef2f2; }
+        
+        /* --- Pad & Button Transitions --- */
+        .drum-pad, .theme-button {
+            transition: all 0.07s ease-in-out;
+            user-select: none; /* Prevent text selection */
+        }
+        
+        .theme-button.active-theme {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+            filter: brightness(1.2);
+        }
+
+        /* --- Unified Active State with RGB Animation --- */
+        .drum-pad.active {
+            animation: rgb-cycle 0.4s linear;
+        }
+        
+        /* --- Theme-specific NEON GLOWS --- */
+        .theme-graffiti .drum-pad.active {
+            border-color: #f9a8d4;
+            box-shadow: 0 0 5px #ec4899, 0 0 15px #ec4899, 0 0 30px #ec4899, inset 0 0 5px #ec4899;
+        }
+        .theme-urban .drum-pad.active {
+            border-color: #fde047;
+            box-shadow: 0 0 5px #facc15, 0 0 15px #facc15, 0 0 30px #facc15, inset 0 0 5px #facc15;
+        }
+        .theme-concrete .drum-pad.active {
+            border-color: #fb923c;
+            box-shadow: 0 0 5px #f97316, 0 0 15px #f97316, 0 0 30px #f97316, inset 0 0 5px #f97316;
+        }
+        .theme-stencil .drum-pad.active {
+            border-color: #2dd4bf;
+            box-shadow: 0 0 5px #14b8a6, 0 0 15px #14b8a6, 0 0 30px #14b8a6, inset 0 0 5px #14b8a6;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white flex items-center justify-center min-h-screen p-4">
+
+    <main id="drum-machine-container" class="w-full max-w-2xl mx-auto theme-graffiti">
+        <!-- Header -->
+        <header class="text-center mb-6">
+            <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-gray-100 uppercase">DRUM PAD</h1>
+            <p class="text-gray-400 mt-2 italic">"Rhythm is the soul of life."</p>
+        </header>
+
+        <!-- Theme Mode Buttons -->
+        <div id="theme-buttons-container" class="flex justify-center items-center mb-8 space-x-2 md:space-x-3 bg-gray-800 p-2 rounded-xl">
+             <button data-theme="theme-graffiti" class="theme-button active-theme flex-1 sm:flex-none text-sm font-semibold py-2 px-4 rounded-lg bg-blue-500 border-b-2 border-blue-700">🎨 Graffiti Pop</button>
+             <button data-theme="theme-urban" class="theme-button flex-1 sm:flex-none text-sm font-semibold py-2 px-4 rounded-lg bg-purple-500 border-b-2 border-purple-700">🌃 Urban Night</button>
+             <button data-theme="theme-concrete" class="theme-button flex-1 sm:flex-none text-sm font-semibold py-2 px-4 rounded-lg bg-gray-600 border-b-2 border-gray-800">🧱 Concrete</button>
+             <button data-theme="theme-stencil" class="theme-button flex-1 sm:flex-none text-sm font-semibold py-2 px-4 rounded-lg bg-red-500 border-b-2 border-red-700"> स्प्रे Stencil Red</button>
+        </div>
+
+        <!-- Drum Pads -->
+        <div id="pads-container" class="grid grid-cols-3 gap-3 md:gap-4">
+            <!-- Pads will be dynamically inserted here -->
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const padsContainer = document.getElementById('pads-container');
+            const themeButtonsContainer = document.getElementById('theme-buttons-container');
+            const drumMachineContainer = document.getElementById('drum-machine-container');
+
+            let isAudioReady = false;
+            let currentTheme = 'theme-graffiti';
+
+            // --- Sound Banks for Each Theme ---
+            const themeSounds = {
+                'theme-graffiti': {
+                    'kick': new Tone.MembraneSynth({ pitchDecay: 0.02, octaves: 8, oscillator: { type: 'sine' }, envelope: { attack: 0.001, decay: 0.5, sustain: 0.01, release: 1.4 } }).toDestination(),
+                    'snare': new Tone.NoiseSynth({ noise: { type: 'pink' }, envelope: { attack: 0.001, decay: 0.15, sustain: 0 } }).toDestination(),
+                    'hihat': new Tone.MetalSynth({ frequency: 250, envelope: { attack: 0.001, decay: 0.05, release: 0.02 }, harmonicity: 4.1, modulationIndex: 32, resonance: 3000, octaves: 1.5 }).toDestination(),
+                    'clap': new Tone.NoiseSynth({ noise: { type: 'white' }, envelope: { attack: 0.005, decay: 0.1, sustain: 0, release: 0.1 } }).toDestination(),
+                    'tom1': new Tone.MembraneSynth({ pitchDecay: 0.08, octaves: 5, envelope: { attack: 0.01, decay: 0.2, sustain: 0, release: 0.4 } }).toDestination(),
+                    'tom2': new Tone.MembraneSynth({ pitchDecay: 0.08, octaves: 4, envelope: { attack: 0.01, decay: 0.2, sustain: 0, release: 0.4 } }).toDestination(),
+                    'cymbal': new Tone.MetalSynth({ frequency: 300, envelope: { attack: 0.001, decay: 0.8, release: 0.8 }, harmonicity: 5.1, modulationIndex: 32, resonance: 4000, octaves: 1.5 }).toDestination(),
+                    'openhat': new Tone.MetalSynth({ frequency: 250, envelope: { attack: 0.001, decay: 0.4, release: 0.4 }, harmonicity: 4.1, modulationIndex: 32, resonance: 3000, octaves: 1.5 }).toDestination(),
+                    'perc': new Tone.PluckSynth({ attackNoise: 0.5, dampening: 2000, resonance: 0.9 }).toDestination(),
+                },
+                'theme-urban': {
+                    'kick': new Tone.MembraneSynth({ pitchDecay: 0.08, octaves: 6, oscillator: { type: 'sine' }, envelope: { attack: 0.001, decay: 0.8, sustain: 0, release: 1 } }).toDestination(),
+                    'snare': new Tone.NoiseSynth({ noise: { type: 'white' }, envelope: { attack: 0.001, decay: 0.12, sustain: 0.01, release: 0.1 } }).toDestination(),
+                    'hihat': new Tone.MetalSynth({ frequency: 80, envelope: { attack: 0.001, decay: 0.08, release: 0.01 }, harmonicity: 3.1, modulationIndex: 20, resonance: 2000, octaves: 1 }).toDestination(),
+                    'clap': new Tone.NoiseSynth({ noise: { type: 'pink' }, envelope: { attack: 0.01, decay: 0.15, sustain: 0, release: 0.2 } }).toDestination(),
+                    'tom1': new Tone.MembraneSynth({ pitchDecay: 0.2, octaves: 3, envelope: { attack: 0.02, decay: 0.4, sustain: 0, release: 0.4 } }).toDestination(),
+                    'tom2': new Tone.MembraneSynth({ pitchDecay: 0.2, octaves: 2, envelope: { attack: 0.02, decay: 0.4, sustain: 0, release: 0.4 } }).toDestination(),
+                    'cymbal': new Tone.MetalSynth({ frequency: 150, envelope: { attack: 0.01, decay: 0.5, release: 0.5 }, harmonicity: 4, modulationIndex: 25, resonance: 3000, octaves: 1.5 }).toDestination(),
+                    'openhat': new Tone.MetalSynth({ frequency: 80, envelope: { attack: 0.001, decay: 0.6, release: 0.6 }, harmonicity: 3.1, modulationIndex: 20, resonance: 2000, octaves: 1 }).toDestination(),
+                    'perc': new Tone.PluckSynth({ attackNoise: 2, dampening: 6000, resonance: 0.5 }).toDestination(),
+                },
+                'theme-concrete': {
+                    'kick': new Tone.MembraneSynth({ pitchDecay: 0.05, octaves: 10, oscillator: { type: 'sine' }, envelope: { attack: 0.001, decay: 0.4, sustain: 0.01, release: 1.4, attackCurve: 'exponential' } }).toDestination(),
+                    'snare': new Tone.NoiseSynth({ noise: { type: 'white' }, envelope: { attack: 0.005, decay: 0.2, sustain: 0 } }).toDestination(),
+                    'hihat': new Tone.MetalSynth({ frequency: 100, envelope: { attack: 0.001, decay: 0.1, release: 0.05 }, harmonicity: 5.1, modulationIndex: 32, resonance: 4000, octaves: 1.5 }).toDestination(),
+                    'clap': new Tone.NoiseSynth({ noise: { type: 'white' }, envelope: { attack: 0.001, decay: 0.1, sustain: 0.1, release: 0.2 } }).toDestination(),
+                    'tom1': new Tone.MembraneSynth({ pitchDecay: 0.1, octaves: 4, envelope: { attack: 0.01, decay: 0.3, sustain: 0.01, release: 0.5 } }).toDestination(),
+                    'tom2': new Tone.MembraneSynth({ pitchDecay: 0.1, octaves: 3, envelope: { attack: 0.01, decay: 0.3, sustain: 0.01, release: 0.5 } }).toDestination(),
+                    'cymbal': new Tone.MetalSynth({ frequency: 200, envelope: { attack: 0.001, decay: 1, release: 1 }, harmonicity: 5.1, modulationIndex: 32, resonance: 4000, octaves: 1.5 }).toDestination(),
+                    'openhat': new Tone.MetalSynth({ frequency: 120, envelope: { attack: 0.001, decay: 0.5, release: 0.5 }, harmonicity: 5.1, modulationIndex: 32, resonance: 4000, octaves: 1.5 }).toDestination(),
+                    'perc': new Tone.PluckSynth({ attackNoise: 1, dampening: 4000, resonance: 0.7 }).toDestination(),
+                },
+                'theme-stencil': {
+                    'kick': new Tone.MembraneSynth({ pitchDecay: 0.04, octaves: 7, oscillator: { type: 'sine' }, envelope: { attack: 0.001, decay: 0.3, sustain: 0.01, release: 0.8 } }).toDestination(),
+                    'snare': new Tone.NoiseSynth({ noise: { type: 'white' }, envelope: { attack: 0.001, decay: 0.22, sustain: 0, release: 0.1 } }).toDestination(),
+                    'hihat': new Tone.MetalSynth({ frequency: 180, envelope: { attack: 0.001, decay: 0.09, release: 0.05 }, harmonicity: 5.1, modulationIndex: 32, resonance: 4000, octaves: 1.5 }).toDestination(),
+                    'clap': new Tone.NoiseSynth({ noise: { type: 'white' }, envelope: { attack: 0.01, decay: 0.18, sustain: 0, release: 0.2 } }).toDestination(),
+                    'tom1': new Tone.MembraneSynth({ pitchDecay: 0.15, octaves: 4, oscillator: { type: 'triangle' }, envelope: { attack: 0.01, decay: 0.4, sustain: 0.01, release: 0.5 } }).toDestination(),
+                    'tom2': new Tone.MembraneSynth({ pitchDecay: 0.15, octaves: 3, oscillator: { type: 'triangle' }, envelope: { attack: 0.01, decay: 0.4, sustain: 0.01, release: 0.5 } }).toDestination(),
+                    'cymbal': new Tone.MetalSynth({ frequency: 220, envelope: { attack: 0.001, decay: 1.2, release: 1.2 }, harmonicity: 5.1, modulationIndex: 40, resonance: 4000, octaves: 2 }).toDestination(),
+                    'openhat': new Tone.MetalSynth({ frequency: 180, envelope: { attack: 0.001, decay: 0.6, release: 0.6 }, harmonicity: 5.1, modulationIndex: 32, resonance: 4000, octaves: 1.5 }).toDestination(),
+                    'perc': new Tone.MembraneSynth({ pitchDecay: 0.01, octaves: 6, envelope: { attack: 0.01, decay: 0.1, sustain: 0.01, release: 0.1 } }).toDestination(),
+                }
+            };
+
+            const padConfig = [
+                { key: 'q', sound: 'tom1', label: 'Tom 1', note: 'G4' }, { key: 'w', sound: 'tom2', label: 'Tom 2', note: 'D4' }, { key: 'e', sound: 'cymbal', label: 'Cymbal', note: 'C4'},
+                { key: 'a', sound: 'kick', label: 'Kick', note: 'C1' }, { key: 's', sound: 'snare', label: 'Snare', note: null }, { key: 'd', sound: 'clap', label: 'Clap', note: null },
+                { key: 'z', sound: 'hihat', label: 'Hi-Hat', note: 'C4' }, { key: 'x', sound: 'openhat', label: 'Open Hat', note: 'C4' }, { key: 'c', sound: 'perc', label: 'Perc', note: 'A4' },
+            ];
+
+            const playSound = async (padElement) => {
+                if (!padElement) return;
+                if (!isAudioReady) {
+                    await Tone.start(); isAudioReady = true; console.log('Audio is ready!');
+                }
+                const soundName = padElement.dataset.sound;
+                const note = padElement.dataset.note;
+                const sound = themeSounds[currentTheme][soundName];
+                if (sound) {
+                    if (sound instanceof Tone.MembraneSynth || sound instanceof Tone.PluckSynth) {
+                         sound.triggerAttackRelease(note, '8n');
+                    } else {
+                        sound.triggerAttackRelease('8n');
+                    }
+                    padElement.classList.add('active');
+                    // Increased duration to make the animation more visible
+                    setTimeout(() => padElement.classList.remove('active'), 400);
+                }
+            };
+            
+            padConfig.forEach(config => {
+                const pad = document.createElement('div');
+                pad.className = 'drum-pad flex flex-col items-center justify-center h-24 md:h-32 rounded-lg shadow-lg cursor-pointer border-b-4';
+                pad.dataset.key = config.key; pad.dataset.sound = config.sound; pad.dataset.note = config.note;
+                pad.innerHTML = `<span class="text-2xl md:text-3xl font-bold">${config.key.toUpperCase()}</span><span class="text-xs md:text-sm mt-1 uppercase tracking-wider">${config.label}</span>`;
+                padsContainer.appendChild(pad);
+                pad.addEventListener('mousedown', () => playSound(pad));
+                pad.addEventListener('touchstart', (e) => { e.preventDefault(); playSound(pad); });
+            });
+            
+            window.addEventListener('keydown', (e) => {
+                const padElement = document.querySelector(`.drum-pad[data-key="${e.key.toLowerCase()}"]`);
+                playSound(padElement);
+            });
+
+            themeButtonsContainer.addEventListener('click', (e) => {
+                const button = e.target.closest('.theme-button');
+                if (!button) return;
+
+                document.querySelectorAll('.theme-button').forEach(btn => btn.classList.remove('active-theme'));
+                button.classList.add('active-theme');
+
+                const newTheme = button.dataset.theme;
+                drumMachineContainer.className = `w-full max-w-2xl mx-auto ${newTheme}`;
+                currentTheme = newTheme;
+            });
+        });
+    </script>
+</body>
+</html>
+
