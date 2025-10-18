@@ -1,0 +1,73 @@
+/* style.css */
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden; /* Prevent body scrollbars */
+    font-family: 'Roboto Mono', monospace;
+    background-color: #121212; /* Darker base background */
+    color: #e0e0e0;
+}
+
+.app-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    box-sizing: border-box;
+    background-color: #1e1e1e; /* Slightly lighter container background */
+}
+
+.app-header {
+    text-align: center;
+    padding: 0.75rem 1rem; /* Reduced padding */
+    background-color: #111;
+    border-bottom: 1px solid #333;
+    flex-shrink: 0; /* Prevent header from shrinking */
+}
+
+.app-header h1 {
+    margin: 0;
+    font-size: 1.5rem; /* Reduced font size */
+    color: #00e676; /* Brighter, more vibrant green */
+}
+
+.app-header p {
+    margin: 0.25rem 0 0 0; /* Reduced margin */
+    font-size: 0.9rem;
+    color: #a0a0a0;
+}
+
+/* The wrapper will be the main focus, taking up maximum space */
+.simulator-wrapper {
+    flex-grow: 1; /* This is key to making it fill the space */
+    padding: 0.5rem; /* Reduced padding to maximize iframe size */
+    box-sizing: border-box;
+    min-height: 0;
+    display: flex;
+}
+
+/* Styling for the iframe itself */
+.simulator-frame {
+    width: 100%;
+    height: 100%;
+    border-radius: 6px;
+    border: 1px solid #444; /* Slightly more visible border */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); /* More prominent shadow */
+}
+
+.app-footer {
+    text-align: center;
+    padding: 0.5rem 1rem; /* Reduced padding */
+    font-size: 0.8rem; /* Reduced font size */
+    color: #777;
+    background-color: #111;
+    border-top: 1px solid #333;
+    flex-shrink: 0; /* Prevent footer from shrinking */
+}
+
+.app-footer p {
+    margin: 0;
+}
+
