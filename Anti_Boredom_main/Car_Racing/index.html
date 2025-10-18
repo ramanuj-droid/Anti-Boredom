@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Simple Car Racing Game</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="ui">
+    <h1>Car Racing</h1>
+    <div class="controls">
+      <button id="startBtn">Start</button>
+      <button id="pauseBtn" disabled>Pause</button>
+      <button id="restartBtn" disabled>Restart</button>
+    </div>
+    <div class="info">
+      Score: <span id="score">0</span>
+      &nbsp;|&nbsp;
+      Speed: <span id="speed">1</span>
+    </div>
+    <p class="hint">Use ← and → or A / D to move. Mobile: touch left/right halves of the canvas.</p>
+  </div>
+
+  <div class="game-wrap">
+    <canvas id="gameCanvas" width="360" height="640" aria-label="Car racing game canvas"></canvas>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
