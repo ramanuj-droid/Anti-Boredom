@@ -1,0 +1,66 @@
+:root{
+  --bg:#0b1220;
+  --card:#0f1724;
+  --accent:#f97316;
+  --muted:#94a3b8;
+  --white:#f8fafc;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;font-family:Inter, system-ui, Arial, sans-serif}
+html,body{height:100%}
+body{
+  background: linear-gradient(180deg, #071024 0%, #07182a 100%);
+  color:var(--white);
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+  padding:28px 16px;
+  gap:18px;
+}
+
+.ui{
+  max-width:360px;
+  width:100%;
+  margin-bottom:12px;
+  text-align:center;
+}
+
+h1{font-size:20px;margin-bottom:8px;letter-spacing:0.6px}
+.controls{display:flex;gap:8px;justify-content:center;margin-bottom:8px}
+.controls button{
+  background:var(--card);
+  border:1px solid rgba(255,255,255,0.06);
+  color:var(--white);
+  padding:8px 12px;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:600;
+}
+.controls button:disabled{opacity:0.45;cursor:not-allowed}
+
+.info{color:var(--muted);font-size:14px;margin-bottom:8px}
+.hint{color:var(--muted);font-size:12px;margin-top:6px}
+
+.game-wrap{
+  width:360px;
+  max-width:100%;
+  border-radius:12px;
+  overflow:hidden;
+  box-shadow:0 10px 30px rgba(2,6,23,0.7);
+  border:1px solid rgba(255,255,255,0.04);
+  background:linear-gradient(180deg,#071022,#081622);
+}
+
+canvas{
+  display:block;
+  width:100%;
+  height:auto;
+  background: linear-gradient(#0f1a2b, #0b1220);
+  touch-action: none;
+}
+
+@media (min-width:780px){
+  body{align-items:center}
+  .ui{margin-right:16px}
+  .game-wrap{margin-left:0}
+}
