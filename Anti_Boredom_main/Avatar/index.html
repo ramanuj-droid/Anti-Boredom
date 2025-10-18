@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avatar Creator Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+        }
+
+        .avatar-container {
+            flex: 1;
+            min-width: 300px;
+            max-width: 400px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .avatar-preview {
+            width: 300px;
+            height: 350px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            position: relative;
+            margin-bottom: 30px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .avatar {
+            position: relative;
+            width: 200px;
+            height: 280px;
+        }
+
+        /* Hair - Behind head */
+        .hair {
+            position: absolute;
+            width: 140px;
+            height: 80px;
+            background: #8b4513;
+            border-radius: 70px 70px 0 0;
+            top: 20px;
+            left: 30px;
+            z-index: 1;
+        }
+
+        /* Head */
+        .head {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            background: #ffdbac;
+            border-radius: 50%;
+            top: 40px;
+            left: 40px;
+            z-index: 2;
+        }
+
+        /* Eyes */
+        .eyes {
+            position: absolute;
+            width: 70px;
+            height: 20px;
+            top: 95px;
+            left: 65px;
+            display: flex;
+            justify-content: space-between;
+            z-index: 3;
+        }
+
+        .eye {
+            width: 15px;
+            height: 15px;
+            background: #333;
+            border-radius: 50%;
+        }
+
+        /* Mouth */
+        .mouth {
+            position: absolute;
+            width: 35px;
+            height: 10px;
+            background: #e75480;
+            border-radius: 0 0 18px 18px;
+            top: 125px;
+            left: 82px;
+            z-index: 3;
+        }
+
+        /* Body/Clothing */
+        .body {
+            position: absolute;
+            width: 100px;
+            height: 110px;
+            background: #3498db;
+            border-radius: 50px 50px 25px 25px;
+            top: 150px;
+            left: 50px;
+            z-index: 1;
+        }
+
+        /* Accessory */
+        .accessory {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: #f1c40f;
+            border-radius: 50%;
+            top: 90px;
+            left: 30px;
+            z-index: 4;
+            display: none;
+        }
+
+        .customization-panel {
+            flex: 2;
+            min-width: 300px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .category {
+            margin-bottom: 25px;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #fff;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+            padding-bottom: 8px;
+        }
+
+        h3 {
+            font-size: 1.1rem;
+            margin-top: 15px;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .option {
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            min-width: 80px;
+        }
+
+        .option:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px);
+        }
+
+        .option.active {
+            background: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .color-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .color-option {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+
+        .color-option.active {
+            border: 3px solid white;
+            transform: scale(1.15);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .avatar-container, .customization-panel {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎨 Avatar Creator</h1>
+            <p class="subtitle">Design your unique character with our customization tools</p>
+        </header>
+        
+        <div class="main-content">
+            <div class="avatar-container">
+                <div class="avatar-preview">
+                    <div class="avatar">
+                        <div class="hair" id="hair"></div>
+                        <div class="head" id="head"></div>
+                        <div class="eyes" id="eyes">
+                            <div class="eye left-eye"></div>
+                            <div class="eye right-eye"></div>
+                        </div>
+                        <div class="mouth" id="mouth"></div>
+                        <div class="body" id="body"></div>
+                        <div class="accessory" id="accessory"></div>
+                    </div>
+                </div>
+                <h2>Your Avatar</h2>
+                <p>Customize every detail to create your perfect character</p>
+            </div>
+            
+            <div class="customization-panel">
+                <div class="category">
+                    <h2>Skin Tone</h2>
+                    <div class="color-options" id="skin-colors">
+                        <div class="color-option active" style="background-color: #ffdbac;" data-color="#ffdbac"></div>
+                        <div class="color-option" style="background-color: #f1c27d;" data-color="#f1c27d"></div>
+                        <div class="color-option" style="background-color: #e0ac69;" data-color="#e0ac69"></div>
+                        <div class="color-option" style="background-color: #c68642;" data-color="#c68642"></div>
+                        <div class="color-option" style="background-color: #8d5524;" data-color="#8d5524"></div>
+                    </div>
+                </div>
+                
+                <div class="category">
+                    <h2>Hair Style</h2>
+                    <div class="options" id="hair-options">
+                        <div class="option active" data-style="default">Default</div>
+                        <div class="option" data-style="spiky">Spiky</div>
+                        <div class="option" data-style="curly">Curly</div>
+                        <div class="option" data-style="long">Long</div>
+                        <div class="option" data-style="bald">Bald</div>
+                    </div>
+                    <h3>Hair Color</h3>
+                    <div class="color-options" id="hair-colors">
+                        <div class="color-option active" style="background-color: #8b4513;" data-color="#8b4513"></div>
+                        <div class="color-option" style="background-color: #000000;" data-color="#000000"></div>
+                        <div class="color-option" style="background-color: #FFD700;" data-color="#FFD700"></div>
+                        <div class="color-option" style="background-color: #A52A2A;" data-color="#A52A2A"></div>
+                        <div class="color-option" style="background-color: #E8E8E8;" data-color="#E8E8E8"></div>
+                    </div>
+                </div>
+                
+                <div class="category">
+                    <h2>Clothing</h2>
+                    <div class="options" id="clothing-options">
+                        <div class="option active" data-style="default">T-Shirt</div>
+                        <div class="option" data-style="jacket">Jacket</div>
+                        <div class="option" data-style="sweater">Sweater</div>
+                        <div class="option" data-style="dress">Dress</div>
+                        <div class="option" data-style="suit">Suit</div>
+                    </div>
+                    <h3>Clothing Color</h3>
+                    <div class="color-options" id="clothing-colors">
+                        <div class="color-option active" style="background-color: #3498db;" data-color="#3498db"></div>
+                        <div class="color-option" style="background-color: #e74c3c;" data-color="#e74c3c"></div>
+                        <div class="color-option" style="background-color: #2ecc71;" data-color="#2ecc71"></div>
+                        <div class="color-option" style="background-color: #f39c12;" data-color="#f39c12"></div>
+                        <div class="color-option" style="background-color: #9b59b6;" data-color="#9b59b6"></div>
+                    </div>
+                </div>
+                
+                <div class="category">
+                    <h2>Accessories</h2>
+                    <div class="options" id="accessory-options">
+                        <div class="option active" data-style="none">None</div>
+                        <div class="option" data-style="glasses">Glasses</div>
+                        <div class="option" data-style="hat">Hat</div>
+                        <div class="option" data-style="earrings">Earrings</div>
+                        <div class="option" data-style="necklace">Necklace</div>
+                    </div>
+                </div>
+                
+                <div class="actions">
+                    <button id="randomize">
+                        <span>🎲 Randomize</span>
+                    </button>
+                    <button id="reset">
+                        <span>🔄 Reset</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Avatar Creator Game | Built with HTML, CSS & JavaScript</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get DOM elements
+            const headElement = document.getElementById('head');
+            const hairElement = document.getElementById('hair');
+            const clothingElement = document.getElementById('body');
+            const accessoryElement = document.getElementById('accessory');
+            const eyesElement = document.getElementById('eyes');
+            const mouthElement = document.getElementById('mouth');
+            
+            // Options containers
+            const hairOptions = document.getElementById('hair-options');
+            const clothingOptions = document.getElementById('clothing-options');
+            const accessoryOptions = document.getElementById('accessory-options');
+            const hairColors = document.getElementById('hair-colors');
+            const clothingColors = document.getElementById('clothing-colors');
+            const skinColors = document.getElementById('skin-colors');
+            
+            // Buttons
+            const randomizeButton = document.getElementById('randomize');
+            const resetButton = document.getElementById('reset');
+            
+            // Current selections
+            let currentHair = 'default';
+            let currentHairColor = '#8b4513';
+            let currentClothing = 'default';
+            let currentClothingColor = '#3498db';
+            let currentAccessory = 'none';
+            let currentSkinColor = '#ffdbac';
+            
+            // Hair styles
+            const hairStyles = {
+                default: { 
+                    width: '140px', 
+                    height: '80px', 
+                    borderRadius: '70px 70px 0 0', 
+                    top: '20px', 
+                    left: '30px',
+                    clipPath: '',
+                    display: 'block',
+                    transform: 'none'
+                },
+                spiky: { 
+                    width: '150px', 
+                    height: '70px', 
+                    borderRadius: '0', 
+                    top: '15px', 
+                    left: '25px', 
+                    clipPath: 'polygon(5% 100%, 8% 40%, 10% 20%, 12% 60%, 15% 100%, 18% 30%, 20% 10%, 22% 50%, 25% 100%, 28% 25%, 30% 5%, 32% 45%, 35% 100%, 40% 20%, 45% 0%, 50% 30%, 55% 100%, 58% 15%, 60% 5%, 62% 40%, 65% 100%, 68% 25%, 70% 10%, 72% 50%, 75% 100%, 78% 30%, 80% 15%, 82% 55%, 85% 100%, 88% 35%, 90% 20%, 92% 60%, 95% 100%)',
+                    display: 'block',
+                    transform: 'none'
+                },
+                curly: { 
+                    width: '145px', 
+                    height: '90px', 
+                    borderRadius: '72px 72px 50% 50%', 
+                    top: '18px', 
+                    left: '27px',
+                    clipPath: '',
+                    display: 'block',
+                    transform: 'scaleY(1.1)'
+                },
+                long: { 
+                    width: '140px', 
+                    height: '140px', 
+                    borderRadius: '70px 70px 30px 30px', 
+                    top: '20px', 
+                    left: '30px',
+                    clipPath: '',
+                    display: 'block',
+                    transform: 'none'
+                },
+                bald: { 
+                    display: 'none',
+                    width: '0',
+                    height: '0',
+                    clipPath: '',
+                    transform: 'none'
+                }
+            };
+            
+            // Clothing styles
+            const clothingStyles = {
+                default: { 
+                    width: '100px', 
+                    height: '110px', 
+                    borderRadius: '50px 50px 25px 25px', 
+                    top: '150px', 
+                    left: '50px',
+                    clipPath: '',
+                    boxShadow: 'none'
+                },
+                jacket: { 
+                    width: '120px', 
+                    height: '125px', 
+                    borderRadius: '60px 60px 30px 30px', 
+                    top: '145px', 
+                    left: '40px',
+                    clipPath: '',
+                    boxShadow: 'inset 0 0 0 4px rgba(0,0,0,0.2), inset 45px 10px 0 -40px rgba(255,255,255,0.3), inset -45px 10px 0 -40px rgba(255,255,255,0.3)'
+                },
+                sweater: { 
+                    width: '105px', 
+                    height: '115px', 
+                    borderRadius: '52px 52px 40px 40px', 
+                    top: '148px', 
+                    left: '47px',
+                    clipPath: '',
+                    boxShadow: 'inset 0 -20px 20px -15px rgba(0,0,0,0.2)'
+                },
+                dress: { 
+                    width: '70px', 
+                    height: '140px', 
+                    borderRadius: '35px 35px 0 0', 
+                    top: '150px', 
+                    left: '65px',
+                    clipPath: 'polygon(0% 0%, 100% 0%, 100% 60%, 130% 100%, -30% 100%, 0% 60%)',
+                    boxShadow: 'none'
+                },
+                suit: { 
+                    width: '100px', 
+                    height: '120px', 
+                    borderRadius: '50px 50px 5px 5px', 
+                    top: '150px', 
+                    left: '50px',
+                    clipPath: '',
+                    boxShadow: 'inset 0 0 0 3px rgba(255,255,255,0.4), inset 0 20px 0 -15px rgba(0,0,0,0.3)'
+                }
+            };
+            
+            // Accessory styles
+            const accessoryStyles = {
+                none: { 
+                    display: 'none',
+                    width: '0',
+                    height: '0',
+                    top: '0',
+                    left: '0',
+                    backgroundColor: 'transparent',
+                    border: 'none',
+                    boxShadow: 'none',
+                    borderRadius: '0'
+                },
+                glasses: { 
+                    width: '90px', 
+                    height: '25px', 
+                    borderRadius: '15px', 
+                    top: '88px', 
+                    left: '55px', 
+                    backgroundColor: 'transparent',
+                    border: '4px solid #333',
+                    display: 'block',
+                    boxShadow: 'inset 40px 0 0 -36px #333, inset -40px 0 0 -36px #333, 20px 0 0 -16px #333, 25px 0 0 -16px #333, 65px 0 0 -16px #333, 70px 0 0 -16px #333'
+                },
+                hat: { 
+                    width: '160px', 
+                    height: '45px', 
+                    borderRadius: '80px 80px 0 0', 
+                    top: '-5px', 
+                    left: '20px', 
+                    backgroundColor: '#964B00',
+                    display: 'block',
+                    border: 'none',
+                    boxShadow: '0 40px 0 -25px #7d3f00, 0 45px 0 -30px #6b3600'
+                },
+                earrings: { 
+                    width: '14px', 
+                    height: '14px', 
+                    borderRadius: '50%', 
+                    top: '108px', 
+                    left: '32px', 
+                    backgroundColor: '#FFD700',
+                    display: 'block',
+                    boxShadow: '136px 0 0 0 #FFD700, 0 0 3px rgba(255,215,0,0.6), 136px 0 3px rgba(255,215,0,0.6)',
+                    border: '2px solid #DAA520'
+                },
+                necklace: { 
+                    width: '80px', 
+                    height: '12px', 
+                    borderRadius: '50%', 
+                    top: '152px', 
+                    left: '60px', 
+                    backgroundColor: '#FFD700',
+                    display: 'block',
+                    border: '3px solid #DAA520',
+                    boxShadow: '0 0 5px rgba(255,215,0,0.5), inset 0 -3px 3px rgba(0,0,0,0.2)'
+                }
+            };
+            
+            // Set active option
+            function setActiveOption(container, target) {
+                const options = container.querySelectorAll('.option');
+                options.forEach(option => option.classList.remove('active'));
+                target.classList.add('active');
+            }
+            
+            // Set active color
+            function setActiveColor(container, target) {
+                const colors = container.querySelectorAll('.color-option');
+                colors.forEach(color => color.classList.remove('active'));
+                target.classList.add('active');
+            }
+            
+            // Update hair style
+            function updateHair(style) {
+                currentHair = style;
+                const hairStyle = hairStyles[style];
+                
+                // Reset all hair styles first
+                hairElement.style.width = '';
+                hairElement.style.height = '';
+                hairElement.style.borderRadius = '';
+                hairElement.style.top = '';
+                hairElement.style.left = '';
+                hairElement.style.clipPath = '';
+                hairElement.style.display = '';
+                hairElement.style.transform = '';
+                
+                // Apply new style
+                Object.keys(hairStyle).forEach(property => {
+                    hairElement.style[property] = hairStyle[property];
+                });
+                
+                if (style !== 'bald') {
+                    hairElement.style.backgroundColor = currentHairColor;
+                }
+            }
+            
+            // Update clothing style
+            function updateClothing(style) {
+                currentClothing = style;
+                const clothingStyle = clothingStyles[style];
+                
+                // Reset all clothing styles first
+                clothingElement.style.width = '';
+                clothingElement.style.height = '';
+                clothingElement.style.borderRadius = '';
+                clothingElement.style.top = '';
+                clothingElement.style.left = '';
+                clothingElement.style.clipPath = '';
+                clothingElement.style.boxShadow = '';
+                
+                // Apply new style
+                Object.keys(clothingStyle).forEach(property => {
+                    clothingElement.style[property] = clothingStyle[property];
+                });
+                
+                clothingElement.style.backgroundColor = currentClothingColor;
+            }
+            
+            // Update accessory style
+            function updateAccessory(style) {
+                currentAccessory = style;
+                const accessoryStyle = accessoryStyles[style];
+                
+                // Reset all styles
+                accessoryElement.style.cssText = '';
+                
+                Object.keys(accessoryStyle).forEach(property => {
+                    accessoryElement.style[property] = accessoryStyle[property];
+                });
+            }
+            
+            // Update skin color
+            function updateSkinColor(color) {
+                currentSkinColor = color;
+                headElement.style.backgroundColor = color;
+            }
+            
+            // Randomize avatar
+            function randomizeAvatar() {
+                const hairKeys = Object.keys(hairStyles);
+                const clothingKeys = Object.keys(clothingStyles);
+                const accessoryKeys = Object.keys(accessoryStyles);
+                
+                const randomHair = hairKeys[Math.floor(Math.random() * hairKeys.length)];
+                const randomClothing = clothingKeys[Math.floor(Math.random() * clothingKeys.length)];
+                const randomAccessory = accessoryKeys[Math.floor(Math.random() * accessoryKeys.length)];
+                
+                // Update hair
+                const hairOption = document.querySelector(`#hair-options .option[data-style="${randomHair}"]`);
+                if (hairOption) {
+                    setActiveOption(hairOptions, hairOption);
+                    updateHair(randomHair);
+                }
+                
+                // Update clothing
+                const clothingOption = document.querySelector(`#clothing-options .option[data-style="${randomClothing}"]`);
+                if (clothingOption) {
+                    setActiveOption(clothingOptions, clothingOption);
+                    updateClothing(randomClothing);
+                }
+                
+                // Update accessory
+                const accessoryOption = document.querySelector(`#accessory-options .option[data-style="${randomAccessory}"]`);
+                if (accessoryOption) {
+                    setActiveOption(accessoryOptions, accessoryOption);
+                    updateAccessory(randomAccessory);
+                }
+                
+                // Random colors
+                const hairColorOptions = hairColors.querySelectorAll('.color-option');
+                const randomHairColor = hairColorOptions[Math.floor(Math.random() * hairColorOptions.length)];
+                setActiveColor(hairColors, randomHairColor);
+                currentHairColor = randomHairColor.getAttribute('data-color');
+                if (currentHair !== 'bald') {
+                    hairElement.style.backgroundColor = currentHairColor;
+                }
+                
+                const clothingColorOptions = clothingColors.querySelectorAll('.color-option');
+                const randomClothingColor = clothingColorOptions[Math.floor(Math.random() * clothingColorOptions.length)];
+                setActiveColor(clothingColors, randomClothingColor);
+                currentClothingColor = randomClothingColor.getAttribute('data-color');
+                clothingElement.style.backgroundColor = currentClothingColor;
+                
+                const skinColorOptions = skinColors.querySelectorAll('.color-option');
+                const randomSkinColor = skinColorOptions[Math.floor(Math.random() * skinColorOptions.length)];
+                setActiveColor(skinColors, randomSkinColor);
+                updateSkinColor(randomSkinColor.getAttribute('data-color'));
+            }
+            
+            // Reset avatar
+            function resetAvatar() {
+                // Reset skin
+                const defaultSkinColor = skinColors.querySelector('.color-option[data-color="#ffdbac"]');
+                setActiveColor(skinColors, defaultSkinColor);
+                updateSkinColor('#ffdbac');
+                
+                // Reset hair
+                const defaultHairOption = hairOptions.querySelector('.option[data-style="default"]');
+                setActiveOption(hairOptions, defaultHairOption);
+                updateHair('default');
+                
+                const defaultHairColor = hairColors.querySelector('.color-option[data-color="#8b4513"]');
+                setActiveColor(hairColors, defaultHairColor);
+                currentHairColor = '#8b4513';
+                hairElement.style.backgroundColor = currentHairColor;
+                
+                // Reset clothing
+                const defaultClothingOption = clothingOptions.querySelector('.option[data-style="default"]');
+                setActiveOption(clothingOptions, defaultClothingOption);
+                updateClothing('default');
+                
+                const defaultClothingColor = clothingColors.querySelector('.color-option[data-color="#3498db"]');
+                setActiveColor(clothingColors, defaultClothingColor);
+                currentClothingColor = '#3498db';
+                clothingElement.style.backgroundColor = currentClothingColor;
+                
+                // Reset accessory
+                const defaultAccessoryOption = accessoryOptions.querySelector('.option[data-style="none"]');
+                setActiveOption(accessoryOptions, defaultAccessoryOption);
+                updateAccessory('none');
+            }
+            
+            // Event listeners for hair options
+            hairOptions.addEventListener('click', function(e) {
+                if (e.target.classList.contains('option')) {
+                    setActiveOption(hairOptions, e.target);
+                    updateHair(e.target.getAttribute('data-style'));
+                }
+            });
+            
+            // Event listeners for clothing options
+            clothingOptions.addEventListener('click', function(e) {
+                if (e.target.classList.contains('option')) {
+                    setActiveOption(clothingOptions, e.target);
+                    updateClothing(e.target.getAttribute('data-style'));
+                }
+            });
+            
+            // Event listeners for accessory options
+            accessoryOptions.addEventListener('click', function(e) {
+                if (e.target.classList.contains('option')) {
+                    setActiveOption(accessoryOptions, e.target);
+                    updateAccessory(e.target.getAttribute('data-style'));
+                }
+            });
+            
+            // Event listeners for hair colors
+            hairColors.addEventListener('click', function(e) {
+                if (e.target.classList.contains('color-option')) {
+                    setActiveColor(hairColors, e.target);
+                    currentHairColor = e.target.getAttribute('data-color');
+                    if (currentHair !== 'bald') {
+                        hairElement.style.backgroundColor = currentHairColor;
+                    }
+                }
+            });
+            
+            // Event listeners for clothing colors
+            clothingColors.addEventListener('click', function(e) {
+                if (e.target.classList.contains('color-option')) {
+                    setActiveColor(clothingColors, e.target);
+                    currentClothingColor = e.target.getAttribute('data-color');
+                    clothingElement.style.backgroundColor = currentClothingColor;
+                }
+            });
+            
+            // Event listeners for skin colors
+            skinColors.addEventListener('click', function(e) {
+                if (e.target.classList.contains('color-option')) {
+                    setActiveColor(skinColors, e.target);
+                    updateSkinColor(e.target.getAttribute('data-color'));
+                }
+            });
+            
+            // Randomize button
+            randomizeButton.addEventListener('click', randomizeAvatar);
+            
+            // Reset button
+            resetButton.addEventListener('click', resetAvatar);
+        });
+    </script>
+</body>
+</html>
