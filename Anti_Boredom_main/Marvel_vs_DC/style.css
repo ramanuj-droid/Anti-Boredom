@@ -1,0 +1,31 @@
+
+.progress-fill {
+  background: linear-gradient(90deg, #4f46e5, #06b6d4);
+  width: 0%;
+}
+.transition-width {
+  transition: width 900ms ease;
+}
+#marvelImg img, #dcImg img {
+  transition: transform 0.3s ease;
+}
+
+.winner img {
+  transform: scale(1.1);
+}
+
+
+.winner {
+  animation: winner-pulse 1s ease-in-out infinite;
+  box-shadow: 0 10px 30px rgba(99,102,241,0.18);
+}
+@keyframes winner-pulse {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+  100% { transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+  .progress-wrapper { margin-bottom: 6px; }
+}
+
