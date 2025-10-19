@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Marvel vs DC — Battle</title>
+
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-6">
+  <div class="w-full max-w-4xl bg-white rounded-2xl shadow-lg p-6">
+    <h1 class="text-2xl font-bold mb-4 text-center">Marvel vs DC — Quick Battle</h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Marvel Column -->
+      <div id="leftCol" class="p-4 border rounded-lg theme-left">
+        <h2 class="text-lg font-semibold mb-3">Marvel</h2>
+        <select id="marvelSelect" class="w-full p-2 border rounded mb-4"></select>
+
+        <div id="marvelCard" class="p-3 rounded-lg bg-gray-50">
+          <div class="flex items-center gap-3">
+            <div id="marvelImg" class="w-20 h-20 bg-gray-200 rounded-lg flex items-center justify-center text-3xl"></div>
+            <div>
+              <div id="marvelName" class="font-bold text-xl">Select a hero</div>
+              <div id="marvelInfo" class="text-sm text-gray-500">Stats: —</div>
+            </div>
+          </div>
+
+          <div class="mt-4 space-y-2">
+            <div class="text-sm text-gray-600">Strength</div>
+            <div class="progress-wrapper bg-gray-200 h-4 rounded overflow-hidden">
+              <div id="m-strength" class="progress-fill h-full transition-width" style="width:0%"></div>
+            </div>
+
+            <div class="text-sm text-gray-600 mt-2">Speed</div>
+            <div class="progress-wrapper bg-gray-200 h-4 rounded overflow-hidden">
+              <div id="m-speed" class="progress-fill h-full transition-width" style="width:0%"></div>
+            </div>
+
+            <div class="text-sm text-gray-600 mt-2">Intelligence</div>
+            <div class="progress-wrapper bg-gray-200 h-4 rounded overflow-hidden">
+              <div id="m-intel" class="progress-fill h-full transition-width" style="width:0%"></div>
+            </div>
+
+            <div class="text-sm text-gray-600 mt-2">Power</div>
+            <div class="progress-wrapper bg-gray-200 h-4 rounded overflow-hidden">
+              <div id="m-power" class="progress-fill h-full transition-width" style="width:0%"></div>
+            </div>
+
+            <div class="text-sm text-gray-600 mt-2">Durability</div>
+            <div class="progress-wrapper bg-gray-200 h-4 rounded overflow-hidden">
+              <div id="m-dur" class="progress-fill h-full transition-width" style="width:0%"></div>
+            </div>
+
+            <div class="text-sm text-gray-600 mt-2">Combat</div>
+            <div class="progress-wrapper bg-gray-200 h-4 rounded overflow-hidden">
+              <div id="m-combat" class="progress-fill h-full transition-width" style="width:0%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DC Column -->
+      <div id="rightCol" class="p-4 border rounded-lg theme-right">
+        <h2 class="text-lg font-semibold mb-3">DC</h2>
+        <select id="dcSelect" class="w-full p-2 border rounded mb-4"></select>
+
+        <div id="dcCard" class="p-3 rounded-lg bg-gray-50">
+          <div class="flex items-center gap-3">
+            <div id="dcImg" class="w-20 h-20 bg-gray-200 rounded-lg flex items-center justify-center text-3xl"></div>
+            <div>
+              <div id="dcName" class="font-bold text-xl">Select a hero</div>
+              <div id="dcInfo" class="text-sm text-gray-500">Stats: —</div>
+            </div>
+          </div>
+
+          <div class="mt-4 space-y-2">
+            <div class="text-sm text-gray-600">Strength</div>
+            <div class="progress-wrapper bg-gray-200 h-4 rounded overflow-hidden">
+              <div id="d-strength" class="progress-fill h-full transition-width" style="width:0%"></div>
+            </div>
+
+            <div class="text-sm text-gray-600 mt-2">Speed</div>
+            <div class="progress-wrapper bg-gray-200 h-4 rounded overflow-hidden">
+              <div id="d-speed" class="progress-fill h-full transition-width" style="width:0%"></div>
+            </div>
+
+            <div class="text-sm text-gray-600 mt-2">Intelligence</div>
+            <div class="progress-wrapper bg-gray-200 h-4 rounded overflow-hidden">
+              <div id="d-intel" class="progress-fill h-full transition-width" style="width:0%"></div>
+            </div>
+
+            <div class="text-sm text-gray-600 mt-2">Power</div>
+            <div class="progress-wrapper bg-gray-200 h-4 rounded overflow-hidden">
+              <div id="d-power" class="progress-fill h-full transition-width" style="width:0%"></div>
+            </div>
+
+            <div class="text-sm text-gray-600 mt-2">Durability</div>
+            <div class="progress-wrapper bg-gray-200 h-4 rounded overflow-hidden">
+              <div id="d-dur" class="progress-fill h-full transition-width" style="width:0%"></div>
+            </div>
+
+            <div class="text-sm text-gray-600 mt-2">Combat</div>
+            <div class="progress-wrapper bg-gray-200 h-4 rounded overflow-hidden">
+              <div id="d-combat" class="progress-fill h-full transition-width" style="width:0%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="mt-6 flex items-center justify-center gap-4">
+      <button id="battleBtn" class="px-6 py-3 bg-indigo-600 text-white rounded hover:bg-indigo-700">Battle Start</button>
+      <button id="resetBtn" class="px-4 py-2 border rounded">Reset</button>
+    </div>
+
+    <!-- Result -->
+    <div id="result" class="mt-6 text-center text-2xl font-bold"></div>
+  </div>
+
+  <script src="./script.js"></script>
+</body>
+</html>
