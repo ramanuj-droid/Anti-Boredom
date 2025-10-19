@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>N-Queen Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>N-Queen Game</h1>
+        <label for="level">Select Level (Board Size): </label>
+        <select id="level">
+            <!-- Levels 1 to 10 -->
+            <option value="4">Level 1 (4x4)</option>
+            <option value="5">Level 2 (5x5)</option>
+            <option value="6">Level 3 (6x6)</option>
+            <option value="7">Level 4 (7x7)</option>
+            <option value="8">Level 5 (8x8)</option>
+            <option value="9">Level 6 (9x9)</option>
+            <option value="10">Level 7 (10x10)</option>
+            <option value="11">Level 8 (11x11)</option>
+            <option value="12">Level 9 (12x12)</option>
+            <option value="13">Level 10 (13x13)</option>
+        </select>
+        <button id="startBtn">Start Game</button>
+        <div id="board"></div>
+        <p id="message"></p>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
