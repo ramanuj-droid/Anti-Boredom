@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Who's That Pokémon?</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <!-- Score Board -->
+        <div class="score-board">
+            <div class="score-item">
+                <span class="label">Score:</span>
+                <span id="score" class="value">0</span>
+            </div>
+            <div class="score-item">
+                <span class="label">Streak:</span>
+                <span id="streak" class="value">0</span>
+            </div>
+        </div>
+
+        <!-- Main Display Area with Radial Background -->
+        <div class="display-area">
+            <div class="radial-background">
+                <!-- Question Mark -->
+                <div class="question-mark" id="questionMark">?</div>
+                
+                <!-- Pokemon Silhouette -->
+                <div class="pokemon-wrapper">
+                    <img id="pokemonImage" src="" alt="Mystery Pokémon">
+                </div>
+                
+                <!-- Pokemon Logo -->
+                <div class="pokemon-logo">
+                    <svg viewBox="0 0 200 60" width="200" height="60">
+                        <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" 
+                              fill="#FFCB05" stroke="#3D7DCA" stroke-width="2" 
+                              font-family="Arial Black, sans-serif" font-size="36" font-weight="bold">
+                            Pokémon
+                        </text>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Question Text -->
+        <div id="question" class="question-text">Who's that Pokémon?</div>
+
+        <!-- Options -->
+        <div id="options" class="options-container">
+            <button class="option-btn" data-option="0"></button>
+            <button class="option-btn" data-option="1"></button>
+            <button class="option-btn" data-option="2"></button>
+        </div>
+
+        <!-- Feedback -->
+        <div id="feedback" class="feedback hidden"></div>
+        
+        <!-- Next Button -->
+        <button id="nextBtn" class="next-btn hidden">Next Pokémon →</button>
+
+        <!-- Loading -->
+        <div class="loading hidden" id="loading">
+            <div class="pokeball-loader"></div>
+            <p>Loading...</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
