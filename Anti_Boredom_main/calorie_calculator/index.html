@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daily Calorie Tracker</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <button class="toggle-btn" id="modeToggle">🌙 Dark Mode</button>
+  <h1>🔥 Daily Calorie Tracker</h1>
+
+  <div class="container">
+    <div class="activity">
+      <label for="sleep">🛌 Sleep <span><span id="sleepValue">8</span> hrs</span></label>
+      <input type="range" id="sleep" min="0" max="12" value="8" step="0.5">
+    </div>
+
+    <div class="activity">
+      <label for="walk">🚶‍♂️ Walk <span><span id="walkValue">60</span> min</span></label>
+      <input type="range" id="walk" min="0" max="180" value="60" step="5">
+    </div>
+
+    <div class="activity">
+      <label for="workout">💪 Workout <span><span id="workoutValue">30</span> min</span></label>
+      <input type="range" id="workout" min="0" max="120" value="30" step="5">
+    </div>
+
+    <div class="result">
+      <div class="total">Total Burn: <span id="totalCalories">0</span> kcal</div>
+      <div class="breakdown" id="breakdown"></div>
+    </div>
+  </div>
+
+  <footer>💡 Tip: Consistency matters more than intensity!</footer>
+
+  <script src="./script.js"></script>
+</body>
+</html>
