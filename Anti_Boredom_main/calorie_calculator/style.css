@@ -1,0 +1,149 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+    transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    color: #f1f1f1;
+    padding: 20px;
+}
+
+h1 {
+    font-size: 2rem;
+    margin-bottom: 25px;
+    color: #00b4d8;
+    text-align: center;
+}
+
+.toggle-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(255, 255, 255, 0.15);
+    border: none;
+    color: #fff;
+    padding: 8px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    backdrop-filter: blur(5px);
+}
+
+.container {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    padding: 25px 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    width: 350px;
+    animation: fadeIn 0.7s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.activity {
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 15px;
+    background: rgba(255,255,255,0.08);
+    box-shadow: inset 0 0 10px rgba(255,255,255,0.05);
+}
+
+.activity label {
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #90e0ef;
+}
+
+input[type="range"] {
+    width: 100%;
+    margin-top: 10px;
+    cursor: pointer;
+    accent-color: #00b4d8;
+}
+
+.result {
+    margin-top: 25px;
+    text-align: center;
+    background: rgba(255,255,255,0.08);
+    border-radius: 15px;
+    padding: 15px;
+    box-shadow: 0 0 10px rgba(255,255,255,0.05);
+}
+
+.total {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #48cae4;
+}
+
+.breakdown {
+    margin-top: 10px;
+    color: #ddd;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+footer {
+    margin-top: 20px;
+    font-size: 0.85rem;
+    color: #aaa;
+    text-align: center;
+}
+
+/* Light Mode Styles */
+body.light {
+    background: linear-gradient(135deg, #a0e7e5, #b4f8c8, #fbe7c6);
+    color: #222;
+}
+
+body.light .container {
+    background: rgba(255,255,255,0.8);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+body.light .activity {
+    background: #f6fff8;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+}
+
+body.light h1 {
+    color: #0077b6;
+}
+
+body.light .total {
+    color: #0077b6;
+}
+
+body.light .activity label {
+    color: #0077b6;
+}
+
+body.light .breakdown {
+    color: #333;
+}
+
+body.light .toggle-btn {
+    background: rgba(0,0,0,0.1);
+    color: #000;
+}
+body.light footer {
+    margin-top: 20px;
+    font-size: 0.85rem;
+    color: #171717;
+    text-align: center;
+}
