@@ -1,0 +1,148 @@
+
+body {
+    font-family: 'Poppins', Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 30px;
+    background: linear-gradient(135deg, #fff0f5, #fff7e6); /* lively happy gradient */
+    color: #333;
+}
+
+/* Main container */
+.container {
+    text-align: center;
+    background: #ffffffdd;
+    padding: 30px 50px;
+    border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    width: fit-content;
+}
+
+/* Heading */
+h1 {
+    font-size: 2.2rem;
+    margin-bottom: 20px;
+    color: #ff6f61; /* warm, happy color */
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+}
+
+
+label {
+    font-weight: 500;
+    margin-right: 10px;
+}
+
+select, button {
+    padding: 8px 14px;
+    margin: 10px 5px;
+    font-size: 1rem;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+select:focus, button:focus {
+    outline: none;
+    border-color: #ff7f50;
+}
+
+button {
+    background-color: #ff7f50;
+    color: #fff;
+    border: none;
+}
+
+button:hover {
+    background-color: #ff5a36;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+
+#board {
+    margin-top: 30px;
+    margin-bottom: 30px;
+    display: grid;
+    gap: 7px; 
+    justify-content: center;
+    padding: 12px;
+    background: #ffeedd; 
+    border-radius: 14px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+
+.cell {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 28px;
+    border-radius: 8px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.3s ease;
+    user-select: none;
+    border: 2px solid #eee; 
+    background: linear-gradient(145deg, #ffffff, #fffbf0);
+}
+
+
+.cell.white {
+    background-color: #fff8dc; /* soft cream */
+}
+
+.cell.black {
+    background-color: #ffefc1; /* soft pastel yellow */
+    color: #1a1a1a;
+}
+
+
+.cell {
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+
+.cell:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+}
+
+
+.cell.safe {
+    background-color: #d4f8d4 !important;
+}
+
+
+.cell.invalid {
+    background-color: #f8d4d4 !important;
+}
+
+
+#message {
+    margin-top: 25px;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #ff7f50;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+
+@media (max-width: 600px) {
+    .cell {
+        width: 35px;
+        height: 35px;
+        font-size: 20px;
+    }
+
+    .container {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 1.8rem;
+    }
+}
