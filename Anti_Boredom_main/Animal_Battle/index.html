@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Animal Battle</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <section id="animal-showdown" class="reveal">
+      <h1>Animal Showdown</h1>
+      <p>Pit two animals against each other in a battle of wits and strength!</p>
+
+      <div class="animal-container">
+        <div class="animal" id="animal1">
+          <h3>Animal 1</h3>
+          <div id="animal1-image-container">
+            <img src="" alt="Animal 1 Image">
+          </div>
+          <p id="animal1-name">Name: Lion</p>
+          <p id="animal1-size">Size: 250 kg</p>
+          <p id="animal1-speed">Speed: 80 km/h</p>
+          <p id="animal1-strength">Strength: 90</p>
+          <select option="Lion" id="animal1-selection">
+          </select>
+        </div>
+
+        <div class="animal" id="animal2">
+          <h3>Animal 2</h3>
+          <div id="animal2-image-container">
+            <img src="" alt="Animal 2 Image">
+          </div>
+          <p id="animal2-name">Name: Lion</p>
+          <p id="animal2-size">Size: 250 kg</p>
+          <p id="animal2-speed">Speed: 80 km/h</p>
+          <p id="animal2-strength">Strength: 90</p>
+          <select option="Lion" id="animal2-selection">
+          </select>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button id="random-pair-btn">Random Pair</button>
+        <button id="battle-btn">Battle</button>
+      </div>
+
+      <div id="battle-result">
+        <!-- Battle result will be displayed here -->
+      </div>
+    </section>
+  <script src="index.js"></script>
+</body>
+</html>

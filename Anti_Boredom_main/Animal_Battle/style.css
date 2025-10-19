@@ -1,0 +1,39 @@
+body {
+    overflow: hidden;
+}
+
+h1 {
+    text-align: center;
+}
+
+.animal-container {
+    display: flex;
+    width: 100vw;
+    justify-content: space-evenly;
+}
+
+.animal {
+    width: 100%;
+    text-align: center;
+}
+
+img {
+    width: 25%;
+}
+
+p {
+    text-align: center;
+}
+
+.controls {
+    position: absolute;
+    text-align: center;
+    top: 80%;
+    width: 100vw;
+}
+
+.result {
+    position: absolute;
+    width: 100vw;
+    top: 85%
+}
