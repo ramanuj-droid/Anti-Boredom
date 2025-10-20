@@ -46,6 +46,26 @@ All games and features reside in their own dedicated folders for easy maintenanc
 | **Sports_Live** | **< Displays real-time or recent scores for various sports\>** |
 | **fun-games-hub** | **< A modern, centralized hub for multiple embedded games\>** |
 | **NewsHub** | **< A quick reader for the latest trending news headlines\>** |
+| **Animal_Battle** | **< A game for battling animals\>** |
+| **Anime_Recommender** | **< Tool to recommend anime based on preferences\>** |
+| **Art_Gallery** | **< Digital gallery for viewing art\>** | 
+| **Avatar** | **< Avatar creation or viewing tool\>** | 
+| **Book_Library** | **< A simple library or book tracker\>** |  
+| **calorie_calculator** | **< Tool to calculate daily caloric needs\>** |  
+| **Car_Racing** | **< A simple car racing mini-game\>** |  
+| **Circuit_Simulator** | **< A tool for simulating basic circuits\>** |  
+| **daily_outfit_generator** | **< Tool to generate outfit ideas\>** |  
+| **Google_Maps_Navigation_Game** | **< A game using Google Maps for navigation\>** |
+| **Manga_Mood_Match** | **< Tool to recommend manga based on mood\>** |  
+| **Marvel_vs_DC** | **< A quiz or trivia game about Marvel and DC\>** |  
+| **Math_Challenge** | **< Quick math challenge problems\>** | 
+| **Mini_Mystery** | **< A mini mystery game or puzzle\>** |  
+| **Movie_Suggestions** | **< Tool to suggest movies\>** |  
+| **N_Queen_Game** | **< An implementation of the N-Queens problem\>** |  
+| **Photo_Road_Machine** | **< A photo or image manipulation tool\>** |  
+| **Recipe_Finder** | **< Tool for finding recipes\>** | 
+| **Who_the_pokemon** | **< A 'Who's that Pokemon?' style game\>** |  
+| **Drum-Pad** | **< A virtual drum instrument for making beats\>** | 
 
 *NOTE: Please replace the bold placeholder text above with your final, officia  summaries.*
 
@@ -112,3 +132,15 @@ Thank you to all the wonderful people who have contributed to Anti-Boredom!
   * @nitin-999-code
   * @Adii0960
   * @ayush00git
+  * @arnav-terex
+  * @ebignumber
+  * @RishiByte
+  * @subhahens
+  * @e25b070739-oss
+  * @UrekMaz
+  * @AdithyaP-AI72
+  * @Adii0906
+  * @shanaya-Gupta
+  * @kumaradarsh2
+  * @prakhar-174
+  * @shrav784
