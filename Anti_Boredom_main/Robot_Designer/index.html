@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robot Designer - Customize Your Robot</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🤖 Robot Designer</h1>
+            <p>Create your perfect robot companion!</p>
+        </header>
+
+        <div class="main-content">
+            <!-- Robot Preview Area -->
+            <div class="robot-preview">
+                <h2>Your Robot</h2>
+                <div class="robot-container">
+                    <div class="robot" id="robot">
+                        <!-- Robot parts will be dynamically inserted here -->
+                        <div class="robot-head" id="robot-head"></div>
+                        <div class="robot-body" id="robot-body"></div>
+                        <div class="robot-arms">
+                            <div class="robot-arm robot-arm-left" id="robot-arm-left"></div>
+                            <div class="robot-arm robot-arm-right" id="robot-arm-right"></div>
+                        </div>
+                        <div class="robot-legs">
+                            <div class="robot-leg robot-leg-left" id="robot-leg-left"></div>
+                            <div class="robot-leg robot-leg-right" id="robot-leg-right"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button id="save-robot" class="btn btn-primary">💾 Save Design</button>
+                    <button id="load-robot" class="btn btn-secondary">📂 Load Design</button>
+                    <button id="reset-robot" class="btn btn-danger">🔄 Reset to Default</button>
+                </div>
+            </div>
+
+            <!-- Customization Panels -->
+            <div class="customization-panels">
+                <!-- Head Customization -->
+                <div class="panel">
+                    <h3>🧠 Head</h3>
+                    <div class="options">
+                        <button class="option-btn" data-part="head" data-option="round">Round</button>
+                        <button class="option-btn" data-part="head" data-option="square">Square</button>
+                        <button class="option-btn" data-part="head" data-option="triangular">Triangular</button>
+                        <button class="option-btn" data-part="head" data-option="hexagonal">Hexagonal</button>
+                    </div>
+                    <div class="color-picker">
+                        <label>Head Color:</label>
+                        <input type="color" id="head-color" value="#4CAF50">
+                    </div>
+                </div>
+
+                <!-- Body Customization -->
+                <div class="panel">
+                    <h3>🦾 Body</h3>
+                    <div class="options">
+                        <button class="option-btn" data-part="body" data-option="rectangular">Rectangular</button>
+                        <button class="option-btn" data-part="body" data-option="oval">Oval</button>
+                        <button class="option-btn" data-part="body" data-option="diamond">Diamond</button>
+                        <button class="option-btn" data-part="body" data-option="trapezoid">Trapezoid</button>
+                    </div>
+                    <div class="color-picker">
+                        <label>Body Color:</label>
+                        <input type="color" id="body-color" value="#2196F3">
+                    </div>
+                </div>
+
+                <!-- Arms Customization -->
+                <div class="panel">
+                    <h3>🦾 Arms</h3>
+                    <div class="options">
+                        <button class="option-btn" data-part="arms" data-option="straight">Straight</button>
+                        <button class="option-btn" data-part="arms" data-option="curved">Curved</button>
+                        <button class="option-btn" data-part="arms" data-option="jointed">Jointed</button>
+                        <button class="option-btn" data-part="arms" data-option="mechanical">Mechanical</button>
+                    </div>
+                    <div class="color-picker">
+                        <label>Arms Color:</label>
+                        <input type="color" id="arms-color" value="#FF9800">
+                    </div>
+                </div>
+
+                <!-- Legs Customization -->
+                <div class="panel">
+                    <h3>🦵 Legs</h3>
+                    <div class="options">
+                        <button class="option-btn" data-part="legs" data-option="straight">Straight</button>
+                        <button class="option-btn" data-part="legs" data-option="bent">Bent</button>
+                        <button class="option-btn" data-part="legs" data-option="jointed">Jointed</button>
+                        <button class="option-btn" data-part="legs" data-option="wheels">Wheels</button>
+                    </div>
+                    <div class="color-picker">
+                        <label>Legs Color:</label>
+                        <input type="color" id="legs-color" value="#9C27B0">
+                    </div>
+                </div>
+
+                <!-- Overall Customization -->
+                <div class="panel">
+                    <h3>🎨 Overall</h3>
+                    <div class="color-picker">
+                        <label>Robot Size:</label>
+                        <input type="range" id="robot-size" min="0.5" max="2" step="0.1" value="1">
+                        <span id="size-value">100%</span>
+                    </div>
+                    <div class="color-picker">
+                        <label>Robot Rotation:</label>
+                        <input type="range" id="robot-rotation" min="0" max="360" step="5" value="0">
+                        <span id="rotation-value">0°</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
