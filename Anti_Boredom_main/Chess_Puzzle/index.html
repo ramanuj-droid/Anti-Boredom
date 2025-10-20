@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chess Puzzle - Anti-Boredom</title>
+    <link rel="stylesheet" href="chess-puzzle.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>♟️ Chess Puzzle Challenge</h1>
+            <p>Place chess pieces so they don't attack each other!</p>
+        </header>
+
+        <div class="game-controls">
+            <div class="piece-selector">
+                <h3>Select Piece:</h3>
+                <div class="pieces">
+                    <button class="piece-btn active" data-piece="queen" title="Queen">♛</button>
+                    <button class="piece-btn" data-piece="rook" title="Rook">♜</button>
+                    <button class="piece-btn" data-piece="bishop" title="Bishop">♝</button>
+                    <button class="piece-btn" data-piece="knight" title="Knight">♞</button>
+                </div>
+            </div>
+
+            <div class="challenge-selector">
+                <h3>Challenge:</h3>
+                <select id="challenge">
+                    <option value="8-queens">8 Queens (Classic)</option>
+                    <option value="8-rooks">8 Rooks</option>
+                    <option value="14-bishops">14 Bishops (Max)</option>
+                    <option value="custom">Custom Mix</option>
+                </select>
+            </div>
+
+            <div class="controls">
+                <button id="reset-btn">🔄 Reset</button>
+                <button id="hint-btn">💡 Hint</button>
+                <button id="solve-btn">✨ Show Solution</button>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-item">
+                <span class="stat-label">Pieces Placed:</span>
+                <span class="stat-value" id="pieces-count">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Target:</span>
+                <span class="stat-value" id="target-count">8</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Conflicts:</span>
+                <span class="stat-value" id="conflicts-count">0</span>
+            </div>
+        </div>
+
+        <div class="chessboard-container">
+            <div id="chessboard" class="chessboard"></div>
+        </div>
+
+        <div class="info-panel">
+            <h3>How to Play:</h3>
+            <ul>
+                <li>🖱️ Click on empty squares to place pieces</li>
+                <li>🎯 Place all pieces without attacks</li>
+                <li>❌ Red squares show attacked positions</li>
+                <li>✅ Green board means success!</li>
+                <li>💡 Use hints if you're stuck</li>
+            </ul>
+        </div>
+
+        <div id="success-modal" class="modal hidden">
+            <div class="modal-content">
+                <h2>🎉 Puzzle Solved!</h2>
+                <p>Congratulations! You successfully placed all pieces.</p>
+                <button id="next-challenge">Next Challenge</button>
+                <button id="close-modal">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="chess-puzzle.js"></script>
+</body>
+</html>
