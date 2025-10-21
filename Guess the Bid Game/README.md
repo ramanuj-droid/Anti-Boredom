@@ -47,5 +47,5 @@ Adjust design, colors, or animations in style.css
 
 Change timer duration or round settings as you like
 
-⭐ If you enjoy this project, consider starring the repo!
+# ⭐ If you enjoy this project, consider starring the repo!
 “Bid smart, play fair, and have fun!”
