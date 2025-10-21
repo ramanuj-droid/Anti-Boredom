@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎯 Auction Price Prediction Game</title>
+<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>🎯 Auction Price Prediction</h1>
+        <p class="subtitle">Test your intuition! Guess the final bid price.</p>
+    </header>
+
+    <div class="game-info">
+        <div class="score-container">
+            <div>Score</div>
+            <div class="score" id="score">0</div>
+        </div>
+        <div class="timer-container">
+            <div>Time Remaining</div>
+            <div class="timer" id="timer">30</div>
+            <div class="timer-bar"><div class="timer-progress" id="timer-progress"></div></div>
+        </div>
+    </div>
+
+    <div class="auction-item" id="auction-item">
+        <img src="" alt="Auction Item" class="item-image" id="item-image">
+        <div class="item-info">
+            <h2 class="item-title" id="item-title">A chocolate cake</h2>
+            <p class="item-description" id="item-description">A delicious chocolate cake...</p>
+            <div class="bid-section">
+                <input type="number" class="bid-input" id="bid-input" placeholder="Enter your bid ($)" min="1">
+                <button class="bid-button" id="bid-button">Submit Bid</button>
+            </div>
+            <div class="result-section" id="result-section">
+                <h3 class="result-title">Auction Results</h3>
+                <p class="actual-price" id="actual-price">Actual Price: $0</p>
+                <p class="player-bid" id="player-bid">Your Bid: $0</p>
+                <p class="points-earned" id="points-earned">Points Earned: 0</p>
+                <button class="next-round-button" id="next-round-button">Next Item</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="game-over" id="game-over">
+        <h2>Game Over!</h2>
+        <p>You've completed all auction rounds.</p>
+        <div class="final-score" id="final-score">0</div>
+        <p>Thanks for playing!</p>
+        <button class="restart-button" id="restart-button">Play Again</button>
+    </div>
+
+    <div class="instructions">
+        <h3>How to Play</h3>
+        <ul>
+            <li>Examine the auction item and its description</li>
+            <li>Enter your prediction for the final bid price</li>
+            <li>The closer your guess is to the actual price, the more points you earn</li>
+            <li>You have 30 seconds per item</li>
+            <li>Complete all rounds to see your final score!</li>
+        </ul>
+    </div>
+
+    <footer>
+        <p>🔥 Enjoyed the game? Show some love and ⭐ this project!</p>
+    </footer>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
