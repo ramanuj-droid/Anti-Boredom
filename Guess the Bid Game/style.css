@@ -1,0 +1,44 @@
+* {margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif;}
+body {background:linear-gradient(135deg,#1a2a6c,#b21f1f,#fdbb2d); color:#fff; min-height:100vh; padding:20px;}
+.container {max-width:900px; margin:0 auto;}
+header {text-align:center; margin-bottom:30px;}
+h1 {font-size:2.5rem; margin-bottom:10px; text-shadow:2px 2px 4px rgba(0,0,0,0.3);}
+.subtitle {font-size:1.1rem; opacity:0.9;}
+.game-info {display:flex; justify-content:space-between; margin-bottom:20px; background:rgba(0,0,0,0.3); padding:15px; border-radius:10px; flex-wrap:wrap; gap:15px;}
+.score-container, .timer-container{text-align:center;}
+.score, .timer{font-size:2rem; font-weight:bold; color:#ffcc00; transition:0.3s;}
+.score-updated {animation: pop 0.5s ease;}
+@keyframes pop {0%{transform:scale(1); color:#ffcc00;}50%{transform:scale(1.5); color:#ffd633;}100%{transform:scale(1); color:#ffcc00;}}
+.auction-item {max-width:700px; margin:20px auto; padding:20px; border-radius:15px; background:rgba(255,255,255,0.1); backdrop-filter:blur(10px); box-shadow:0 8px 25px rgba(0,0,0,0.2); display:flex; flex-direction:row; gap:20px; align-items:center; transition:transform 0.3s;}
+.auction-item:hover {transform:scale(1.02); box-shadow:0 15px 40px rgba(0,0,0,0.4);}
+.item-image {width:40%; height:200px; border-radius:10px; object-fit:cover; transition:transform 0.3s;}
+.item-image:hover {transform:scale(1.05);}
+.item-info {width:60%;}
+.item-title {font-size:1.6rem; margin-bottom:10px;}
+.item-description {font-size:1rem; line-height:1.4; margin-bottom:15px; opacity:0.9;}
+.bid-section {display:flex; flex-direction:column; gap:10px;}
+.bid-input {padding:10px 12px; font-size:1.1rem; border:none; border-radius:8px; background:rgba(255,255,255,0.9); color:#333;}
+.bid-button {padding:10px 15px; font-size:1.1rem; background:#ffcc00; color:#333; border:none; border-radius:8px; cursor:pointer; font-weight:bold; transition:all 0.3s ease;}
+.bid-button:hover {transform:translateY(-3px) scale(1.05); background:#ffd633;}
+.bid-button:disabled {background:#666; cursor:not-allowed; transform:none;}
+.result-section {margin-top:15px; padding:15px; background:rgba(0,0,0,0.3); border-radius:10px; display:none; transition:opacity 0.5s;}
+.result-title {font-size:1.3rem; margin-bottom:10px; color:#ffcc00;}
+.actual-price, .player-bid, .points-earned {font-size:1rem; margin-bottom:5px;}
+.next-round-button {padding:10px 20px; font-size:1.1rem; background:#4CAF50; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:bold; margin-top:10px; transition:all 0.3s ease;}
+.next-round-button:hover {transform:translateY(-2px); background:#66bb6a;}
+.game-over {text-align:center; padding:30px; background:rgba(0,0,0,0.5); border-radius:15px; margin-top:30px; display:none;}
+.game-over h2 {font-size:2.2rem; margin-bottom:15px; color:#ffcc00;}
+.final-score {font-size:2.5rem; margin:15px 0; color:#ffcc00;}
+.restart-button {padding:12px 25px; font-size:1.2rem; background:#ff5722; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:bold; transition:all 0.3s ease;}
+.restart-button:hover {background:#ff7043; transform:translateY(-2px);}
+.timer-bar {height:12px; width:100%; background:rgba(255,255,255,0.2); border-radius:10px; overflow:hidden; margin-top:5px;}
+.timer-progress {height:100%; width:100%; background:linear-gradient(90deg,#ffcc00,#ffd633); transition:width 1s linear;}
+.instructions {background:rgba(0,0,0,0.3); padding:15px; border-radius:10px; margin-top:25px;}
+.instructions h3 {margin-bottom:10px; color:#ffcc00;}
+.instructions ul {list-style:none; padding-left:0;}
+.instructions li {margin-bottom:8px; padding-left:20px; position:relative;}
+.instructions li:before {content:"•"; color:#ffcc00; font-size:1.3rem; position:absolute; left:0; top:-2px;}
+footer {text-align:center; margin-top:30px; padding:15px; font-size:0.9rem; opacity:0.7;}
+.confetti {position:fixed; top:0; width:8px; height:8px; opacity:0.8; z-index:9999; pointer-events:none; animation:fall 1.5s linear forwards;}
+@keyframes fall {0%{transform:translateY(0);}100%{transform:translateY(100vh) rotate(720deg);}}
+@media(max-width:768px){.auction-item{flex-direction:column;align-items:center;}.item-image{width:80%;height:180px;}.item-info{width:100%;}}
