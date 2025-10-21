@@ -10,13 +10,16 @@ Thank you for considering contributing to this project!
 5. Commit with a clear message, that depicts what changes you have done and how they improve the project.
 6. **Push** your branch and open a **Pull Request**.
 
+## Folder Structure
+**Important:** To keep the repository organized, please make sure to place your new project folder *inside* the `anti_boredom_main` directory. Do not add new project folders to the root of the repository.
+
 ## Rules
 - Keep your contributions **original**.
 - Be **respectful** and helpful in discussions.
 - **Star the repository** if you like it!
 
 ## Originality
-We value authentic contributions. Avoid copy-pasting or relying on AI tools.  
+We value authentic contributions. Avoid copy-pasting or relying on AI tools.  
 Use your creativity — we want your **unique perspective**!
 
 Happy contributing!
