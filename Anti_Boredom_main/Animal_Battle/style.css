@@ -1,5 +1,7 @@
 body {
     overflow: hidden;
+    background-color: blanchedalmond;
+    font-size: x-large;
 }
 
 h1 {
@@ -10,6 +12,9 @@ h1 {
     display: flex;
     width: 100vw;
     justify-content: space-evenly;
+    font-weight: 600;
+    font-size: x-large;
+
 }
 
 .animal {
@@ -30,6 +35,20 @@ p {
     text-align: center;
     top: 80%;
     width: 100vw;
+    font-size: x-large;
+    font-weight: 800;
+    
+}
+#battle-btn,#random-pair-btn{
+    text-align: center;
+    font-size: medium;
+    margin: 10px;
+    font-weight: 600;
+    background-color: aquamarine;
+    border: 5px solid blueviolet;
+    border-radius: 5px;
+    padding: 10px 20px;
+
 }
 
 .result {
