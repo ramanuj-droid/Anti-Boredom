@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏰 Army Base Builder</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1a4d2e 0%, #0f3d3e 50%, #1a4d2e 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 48px;
+            margin-bottom: 10px;
+            color: #FFD700;
+            text-shadow: 3px 3px 0px #8B4513, 6px 6px 10px rgba(0,0,0,0.5);
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 18px;
+            color: #90EE90;
+            margin-bottom: 30px;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            padding: 12px 25px;
+            font-size: 16px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%);
+            color: white;
+            border: 3px solid #FF6B6B;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 0 #8B0000;
+        }
+
+        .control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #8B0000;
+        }
+
+        .control-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #8B0000;
+        }
+
+        .main-area {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 20px;
+        }
+
+        /* Toolbar */
+        .toolbar {
+            background: rgba(0, 0, 0, 0.8);
+            border: 4px solid #FFD700;
+            border-radius: 15px;
+            padding: 20px;
+            height: fit-content;
+        }
+
+        .toolbar h2 {
+            color: #FFD700;
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .building-category {
+            margin-bottom: 25px;
+        }
+
+        .category-title {
+            color: #90EE90;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #90EE90;
+            padding-bottom: 5px;
+        }
+
+        .building-item {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #FFD700;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 10px;
+            cursor: grab;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .building-item:hover {
+            background: rgba(255, 215, 0, 0.2);
+            transform: scale(1.05);
+        }
+
+        .building-item:active {
+            cursor: grabbing;
+        }
+
+        .building-icon {
+            font-size: 32px;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .building-name {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        /* Map/Grid */
+        .map-container {
+            background: rgba(0, 0, 0, 0.8);
+            border: 4px solid #FFD700;
+            border-radius: 15px;
+            padding: 20px;
+        }
+
+        .map-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .map-title {
+            color: #FFD700;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .map-stats {
+            color: #90EE90;
+            font-size: 16px;
+        }
+
+        .grid-map {
+            display: grid;
+            grid-template-columns: repeat(20, 40px);
+            grid-template-rows: repeat(15, 40px);
+            gap: 1px;
+            background: #2d5016;
+            padding: 2px;
+            border: 3px solid #5d8a3a;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .grid-cell {
+            background: #4a7c3a;
+            border: 1px solid #3d6b2f;
+            position: relative;
+            transition: all 0.2s;
+        }
+
+        .grid-cell:hover {
+            background: #5d8a3a;
+            cursor: crosshair;
+        }
+
+        .grid-cell.occupied {
+            background: transparent;
+        }
+
+        .placed-building {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            cursor: move;
+            position: relative;
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid #FFD700;
+            border-radius: 5px;
+            transition: all 0.2s;
+        }
+
+        .placed-building:hover {
+            transform: scale(1.1);
+            z-index: 10;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+        }
+
+        .placed-building.selected {
+            border: 3px solid #FF1493;
+            box-shadow: 0 0 20px rgba(255, 20, 147, 0.9);
+        }
+
+        .delete-btn {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #FF0000;
+            color: white;
+            border: 2px solid white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            cursor: pointer;
+            z-index: 20;
+        }
+
+        .placed-building:hover .delete-btn {
+            display: flex;
+        }
+
+        /* Customization Panel */
+        .customization-panel {
+            background: rgba(0, 0, 0, 0.9);
+            border: 4px solid #FFD700;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .customization-panel.active {
+            display: block;
+        }
+
+        .customization-panel h3 {
+            color: #FFD700;
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        .custom-option {
+            margin-bottom: 15px;
+        }
+
+        .custom-option label {
+            display: block;
+            color: #90EE90;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .custom-option select,
+        .custom-option input {
+            width: 100%;
+            padding: 8px;
+            border: 2px solid #FFD700;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 14px;
+        }
+
+        .apply-btn {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #32CD32 0%, #228B22 100%);
+            color: white;
+            border: 3px solid #32CD32;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .apply-btn:hover {
+            background: linear-gradient(135deg, #228B22 0%, #006400 100%);
+        }
+
+        /* Info Modal */
+        .info-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.95);
+            border: 4px solid #FFD700;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 500px;
+            z-index: 1000;
+        }
+
+        .info-modal.active {
+            display: block;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+        }
+
+        .modal-overlay.active {
+            display: block;
+        }
+
+        .close-modal {
+            float: right;
+            font-size: 28px;
+            cursor: pointer;
+            color: #FF6B6B;
+        }
+
+        @media (max-width: 1200px) {
+            .main-area {
+                grid-template-columns: 1fr;
+            }
+
+            .grid-map {
+                grid-template-columns: repeat(15, 35px);
+                grid-template-rows: repeat(12, 35px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 32px;
+            }
+
+            .grid-map {
+                grid-template-columns: repeat(10, 30px);
+                grid-template-rows: repeat(10, 30px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏰 ARMY BASE BUILDER 🏰</h1>
+        <p class="subtitle">Design and organize your military base - Drag, drop, and customize!</p>
+
+        <div class="controls">
+            <button class="control-btn" onclick="clearMap()">🗑️ Clear Map</button>
+            <button class="control-btn" onclick="saveBase()">💾 Save Base</button>
+            <button class="control-btn" onclick="loadBase()">📂 Load Base</button>
+            <button class="control-btn" onclick="showInfo()">ℹ️ Help</button>
+        </div>
+
+        <div class="main-area">
+            <!-- Toolbar -->
+            <div class="toolbar">
+                <h2>🛠️ Structures</h2>
+
+                <div class="building-category">
+                    <div class="category-title">⚔️ Military</div>
+                    <div class="building-item" draggable="true" data-type="barracks" data-icon="🏛️">
+                        <span class="building-icon">🏛️</span>
+                        <span class="building-name">Barracks</span>
+                    </div>
+                    <div class="building-item" draggable="true" data-type="training" data-icon="🎯">
+                        <span class="building-icon">🎯</span>
+                        <span class="building-name">Training Ground</span>
+                    </div>
+                    <div class="building-item" draggable="true" data-type="armory" data-icon="⚔️">
+                        <span class="building-icon">⚔️</span>
+                        <span class="building-name">Armory</span>
+                    </div>
+                </div>
+
+                <div class="building-category">
+                    <div class="category-title">🛡️ Defense</div>
+                    <div class="building-item" draggable="true" data-type="tower" data-icon="🗼">
+                        <span class="building-icon">🗼</span>
+                        <span class="building-name">Watch Tower</span>
+                    </div>
+                    <div class="building-item" draggable="true" data-type="wall" data-icon="🧱">
+                        <span class="building-icon">🧱</span>
+                        <span class="building-name">Wall</span>
+                    </div>
+                    <div class="building-item" draggable="true" data-type="cannon" data-icon="💣">
+                        <span class="building-icon">💣</span>
+                        <span class="building-name">Cannon</span>
+                    </div>
+                </div>
+
+                <div class="building-category">
+                    <div class="category-title">🏗️ Resources</div>
+                    <div class="building-item" draggable="true" data-type="storage" data-icon="📦">
+                        <span class="building-icon">📦</span>
+                        <span class="building-name">Storage</span>
+                    </div>
+                    <div class="building-item" draggable="true" data-type="factory" data-icon="🏭">
+                        <span class="building-icon">🏭</span>
+                        <span class="building-name">Factory</span>
+                    </div>
+                    <div class="building-item" draggable="true" data-type="mine" data-icon="⛏️">
+                        <span class="building-icon">⛏️</span>
+                        <span class="building-name">Mine</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Map -->
+            <div class="map-container">
+                <div class="map-info">
+                    <div class="map-title">📍 Base Map</div>
+                    <div class="map-stats">
+                        Buildings: <span id="building-count">0</span> | 
+                        Last Saved: <span id="last-saved">Never</span>
+                    </div>
+                </div>
+                <div class="grid-map" id="grid-map"></div>
+
+                <!-- Customization Panel -->
+                <div class="customization-panel" id="custom-panel">
+                    <h3>⚙️ Customize Building</h3>
+                    <div class="custom-option">
+                        <label>Building Level:</label>
+                        <select id="level-select">
+                            <option value="1">Level 1</option>
+                            <option value="2">Level 2</option>
+                            <option value="3">Level 3</option>
+                            <option value="4">Level 4</option>
+                            <option value="5">Level 5</option>
+                        </select>
+                    </div>
+                    <div class="custom-option">
+                        <label>Border Color:</label>
+                        <input type="color" id="color-select" value="#FFD700">
+                    </div>
+                    <div class="custom-option">
+                        <label>Building Name:</label>
+                        <input type="text" id="name-input" placeholder="Custom name">
+                    </div>
+                    <button class="apply-btn" onclick="applyCustomization()">✅ Apply Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Info Modal -->
+    <div class="modal-overlay" id="modal-overlay" onclick="closeInfo()"></div>
+    <div class="info-modal" id="info-modal">
+        <span class="close-modal" onclick="closeInfo()">×</span>
+        <h2 style="color: #FFD700; margin-bottom: 20px;">🏰 How to Use</h2>
+        <div style="color: #90EE90; line-height: 1.8;">
+            <p><strong>🖱️ Placing Buildings:</strong></p>
+            <p>• Drag any building from the toolbar</p>
+            <p>• Drop it on any green cell in the map</p>
+            <br>
+            <p><strong>✏️ Customizing:</strong></p>
+            <p>• Click on a placed building to select it</p>
+            <p>• Use the customization panel to change level, color, or name</p>
+            <br>
+            <p><strong>🗑️ Removing:</strong></p>
+            <p>• Hover over a building and click the ❌ button</p>
+            <br>
+            <p><strong>💾 Saving:</strong></p>
+            <p>• Click "Save Base" to store your design</p>
+            <p>• Click "Load Base" to restore it</p>
+        </div>
+    </div>
+
+    <script>
+        let selectedBuilding = null;
+        let buildingCount = 0;
+        let placedBuildings = [];
+
+        // Initialize grid
+        function initGrid() {
+            const gridMap = document.getElementById('grid-map');
+            const cols = window.innerWidth > 1200 ? 20 : (window.innerWidth > 768 ? 15 : 10);
+            const rows = window.innerWidth > 1200 ? 15 : (window.innerWidth > 768 ? 12 : 10);
+            
+            gridMap.style.gridTemplateColumns = `repeat(${cols}, 40px)`;
+            gridMap.style.gridTemplateRows = `repeat(${rows}, 40px)`;
+            
+            gridMap.innerHTML = '';
+            
+            for (let i = 0; i < rows * cols; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'grid-cell';
+                cell.dataset.index = i;
+                cell.addEventListener('dragover', handleDragOver);
+                cell.addEventListener('drop', handleDrop);
+                gridMap.appendChild(cell);
+            }
+        }
+
+        // Drag and drop handlers
+        document.querySelectorAll('.building-item').forEach(item => {
+            item.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('type', e.target.dataset.type);
+                e.dataTransfer.setData('icon', e.target.dataset.icon);
+            });
+        });
+
+        function handleDragOver(e) {
+            e.preventDefault();
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            const cell = e.target.closest('.grid-cell');
+            
+            if (cell && !cell.classList.contains('occupied')) {
+                const type = e.dataTransfer.getData('type');
+                const icon = e.dataTransfer.getData('icon');
+                
+                placeBuilding(cell, type, icon);
+            }
+        }
+
+        function placeBuilding(cell, type, icon, customData = {}) {
+            const building = document.createElement('div');
+            building.className = 'placed-building';
+            building.textContent = icon;
+            building.dataset.type = type;
+            building.dataset.level = customData.level || '1';
+            building.dataset.name = customData.name || type;
+            
+            if (customData.color) {
+                building.style.borderColor = customData.color;
+            }
+            
+            const deleteBtn = document.createElement('div');
+            deleteBtn.className = 'delete-btn';
+            deleteBtn.textContent = '×';
+            deleteBtn.onclick = (e) => {
+                e.stopPropagation();
+                removeBuilding(building, cell);
+            };
+            
+            building.appendChild(deleteBtn);
+            building.onclick = () => selectBuilding(building);
+            
+            cell.appendChild(building);
+            cell.classList.add('occupied');
+            
+            buildingCount++;
+            updateStats();
+            
+            placedBuildings.push({
+                cellIndex: cell.dataset.index,
+                type: type,
+                icon: icon,
+                level: building.dataset.level,
+                name: building.dataset.name,
+                color: building.style.borderColor
+            });
+        }
+
+        function removeBuilding(building, cell) {
+            const index = placedBuildings.findIndex(b => b.cellIndex === cell.dataset.index);
+            if (index > -1) {
+                placedBuildings.splice(index, 1);
+            }
+            
+            cell.removeChild(building);
+            cell.classList.remove('occupied');
+            buildingCount--;
+            updateStats();
+            
+            if (selectedBuilding === building) {
+                selectedBuilding = null;
+                document.getElementById('custom-panel').classList.remove('active');
+            }
+        }
+
+        function selectBuilding(building) {
+            if (selectedBuilding) {
+                selectedBuilding.classList.remove('selected');
+            }
+            
+            selectedBuilding = building;
+            building.classList.add('selected');
+            
+            document.getElementById('custom-panel').classList.add('active');
+            document.getElementById('level-select').value = building.dataset.level;
+            document.getElementById('color-select').value = building.style.borderColor || '#FFD700';
+            document.getElementById('name-input').value = building.dataset.name;
+        }
+
+        function applyCustomization() {
+            if (!selectedBuilding) return;
+            
+            const level = document.getElementById('level-select').value;
+            const color = document.getElementById('color-select').value;
+            const name = document.getElementById('name-input').value;
+            
+            selectedBuilding.dataset.level = level;
+            selectedBuilding.dataset.name = name || selectedBuilding.dataset.type;
+            selectedBuilding.style.borderColor = color;
+            
+            const cellIndex = selectedBuilding.parentElement.dataset.index;
+            const buildingData = placedBuildings.find(b => b.cellIndex === cellIndex);
+            if (buildingData) {
+                buildingData.level = level;
+                buildingData.name = name;
+                buildingData.color = color;
+            }
+            
+            alert('Customization applied! ✅');
+        }
+
+        function clearMap() {
+            if (confirm('Clear entire map? This cannot be undone!')) {
+                document.querySelectorAll('.placed-building').forEach(b => {
+                    b.parentElement.classList.remove('occupied');
+                    b.remove();
+                });
+                placedBuildings = [];
+                buildingCount = 0;
+                updateStats();
+                document.getElementById('custom-panel').classList.remove('active');
+            }
+        }
+
+        function saveBase() {
+            localStorage.setItem('armyBase', JSON.stringify(placedBuildings));
+            const now = new Date().toLocaleString();
+            localStorage.setItem('armyBaseSaveTime', now);
+            document.getElementById('last-saved').textContent = now;
+            alert('Base saved successfully! 💾');
+        }
+
+        function loadBase() {
+            const savedBase = localStorage.getItem('armyBase');
+            const saveTime = localStorage.getItem('armyBaseSaveTime');
+            
+            if (!savedBase) {
+                alert('No saved base found! 😔');
+                return;
+            }
+            
+            clearMap();
+            
+            const buildings = JSON.parse(savedBase);
+            const cells = document.querySelectorAll('.grid-cell');
+            
+            buildings.forEach(b => {
+                const cell = cells[b.cellIndex];
+                if (cell) {
+                    placeBuilding(cell, b.type, b.icon, {
+                        level: b.level,
+                        name: b.name,
+                        color: b.color
+                    });
+                }
+            });
+            
+            document.getElementById('last-saved').textContent = saveTime || 'Unknown';
+            alert('Base loaded successfully! 📂');
+        }
+
+        function updateStats() {
+            document.getElementById('building-count').textContent = buildingCount;
+        }
+
+        function showInfo() {
+            document.getElementById('modal-overlay').classList.add('active');
+            document.getElementById('info-modal').classList.add('active');
+        }
+
+        function closeInfo() {
+            document.getElementById('modal-overlay').classList.remove('active');
+            document.getElementById('info-modal').classList.remove('active');
+        }
+
+        // Initialize on load
+        initGrid();
+        
+        // Check for saved data
+        const saveTime = localStorage.getItem('armyBaseSaveTime');
+        if (saveTime) {
+            document.getElementById('last-saved').textContent = saveTime;
+        }
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            if (buildingCount === 0) {
+                initGrid();
+            }
+        });
+    </script>
+</body>
+</html>
