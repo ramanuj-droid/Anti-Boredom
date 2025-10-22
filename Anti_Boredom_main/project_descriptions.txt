@@ -1,0 +1,53 @@
+Anti_Boredom_main: The central hub connecting all mini-games and tools. Features a sleek launcher UI for exploring creative boredom-busters.
+
+Guess_The_Flag: A fast-paced flag quiz that tests your geography skills. Guess countries, learn facts, and track your score.
+
+Planet_Explorer: Explore the wonders of the solar system with interactive planetary visuals and fascinating facts.
+
+Random_Facts: Discover quirky and amazing facts from science, history, and more — one click for endless curiosity.
+
+Sports_Live: Get live updates and recent scores from popular sports around the world in a fast, minimal dashboard.
+
+fun-games-hub: A one-stop playground containing mini-games for quick fun sessions anytime, anywhere.
+
+NewsHub: Stay updated with top headlines from across the web in a clean, distraction-free reader.
+
+Animal_Battle: Pit animals against each other in a fun, stat-based battle game with colorful visuals and animations.
+
+Anime_Recommender: Get tailored anime suggestions based on your favorite genres and moods.
+
+Art_Gallery: Browse a curated collection of artworks in a smooth, minimalistic digital gallery experience.
+
+Avatar: Create or customize avatars with unique looks and moods — perfect for social profiles or games.
+
+Book_Library: A personal digital library for organizing, discovering, and tracking your reading list.
+
+calorie_calculator: Calculate daily calorie needs and manage your nutrition with simple, user-friendly tools.
+
+Car_Racing: Race through levels with fast-paced action and exciting visuals in this mini racing challenge.
+
+Circuit_Simulator: Design and visualize simple circuits with an interactive and educational simulator.
+
+daily_outfit_generator: Get daily outfit ideas based on your style and weather — fashion made fun and smart.
+
+Google_Maps_Navigation_Game: A game that challenges your map skills — find destinations and explore the world virtually.
+
+Manga_Mood_Match: Match your current mood with a perfect manga recommendation — discover hidden gems to read.
+
+Marvel_vs_DC: Test your fandom with this Marvel vs. DC trivia challenge full of superhero questions.
+
+Math_Challenge: Sharpen your mind with quick, timed math problems and improve your calculation speed.
+
+Mini_Mystery: Solve bite-sized mysteries with clues, logic, and reasoning — a quick brain teaser for sleuths.
+
+Movie_Suggestions: Get personalized movie recommendations for every mood — from thrillers to rom-coms.
+
+N_Queen_Game: A fun twist on the classic N-Queens problem where logic meets strategy.
+
+Photo_Road_Machine: Experiment with image effects, filters, and creative edits in a compact photo playground.
+
+Recipe_Finder: Search, discover, and try new recipes with a smart suggestion system based on ingredients.
+
+Who_the_pokemon: A nostalgic guessing game — identify Pokémon silhouettes and test your fan knowledge.
+
+Drum-Pad: Create beats and rhythms using an interactive virtual drum pad — feel the groove!
