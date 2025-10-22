@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Kitchen - Professional Cooking Simulator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #1a1a2e;
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: #fff;
+        }
+
+        .app-container {
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeInDown 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .header h1 {
+            font-size: 3.5em;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+            letter-spacing: -1px;
+        }
+
+        .header p {
+            font-size: 1.3em;
+            color: #a0aec0;
+            font-weight: 500;
+        }
+
+        .game-layout {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 30px;
+            animation: fadeIn 1s ease;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 25px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .panel:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.6);
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .panel-header h2 {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .dish-selector {
+            display: grid;
+            gap: 15px;
+        }
+
+        .dish-card {
+            position: relative;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+        }
+
+        .dish-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .dish-card:hover::before {
+            left: 100%;
+        }
+
+        .dish-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 215, 155, 0.5);
+            box-shadow: 0 15px 40px rgba(255, 215, 155, 0.2);
+        }
+
+        .dish-card.active {
+            background: linear-gradient(135deg, rgba(255, 215, 155, 0.2), rgba(25, 84, 123, 0.2));
+            border-color: #ffd79b;
+            box-shadow: 0 10px 30px rgba(255, 215, 155, 0.3);
+        }
+
+        .dish-card-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .dish-icon {
+            font-size: 3em;
+            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.3));
+        }
+
+        .dish-info h3 {
+            font-size: 1.3em;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+
+        .dish-info p {
+            font-size: 0.9em;
+            color: #a0aec0;
+        }
+
+        .ingredients-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            max-height: 500px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .ingredients-grid::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .ingredients-grid::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        .ingredients-grid::-webkit-scrollbar-thumb {
+            background: rgba(255, 215, 155, 0.3);
+            border-radius: 10px;
+        }
+
+        .ingredient-item {
+            position: relative;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 18px 12px;
+            text-align: center;
+            cursor: grab;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            user-select: none;
+        }
+
+        .ingredient-item:active {
+            cursor: grabbing;
+        }
+
+        .ingredient-item:hover {
+            transform: translateY(-5px) scale(1.05);
+            border-color: rgba(255, 215, 155, 0.5);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 10px 30px rgba(255, 215, 155, 0.2);
+        }
+
+        .ingredient-item.dragging {
+            opacity: 0.4;
+            transform: scale(0.9);
+        }
+
+        .ingredient-item.used {
+            opacity: 0.4;
+            pointer-events: none;
+            filter: grayscale(1);
+        }
+
+        .ingredient-emoji {
+            font-size: 2.5em;
+            margin-bottom: 8px;
+            display: block;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+            transition: transform 0.3s ease;
+        }
+
+        .ingredient-item:hover .ingredient-emoji {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .ingredient-name {
+            font-size: 0.9em;
+            font-weight: 600;
+            color: #e0e0e0;
+        }
+
+        .main-workspace {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .kitchen-scene {
+            position: relative;
+            background: linear-gradient(to bottom, #2d3436 0%, #1a1a2e 100%);
+            border-radius: 24px;
+            padding: 40px;
+            min-height: 700px;
+            box-shadow: 
+                inset 0 -5px 20px rgba(0,0,0,0.4),
+                0 20px 60px rgba(0,0,0,0.5);
+            overflow: hidden;
+        }
+
+        .kitchen-scene::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 150px;
+            background: 
+                linear-gradient(to bottom, 
+                    rgba(139, 69, 19, 0.8) 0%,
+                    rgba(160, 82, 45, 0.6) 50%,
+                    transparent 100%);
+            border-radius: 24px 24px 0 0;
+        }
+
+        .kitchen-scene::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: linear-gradient(to top, rgba(0,0,0,0.3), transparent);
+        }
+
+        .cooking-workspace {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 600px;
+            perspective: 1000px;
+        }
+
+        .cooking-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            min-height: 450px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 3px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
+            padding: 40px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cooking-container.drag-over {
+            border-color: #ffd79b;
+            background: rgba(255, 215, 155, 0.1);
+            transform: scale(1.02);
+            box-shadow: 0 0 40px rgba(255, 215, 155, 0.3);
+        }
+
+        .cooking-surface-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Plate Design */
+        .plate-surface {
+            width: 380px;
+            height: 380px;
+            background: 
+                radial-gradient(circle at 50% 40%, #ffffff 0%, #f5f5f5 50%, #e8e8e8 100%);
+            border-radius: 50%;
+            box-shadow: 
+                0 15px 40px rgba(0,0,0,0.4),
+                inset 0 2px 15px rgba(255,255,255,0.8),
+                inset 0 -2px 15px rgba(0,0,0,0.2);
+            position: relative;
+            animation: fadeInScale 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .plate-surface::before {
+            content: '';
+            position: absolute;
+            top: 10%;
+            left: 10%;
+            right: 10%;
+            bottom: 10%;
+            border-radius: 50%;
+            border: 3px solid rgba(0,0,0,0.05);
+        }
+
+        /* Pan Design */
+        .pan-surface {
+            position: relative;
+            width: 420px;
+            height: 120px;
+            background: 
+                linear-gradient(to bottom, 
+                    #2c3e50 0%, 
+                    #34495e 40%,
+                    #2c3e50 100%);
+            border-radius: 50% 50% 48% 48%;
+            box-shadow: 
+                0 20px 50px rgba(0,0,0,0.6),
+                inset 0 -5px 15px rgba(0,0,0,0.6),
+                inset 0 5px 10px rgba(255,255,255,0.1);
+            animation: fadeInScale 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .pan-surface::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+            border-radius: 50% 50% 48% 48%;
+        }
+
+        .pan-handle {
+            position: absolute;
+            right: -100px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 120px;
+            height: 24px;
+            background: linear-gradient(to right, #2c3e50, #1a252f);
+            border-radius: 0 12px 12px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+        }
+
+        .pan-handle::after {
+            content: '';
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 30px;
+            height: 8px;
+            background: #8B4513;
+            border-radius: 4px;
+        }
+
+        /* Oven Design */
+        .oven-surface {
+            width: 500px;
+            height: 380px;
+            background: linear-gradient(to bottom, #555 0%, #333 50%, #222 100%);
+            border-radius: 20px;
+            box-shadow: 
+                0 25px 60px rgba(0,0,0,0.6),
+                inset 0 -10px 30px rgba(0,0,0,0.5);
+            position: relative;
+            animation: fadeInScale 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .oven-control-panel {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            height: 40px;
+            background: #1a1a1a;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            padding: 0 15px;
+        }
+
+        .oven-dial {
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, #444, #222);
+            border-radius: 50%;
+            border: 2px solid #666;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
+        }
+
+        .oven-door {
+            position: absolute;
+            top: 70px;
+            left: 20px;
+            right: 20px;
+            bottom: 20px;
+            background: rgba(50, 50, 50, 0.8);
+            border: 4px solid #666;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .oven-window {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            background: 
+                radial-gradient(circle at center, 
+                    rgba(255, 200, 100, 0.2) 0%, 
+                    rgba(255, 150, 50, 0.1) 50%,
+                    rgba(0, 0, 0, 0.6) 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .oven-window::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: rgba(255,255,255,0.1);
+        }
+
+        .oven-window::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 1px;
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* Dish Content Area */
+        .dish-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            height: 90%;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            z-index: 10;
+        }
+
+        .placed-ingredient {
+            font-size: 3em;
+            filter: drop-shadow(0 8px 15px rgba(0,0,0,0.4));
+            animation: placeIngredient 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            transition: transform 0.3s ease;
+        }
+
+        .placed-ingredient:hover {
+            transform: scale(1.15) rotate(5deg);
+        }
+
+        /* Control Panel */
+        .control-panel {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            padding: 18px 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            color: #fff;
+            font-size: 1.1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .control-btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 215, 155, 0.3);
+        }
+
+        .control-btn.primary {
+            background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
+            border-color: transparent;
+            box-shadow: 0 10px 30px rgba(255, 215, 155, 0.3);
+        }
+
+        .control-btn.primary:hover:not(:disabled) {
+            box-shadow: 0 15px 40px rgba(255, 215, 155, 0.5);
+        }
+
+        .control-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .control-btn.danger {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            border-color: transparent;
+        }
+
+        /* Empty State */
+        .empty-cooking-state {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.4);
+            padding: 60px 20px;
+        }
+
+        .empty-icon {
+            font-size: 5em;
+            margin-bottom: 20px;
+            opacity: 0.3;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .empty-cooking-state h3 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .empty-cooking-state p {
+            font-size: 1.1em;
+        }
+
+        /* Cooking Process Overlay */
+        .cooking-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .cooking-status {
+            text-align: center;
+            color: #fff;
+        }
+
+        .cooking-icon {
+            font-size: 6em;
+            margin-bottom: 20px;
+            animation: cookingRotate 2s ease-in-out infinite;
+        }
+
+        .cooking-text {
+            font-size: 2em;
+            font-weight: 700;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .cooking-progress {
+            width: 300px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 0 auto;
+        }
+
+        .cooking-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #ffd89b, #19547b);
+            border-radius: 10px;
+            animation: progressFill 3s ease-in-out;
+        }
+
+        /* Completion Modal */
+        .completion-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(20px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .completion-content {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border: 2px solid rgba(255, 215, 155, 0.3);
+            border-radius: 32px;
+            padding: 60px;
+            text-align: center;
+            max-width: 500px;
+            backdrop-filter: blur(20px);
+            animation: modalPop 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .completion-icon {
+            font-size: 8em;
+            margin-bottom: 30px;
+            animation: celebrate 0.8s ease;
+        }
+
+        .completion-content h2 {
+            font-size: 3em;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .completion-content p {
+            font-size: 1.3em;
+            color: #a0aec0;
+            margin-bottom: 30px;
+        }
+
+        .completion-btn {
+            padding: 18px 50px;
+            background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
+            border: none;
+            border-radius: 16px;
+            color: #fff;
+            font-size: 1.2em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .completion-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(255, 215, 155, 0.5);
+        }
+
+        /* Recipe Info Panel */
+        .recipe-info {
+            background: rgba(255, 215, 155, 0.1);
+            border: 1px solid rgba(255, 215, 155, 0.3);
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 15px;
+        }
+
+        .recipe-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .recipe-stat {
+            text-align: center;
+        }
+
+        .recipe-stat-value {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #ffd89b;
+            display: block;
+        }
+
+        .recipe-stat-label {
+            font-size: 0.85em;
+            color: #a0aec0;
+            margin-top: 5px;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes placeIngredient {
+            0% {
+                opacity: 0;
+                transform: scale(0) rotate(-180deg);
+            }
+            50% {
+                transform: scale(1.3) rotate(10deg);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) rotate(0deg);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        @keyframes cookingRotate {
+            0% {
+                transform: rotate(0deg) scale(1);
+            }
+            50% {
+                transform: rotate(180deg) scale(1.1);
+            }
+            100% {
+                transform: rotate(360deg) scale(1);
+            }
+        }
+
+        @keyframes progressFill {
+            from { width: 0%; }
+            to { width: 100%; }
+        }
+
+        @keyframes modalPop {
+            from {
+                opacity: 0;
+                transform: scale(0.5) rotate(-5deg);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) rotate(0deg);
+            }
+        }
+
+        @keyframes celebrate {
+            0%, 100% {
+                transform: scale(1) rotate(0deg);
+            }
+            25% {
+                transform: scale(1.2) rotate(-10deg);
+            }
+            75% {
+                transform: scale(1.2) rotate(10deg);
+            }
+        }
+
+        /* Cooking-specific animations */
+        .cooking-surface-wrapper.stirring .dish-content {
+            animation: stir 0.6s ease-in-out infinite;
+        }
+
+        .cooking-surface-wrapper.flipping .dish-content {
+            animation: flip 1.2s ease-in-out;
+        }
+
+        .cooking-surface-wrapper.baking .oven-window {
+            animation: bakeGlow 1.5s ease-in-out infinite;
+        }
+
+        @keyframes stir {
+            0%, 100% { transform: translate(-50%, -50%) rotate(0deg); }
+            25% { transform: translate(-48%, -52%) rotate(5deg); }
+            75% { transform: translate(-52%, -48%) rotate(-5deg); }
+        }
+
+        @keyframes flip {
+            0% { transform: translate(-50%, -50%) rotateY(0deg); }
+            50% { transform: translate(-50%, -50%) rotateY(180deg); }
+            100% { transform: translate(-50%, -50%) rotateY(360deg); }
+        }
+
+        @keyframes bakeGlow {
+            0%, 100% {
+                box-shadow: inset 0 0 30px rgba(255, 150, 50, 0.3);
+                filter: brightness(1);
+            }
+            50% {
+                box-shadow: inset 0 0 50px rgba(255, 150, 50, 0.6);
+                filter: brightness(1.3);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .game-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                order: 2;
+            }
+
+            .main-workspace {
+                order: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5em;
+            }
+
+            .ingredients-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .plate-surface {
+                width: 280px;
+                height: 280px;
+            }
+
+            .pan-surface {
+                width: 320px;
+            }
+
+            .oven-surface {
+                width: 350px;
+                height: 300px;
+            }
+
+            .control-btn {
+                padding: 15px 25px;
+                font-size: 1em;
+            }
+
+            .completion-content {
+                padding: 40px 30px;
+            }
+
+            .completion-icon {
+                font-size: 5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="header">
+            <h1>👨‍🍳 Virtual Kitchen</h1>
+            <p>Master the art of cooking with our professional simulator</p>
+        </div>
+
+        <div class="game-layout">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <!-- Dish Selection -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <h2>🍽️ Select Recipe</h2>
+                    </div>
+                    <div class="dish-selector" id="dishSelector"></div>
+                </div>
+
+                <!-- Ingredients -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <h2>🥘 Ingredients</h2>
+                    </div>
+                    <div class="ingredients-grid" id="ingredientsGrid"></div>
+                </div>
+            </div>
+
+            <!-- Main Workspace -->
+            <div class="main-workspace">
+                <div class="kitchen-scene">
+                    <div class="cooking-workspace">
+                        <div class="cooking-container" id="cookingContainer">
+                            <div class="cooking-surface-wrapper" id="cookingSurface">
+                                <div class="empty-cooking-state">
+                                    <div class="empty-icon">👨‍🍳</div>
+                                    <h3>Ready to Cook</h3>
+                                    <p>Drag ingredients here or click them to add</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Controls -->
+                <div class="panel">
+                    <div class="control-panel">
+                        <button class="control-btn primary" id="cookBtn" disabled>
+                            <span>🔥</span>
+                            <span>Start Cooking</span>
+                        </button>
+                        <button class="control-btn" id="clearBtn">
+                            <span>🔄</span>
+                            <span>Reset</span>
+                        </button>
+                        <button class="control-btn danger" id="newDishBtn">
+                            <span>✨</span>
+                            <span>New Dish</span>
+                        </button>
+                    </div>
+                    <div id="recipeInfo"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const recipes = {
+            pizza: {
+                name: 'Margherita Pizza',
+                icon: '🍕',
+                description: 'Classic Italian pizza with fresh ingredients',
+                surface: 'plate',
+                cookTime: 4000,
+                difficulty: 'Medium',
+                servings: '2-3',
+                ingredients: [
+                    { id: 'dough', icon: '🫓', name: 'Pizza Dough', required: true },
+                    { id: 'sauce', icon: '🍅', name: 'Tomato Sauce', required: true },
+                    { id: 'mozzarella', icon: '🧀', name: 'Mozzarella', required: true },
+                    { id: 'basil', icon: '🌿', name: 'Fresh Basil', required: false },
+                    { id: 'pepperoni', icon: '🥓', name: 'Pepperoni', required: false },
+                    { id: 'mushroom', icon: '🍄', name: 'Mushrooms', required: false },
+                    { id: 'olive', icon: '🫒', name: 'Olives', required: false },
+                    { id: 'pepper', icon: '🫑', name: 'Bell Pepper', required: false }
+                ],
+                steps: [
+                    { icon: '🔥', text: 'Preheating oven to 450°F...', duration: 1000 },
+                    { icon: '👨‍🍳', text: 'Preparing the dough...', duration: 1000 },
+                    { icon: '🍕', text: 'Baking pizza to perfection...', duration: 1500 },
+                    { icon: '✨', text: 'Adding final touches...', duration: 500 }
+                ],
+                animation: 'baking'
+            },
+            burger: {
+                name: 'Gourmet Burger',
+                icon: '🍔',
+                description: 'Juicy beef burger with premium toppings',
+                surface: 'pan',
+                cookTime: 3500,
+                difficulty: 'Easy',
+                servings: '1-2',
+                ingredients: [
+                    { id: 'bun-bottom', icon: '🍞', name: 'Bottom Bun', required: true },
+                    { id: 'patty', icon: '🥩', name: 'Beef Patty', required: true },
+                    { id: 'cheese', icon: '🧀', name: 'Cheese Slice', required: true },
+                    { id: 'lettuce', icon: '🥬', name: 'Lettuce', required: false },
+                    { id: 'tomato', icon: '🍅', name: 'Tomato', required: false },
+                    { id: 'onion', icon: '🧅', name: 'Onion Ring', required: false },
+                    { id: 'bacon', icon: '🥓', name: 'Bacon', required: false },
+                    { id: 'bun-top', icon: '🍔', name: 'Top Bun', required: true }
+                ],
+                steps: [
+                    { icon: '🔥', text: 'Heating the grill...', duration: 800 },
+                    { icon: '🥩', text: 'Searing the patty...', duration: 1000 },
+                    { icon: '🔄', text: 'Flipping for perfection...', duration: 1000 },
+                    { icon: '👨‍🍳', text: 'Assembling the burger...', duration: 700 }
+                ],
+                animation: 'flipping'
+            },
+            cake: {
+                name: 'Chocolate Cake',
+                icon: '🎂',
+                description: 'Rich and moist chocolate layer cake',
+                surface: 'oven',
+                cookTime: 5000,
+                difficulty: 'Hard',
+                servings: '8-10',
+                ingredients: [
+                    { id: 'flour', icon: '🌾', name: 'All-Purpose Flour', required: true },
+                    { id: 'cocoa', icon: '🍫', name: 'Cocoa Powder', required: true },
+                    { id: 'eggs', icon: '🥚', name: 'Eggs', required: true },
+                    { id: 'sugar', icon: '🍬', name: 'Sugar', required: true },
+                    { id: 'butter', icon: '🧈', name: 'Butter', required: true },
+                    { id: 'milk', icon: '🥛', name: 'Milk', required: true },
+                    { id: 'vanilla', icon: '🌸', name: 'Vanilla', required: false },
+                    { id: 'cherry', icon: '🍒', name: 'Cherry', required: false }
+                ],
+                steps: [
+                    { icon: '🥣', text: 'Mixing the batter...', duration: 1200 },
+                    { icon: '🔥', text: 'Preheating oven to 350°F...', duration: 1000 },
+                    { icon: '⏰', text: 'Baking the layers...', duration: 2000 },
+                    { icon: '❄️', text: 'Cooling and frosting...', duration: 800 }
+                ],
+                animation: 'baking'
+            },
+            pasta: {
+                name: 'Pasta Carbonara',
+                icon: '🍝',
+                description: 'Creamy Italian pasta with bacon',
+                surface: 'pan',
+                cookTime: 3000,
+                difficulty: 'Medium',
+                servings: '2-3',
+                ingredients: [
+                    { id: 'pasta', icon: '🍝', name: 'Spaghetti', required: true },
+                    { id: 'bacon', icon: '🥓', name: 'Bacon', required: true },
+                    { id: 'eggs', icon: '🥚', name: 'Eggs', required: true },
+                    { id: 'parmesan', icon: '🧀', name: 'Parmesan', required: true },
+                    { id: 'pepper', icon: '🌶️', name: 'Black Pepper', required: false },
+                    { id: 'garlic', icon: '🧄', name: 'Garlic', required: false },
+                    { id: 'parsley', icon: '🌿', name: 'Parsley', required: false }
+                ],
+                steps: [
+                    { icon: '💧', text: 'Boiling water...', duration: 800 },
+                    { icon: '🍝', text: 'Cooking pasta...', duration: 1000 },
+                    { icon: '🥓', text: 'Crisping the bacon...', duration: 800 },
+                    { icon: '👨‍🍳', text: 'Mixing it all together...', duration: 400 }
+                ],
+                animation: 'stirring'
+            },
+            salad: {
+                name: 'Caesar Salad',
+                icon: '🥗',
+                description: 'Fresh and crisp caesar salad',
+                surface: 'plate',
+                cookTime: 2000,
+                difficulty: 'Easy',
+                servings: '2-3',
+                ingredients: [
+                    { id: 'lettuce', icon: '🥬', name: 'Romaine Lettuce', required: true },
+                    { id: 'croutons', icon: '🍞', name: 'Croutons', required: true },
+                    { id: 'parmesan', icon: '🧀', name: 'Parmesan', required: true },
+                    { id: 'chicken', icon: '🍗', name: 'Grilled Chicken', required: false },
+                    { id: 'tomato', icon: '🍅', name: 'Cherry Tomatoes', required: false },
+                    { id: 'cucumber', icon: '🥒', name: 'Cucumber', required: false },
+                    { id: 'avocado', icon: '🥑', name: 'Avocado', required: false }
+                ],
+                steps: [
+                    { icon: '🥬', text: 'Washing greens...', duration: 600 },
+                    { icon: '🔪', text: 'Chopping ingredients...', duration: 800 },
+                    { icon: '🥗', text: 'Tossing with dressing...', duration: 600 }
+                ],
+                animation: 'stirring'
+            },
+            sushi: {
+                name: 'Sushi Roll',
+                icon: '🍣',
+                description: 'Fresh Japanese sushi roll',
+                surface: 'plate',
+                cookTime: 3500,
+                difficulty: 'Hard',
+                servings: '2-3',
+                ingredients: [
+                    { id: 'rice', icon: '🍚', name: 'Sushi Rice', required: true },
+                    { id: 'nori', icon: '🟢', name: 'Nori Sheet', required: true },
+                    { id: 'salmon', icon: '🐟', name: 'Fresh Salmon', required: true },
+                    { id: 'avocado', icon: '🥑', name: 'Avocado', required: false },
+                    { id: 'cucumber', icon: '🥒', name: 'Cucumber', required: false },
+                    { id: 'wasabi', icon: '🟢', name: 'Wasabi', required: false },
+                    { id: 'ginger', icon: '🫚', name: 'Pickled Ginger', required: false }
+                ],
+                steps: [
+                    { icon: '🍚', text: 'Preparing sushi rice...', duration: 1000 },
+                    { icon: '🔪', text: 'Slicing ingredients...', duration: 1000 },
+                    { icon: '👨‍🍳', text: 'Rolling the sushi...', duration: 1000 },
+                    { icon: '✨', text: 'Plating beautifully...', duration: 500 }
+                ],
+                animation: 'stirring'
+            }
+        };
+
+        let currentRecipe = 'pizza';
+        let placedIngredients = [];
+        let isCooking = false;
+
+        function init() {
+            renderDishSelector();
+            renderIngredients();
+            renderCookingSurface();
+            setupEventListeners();
+            updateRecipeInfo();
+        }
+
+        function renderDishSelector() {
+            const selector = document.getElementById('dishSelector');
+            selector.innerHTML = Object.keys(recipes).map(key => {
+                const recipe = recipes[key];
+                return `
+                    <div class="dish-card ${key === currentRecipe ? 'active' : ''}" data-dish="${key}">
+                        <div class="dish-card-content">
+                            <div class="dish-icon">${recipe.icon}</div>
+                            <div class="dish-info">
+                                <h3>${recipe.name}</h3>
+                                <p>${recipe.description}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderIngredients() {
+            const grid = document.getElementById('ingredientsGrid');
+            const recipe = recipes[currentRecipe];
+            
+            grid.innerHTML = recipe.ingredients.map(ing => {
+                const isUsed = placedIngredients.some(p => p.id === ing.id);
+                return `
+                    <div class="ingredient-item ${isUsed ? 'used' : ''}" 
+                         draggable="${!isUsed && !isCooking}" 
+                         data-id="${ing.id}">
+                        <span class="ingredient-emoji">${ing.icon}</span>
+                        <div class="ingredient-name">${ing.name}</div>
+                    </div>
+                `;
+            }).join('');
+
+            if (!isCooking) {
+                setupDragAndDrop();
+            }
+        }
+
+        function renderCookingSurface() {
+            const surface = document.getElementById('cookingSurface');
+            const recipe = recipes[currentRecipe];
+            
+            let surfaceHTML = '';
+            if (recipe.surface === 'plate') {
+                surfaceHTML = `
+                    <div class="plate-surface">
+                        <div class="dish-content" id="dishContent"></div>
+                    </div>
+                `;
+            } else if (recipe.surface === 'pan') {
+                surfaceHTML = `
+                    <div class="pan-surface">
+                        <div class="dish-content" id="dishContent"></div>
+                        <div class="pan-handle"></div>
+                    </div>
+                `;
+            } else if (recipe.surface === 'oven') {
+                surfaceHTML = `
+                    <div class="oven-surface">
+                        <div class="oven-control-panel">
+                            <div class="oven-dial"></div>
+                            <div class="oven-dial"></div>
+                            <div class="oven-dial"></div>
+                        </div>
+                        <div class="oven-door">
+                            <div class="oven-window">
+                                <div class="dish-content" id="dishContent"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            surface.innerHTML = surfaceHTML;
+            updateDishDisplay();
+        }
+
+        function updateDishDisplay() {
+            const dishContent = document.getElementById('dishContent');
+            if (!dishContent) return;
+
+            if (placedIngredients.length === 0) {
+                dishContent.innerHTML = '';
+            } else {
+                dishContent.innerHTML = placedIngredients.map(ing => 
+                    `<span class="placed-ingredient" data-id="${ing.id}">${ing.icon}</span>`
+                ).join('');
+            }
+
+            document.getElementById('cookBtn').disabled = placedIngredients.length === 0 || isCooking;
+        }
+
+        function setupDragAndDrop() {
+            const ingredients = document.querySelectorAll('.ingredient-item:not(.used)');
+            const container = document.getElementById('cookingContainer');
+
+            ingredients.forEach(item => {
+                item.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('ingredientId', item.dataset.id);
+                    item.classList.add('dragging');
+                });
+
+                item.addEventListener('dragend', () => {
+                    item.classList.remove('dragging');
+                });
+
+                item.addEventListener('click', () => {
+                    if (!isCooking && !item.classList.contains('used')) {
+                        addIngredient(item.dataset.id);
+                    }
+                });
+            });
+
+            container.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                container.classList.add('drag-over');
+            });
+
+            container.addEventListener('dragleave', () => {
+                container.classList.remove('drag-over');
+            });
+
+            container.addEventListener('drop', (e) => {
+                e.preventDefault();
+                container.classList.remove('drag-over');
+                const ingredientId = e.dataTransfer.getData('ingredientId');
+                if (ingredientId && !isCooking) {
+                    addIngredient(ingredientId);
+                }
+            });
+        }
+
+        function addIngredient(ingredientId) {
+            const recipe = recipes[currentRecipe];
+            const ingredient = recipe.ingredients.find(ing => ing.id === ingredientId);
+            
+            if (ingredient && !placedIngredients.some(p => p.id === ingredientId)) {
+                placedIngredients.push(ingredient);
+                updateDishDisplay();
+                renderIngredients();
+            }
+        }
+
+        function removeIngredient(ingredientId) {
+            placedIngredients = placedIngredients.filter(ing => ing.id !== ingredientId);
+            updateDishDisplay();
+            renderIngredients();
+        }
+
+        function startCooking() {
+            if (isCooking || placedIngredients.length === 0) return;
+
+            isCooking = true;
+            const recipe = recipes[currentRecipe];
+            const surface = document.getElementById('cookingSurface');
+            const container = document.getElementById('cookingContainer');
+
+            // Add animation class
+            surface.classList.add(recipe.animation);
+
+            // Show cooking overlay
+            const overlay = document.createElement('div');
+            overlay.className = 'cooking-overlay';
+            overlay.innerHTML = `
+                <div class="cooking-status">
+                    <div class="cooking-icon">🔥</div>
+                    <div class="cooking-text">Cooking...</div>
+                    <div class="cooking-progress">
+                        <div class="cooking-progress-bar"></div>
+                    </div>
+                </div>
+            `;
+            container.appendChild(overlay);
+
+            // Execute cooking steps
+            let currentStep = 0;
+            const executeStep = () => {
+                if (currentStep < recipe.steps.length) {
+                    const step = recipe.steps[currentStep];
+                    const statusText = overlay.querySelector('.cooking-text');
+                    const statusIcon = overlay.querySelector('.cooking-icon');
+                    
+                    statusIcon.textContent = step.icon;
+                    statusText.textContent = step.text;
+
+                    setTimeout(() => {
+                        currentStep++;
+                        executeStep();
+                    }, step.duration);
+                } else {
+                    finishCooking();
+                }
+            };
+
+            executeStep();
+        }
+
+        function finishCooking() {
+            const recipe = recipes[currentRecipe];
+            const surface = document.getElementById('cookingSurface');
+            const container = document.getElementById('cookingContainer');
+            
+            // Remove animations
+            surface.classList.remove(recipe.animation);
+            const overlay = container.querySelector('.cooking-overlay');
+            if (overlay) overlay.remove();
+
+            // Show completion modal
+            showCompletionModal();
+        }
+
+        function showCompletionModal() {
+            const recipe = recipes[currentRecipe];
+            const modal = document.createElement('div');
+            modal.className = 'completion-modal';
+            modal.innerHTML = `
+                <div class="completion-content">
+                    <div class="completion-icon">${recipe.icon}</div>
+                    <h2>Perfect!</h2>
+                    <p>Your ${recipe.name} is ready to serve!</p>
+                    <button class="completion-btn" onclick="closeCompletionModal()">
+                        Cook Another Dish
+                    </button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+
+            setTimeout(() => {
+                isCooking = false;
+            }, 500);
+        }
+
+        window.closeCompletionModal = function() {
+            const modal = document.querySelector('.completion-modal');
+            if (modal) {
+                modal.style.animation = 'fadeIn 0.3s ease reverse';
+                setTimeout(() => modal.remove(), 300);
+            }
+            clearAll();
+        };
+
+        function clearAll() {
+            placedIngredients = [];
+            isCooking = false;
+            updateDishDisplay();
+            renderIngredients();
+        }
+
+        function newDish() {
+            if (isCooking) return;
+            if (placedIngredients.length > 0) {
+                if (!confirm('This will clear your current dish. Continue?')) return;
+            }
+            clearAll();
+        }
+
+        function updateRecipeInfo() {
+            const recipe = recipes[currentRecipe];
+            const infoDiv = document.getElementById('recipeInfo');
+            
+            infoDiv.innerHTML = `
+                <div class="recipe-info">
+                    <div class="recipe-stats">
+                        <div class="recipe-stat">
+                            <span class="recipe-stat-value">⏱️ ${recipe.cookTime / 1000}s</span>
+                            <span class="recipe-stat-label">Cook Time</span>
+                        </div>
+                        <div class="recipe-stat">
+                            <span class="recipe-stat-value">📊 ${recipe.difficulty}</span>
+                            <span class="recipe-stat-label">Difficulty</span>
+                        </div>
+                        <div class="recipe-stat">
+                            <span class="recipe-stat-value">👥 ${recipe.servings}</span>
+                            <span class="recipe-stat-label">Servings</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function setupEventListeners() {
+            // Dish selection
+            document.querySelectorAll('.dish-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    if (isCooking) return;
+                    if (placedIngredients.length > 0) {
+                        if (!confirm('This will clear your current dish. Continue?')) return;
+                    }
+
+                    document.querySelectorAll('.dish-card').forEach(c => c.classList.remove('active'));
+                    card.classList.add('active');
+                    currentRecipe = card.dataset.dish;
+                    clearAll();
+                    renderCookingSurface();
+                    updateRecipeInfo();
+                });
+            });
+
+            // Control buttons
+            document.getElementById('cookBtn').addEventListener('click', startCooking);
+            document.getElementById('clearBtn').addEventListener('click', clearAll);
+            document.getElementById('newDishBtn').addEventListener('click', newDish);
+
+            // Click on placed ingredients to remove
+            document.addEventListener('click', (e) => {
+                if (e.target.classList.contains('placed-ingredient') && !isCooking) {
+                    removeIngredient(e.target.dataset.id);
+                }
+            });
+        }
+
+        // Initialize the game
+        init();
+    </script>
+</body>
+</html>
