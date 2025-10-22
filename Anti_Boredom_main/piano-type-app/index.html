@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Piano Simulator Pro</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #0f0c29;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(138, 43, 226, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(255, 107, 107, 0.2) 0%, transparent 50%);
+            animation: gradientShift 15s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1400px;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            animation: fadeInDown 1s ease;
+        }
+
+        .header h1 {
+            font-size: 4em;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 40px rgba(102, 126, 234, 0.5);
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { filter: drop-shadow(0 0 20px rgba(102, 126, 234, 0.6)); }
+            50% { filter: drop-shadow(0 0 40px rgba(118, 75, 162, 0.8)); }
+        }
+
+        .header p {
+            font-size: 1.3em;
+            opacity: 0.9;
+            color: #e0e0e0;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        .game-section {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            padding: 40px;
+            box-shadow: 
+                0 8px 32px 0 rgba(31, 38, 135, 0.37),
+                inset 0 0 60px rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: fadeInUp 1s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent,
+                rgba(255, 255, 255, 0.03),
+                transparent
+            );
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .song-selector {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .song-btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 15px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.8) 0%, rgba(118, 75, 162, 0.8) 100%);
+            color: white;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 
+                0 8px 25px rgba(102, 126, 234, 0.4),
+                inset 0 -2px 10px rgba(0, 0, 0, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .song-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .song-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .song-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 
+                0 15px 40px rgba(102, 126, 234, 0.6),
+                inset 0 -2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .song-btn.active {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            box-shadow: 
+                0 8px 25px rgba(245, 87, 108, 0.5),
+                0 0 40px rgba(240, 147, 251, 0.4),
+                inset 0 -2px 10px rgba(0, 0, 0, 0.3);
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .control-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .ctrl-btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            font-size: 1.1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 
+                0 8px 25px rgba(56, 239, 125, 0.4),
+                inset 0 -2px 10px rgba(0, 0, 0, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ctrl-btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent,
+                rgba(255, 255, 255, 0.3),
+                transparent
+            );
+            transform: rotate(45deg);
+            transition: all 0.5s;
+        }
+
+        .ctrl-btn:hover::after {
+            left: 100%;
+        }
+
+        .ctrl-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 
+                0 15px 40px rgba(56, 239, 125, 0.6),
+                inset 0 -2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .ctrl-btn.stop {
+            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+            box-shadow: 
+                0 8px 25px rgba(235, 51, 73, 0.4),
+                inset 0 -2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .ctrl-btn.stop:hover {
+            box-shadow: 
+                0 15px 40px rgba(235, 51, 73, 0.6),
+                inset 0 -2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .info-panel {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            padding: 20px 30px;
+            background: linear-gradient(135deg, rgba(240, 147, 251, 0.2) 0%, rgba(245, 87, 108, 0.2) 100%);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            color: white;
+            font-size: 1.2em;
+            font-weight: 600;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+            position: relative;
+            z-index: 2;
+        }
+
+        .piano-container {
+            display: flex;
+            justify-content: center;
+            margin: 40px 0;
+            perspective: 1500px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .piano {
+            display: flex;
+            position: relative;
+            background: linear-gradient(180deg, #1a1a1a 0%, #0a0a0a 100%);
+            padding: 30px;
+            border-radius: 25px;
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.8),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                0 0 80px rgba(102, 126, 234, 0.2);
+            border: 3px solid rgba(255, 255, 255, 0.05);
+            transform: rotateX(5deg);
+            transition: transform 0.3s ease;
+        }
+
+        .piano:hover {
+            transform: rotateX(0deg);
+        }
+
+        .key {
+            position: relative;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.15s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .white-key {
+            width: 65px;
+            height: 280px;
+            background: linear-gradient(180deg, #ffffff 0%, #f8f8f8 50%, #e8e8e8 100%);
+            border: 3px solid #2a2a2a;
+            border-radius: 0 0 12px 12px;
+            margin: 0 3px;
+            box-shadow: 
+                0 8px 15px rgba(0, 0, 0, 0.4),
+                inset 0 -8px 20px rgba(0, 0, 0, 0.1),
+                inset 0 2px 4px rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding-bottom: 20px;
+            font-weight: 700;
+            font-size: 0.9em;
+            color: #555;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .white-key::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 40%;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.8) 0%, transparent 100%);
+            pointer-events: none;
+        }
+
+        .white-key:hover {
+            background: linear-gradient(180deg, #f5f5f5 0%, #efefef 50%, #e0e0e0 100%);
+            transform: translateY(3px) scale(1.02);
+            box-shadow: 
+                0 5px 10px rgba(0, 0, 0, 0.5),
+                inset 0 -8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .white-key.active {
+            background: linear-gradient(180deg, #667eea 0%, #764ba2 50%, #5a4a8a 100%);
+            color: white;
+            transform: translateY(6px) scale(0.98);
+            box-shadow: 
+                0 2px 8px rgba(0, 0, 0, 0.6),
+                inset 0 -4px 15px rgba(0, 0, 0, 0.4),
+                0 0 30px rgba(102, 126, 234, 0.6);
+        }
+
+        .white-key.highlight {
+            animation: keyGlowWhite 0.8s ease;
+        }
+
+        @keyframes keyGlowWhite {
+            0%, 100% { 
+                box-shadow: 
+                    0 8px 15px rgba(0, 0, 0, 0.4),
+                    inset 0 -8px 20px rgba(0, 0, 0, 0.1);
+            }
+            50% { 
+                box-shadow: 
+                    0 8px 15px rgba(0, 0, 0, 0.4),
+                    inset 0 -8px 20px rgba(0, 0, 0, 0.1),
+                    0 0 50px rgba(102, 126, 234, 0.8),
+                    inset 0 0 30px rgba(102, 126, 234, 0.4);
+                transform: scale(1.08);
+            }
+        }
+
+        .black-key {
+            width: 45px;
+            height: 180px;
+            background: linear-gradient(180deg, #3a3a3a 0%, #1a1a1a 50%, #000000 100%);
+            border: 3px solid #000;
+            border-radius: 0 0 8px 8px;
+            position: absolute;
+            z-index: 2;
+            box-shadow: 
+                0 8px 20px rgba(0, 0, 0, 0.8),
+                inset 0 -8px 15px rgba(0, 0, 0, 0.6),
+                inset 0 2px 4px rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding-bottom: 15px;
+            font-size: 0.75em;
+            font-weight: 700;
+            color: #999;
+            overflow: hidden;
+        }
+
+        .black-key::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 30%;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, transparent 100%);
+            pointer-events: none;
+        }
+
+        .black-key:hover {
+            background: linear-gradient(180deg, #4a4a4a 0%, #2a2a2a 50%, #0a0a0a 100%);
+            transform: translateY(3px) scale(1.02);
+            box-shadow: 
+                0 5px 15px rgba(0, 0, 0, 0.9),
+                inset 0 -8px 15px rgba(0, 0, 0, 0.7);
+        }
+
+        .black-key.active {
+            background: linear-gradient(180deg, #f093fb 0%, #f5576c 50%, #d4395c 100%);
+            color: white;
+            transform: translateY(5px) scale(0.98);
+            box-shadow: 
+                0 2px 10px rgba(0, 0, 0, 0.8),
+                inset 0 -4px 15px rgba(0, 0, 0, 0.5),
+                0 0 30px rgba(240, 147, 251, 0.7);
+        }
+
+        .black-key.highlight {
+            animation: keyGlowBlack 0.8s ease;
+        }
+
+        @keyframes keyGlowBlack {
+            0%, 100% { 
+                box-shadow: 
+                    0 8px 20px rgba(0, 0, 0, 0.8),
+                    inset 0 -8px 15px rgba(0, 0, 0, 0.6);
+            }
+            50% { 
+                box-shadow: 
+                    0 8px 20px rgba(0, 0, 0, 0.8),
+                    inset 0 -8px 15px rgba(0, 0, 0, 0.6),
+                    0 0 50px rgba(240, 147, 251, 0.9),
+                    inset 0 0 30px rgba(240, 147, 251, 0.5);
+                transform: scale(1.08);
+            }
+        }
+
+        .tutorial-display {
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.3) 0%, rgba(118, 75, 162, 0.3) 100%);
+            backdrop-filter: blur(15px);
+            color: white;
+            border-radius: 20px;
+            margin-top: 30px;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4em;
+            font-weight: 600;
+            box-shadow: 
+                0 8px 32px rgba(31, 38, 135, 0.2),
+                inset 0 0 40px rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            z-index: 2;
+            letter-spacing: 0.5px;
+        }
+
+        .keyboard-hints {
+            margin-top: 30px;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            text-align: center;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            z-index: 2;
+        }
+
+        .keyboard-hints h3 {
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #f093fb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 1.3em;
+            font-weight: 700;
+        }
+
+        .keyboard-hints p {
+            color: #e0e0e0;
+            line-height: 1.8;
+            font-size: 1.05em;
+            font-weight: 400;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .score-display {
+            font-size: 1.3em;
+            font-weight: 800;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5em;
+            }
+            
+            .white-key {
+                width: 48px;
+                height: 220px;
+            }
+            
+            .black-key {
+                width: 35px;
+                height: 145px;
+            }
+            
+            .controls {
+                justify-content: center;
+            }
+
+            .game-section {
+                padding: 25px;
+            }
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: particleFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes particleFloat {
+            0%, 100% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) translateX(20px);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎹 PIANO SIMULATOR PRO</h1>
+            <p>Master the keys with stunning visual tutorials</p>
+        </div>
+
+        <div class="game-section">
+            <div class="controls">
+                <div class="song-selector">
+                    <button class="song-btn" data-song="twinkle">⭐ Twinkle Twinkle</button>
+                    <button class="song-btn" data-song="happy">🎂 Happy Birthday</button>
+                    <button class="song-btn" data-song="mary">🐑 Mary's Lamb</button>
+                    <button class="song-btn" data-song="jingle">🔔 Jingle Bells</button>
+                </div>
+                <div class="control-buttons">
+                    <button class="ctrl-btn" id="playBtn">▶ PLAY</button>
+                    <button class="ctrl-btn stop" id="stopBtn">■ STOP</button>
+                </div>
+            </div>
+
+            <div class="info-panel">
+                <div>🎵 Current: <span id="currentSong">None Selected</span></div>
+                <div class="score-display">⭐ Score: <span id="score">0</span></div>
+            </div>
+
+            <div class="piano-container">
+                <div class="piano" id="piano"></div>
+            </div>
+
+            <div class="tutorial-display" id="tutorialDisplay">
+                ✨ Select a song and press PLAY to begin your musical journey!
+            </div>
+
+            <div class="keyboard-hints">
+                <h3>🎮 KEYBOARD CONTROLS</h3>
+                <p>White Keys: A S D F G H J K L ; ' | Black Keys: W E T Y U O P</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        
+        const notes = {
+            'C4': 261.63, 'C#4': 277.18, 'D4': 293.66, 'D#4': 311.13,
+            'E4': 329.63, 'F4': 349.23, 'F#4': 369.99, 'G4': 392.00,
+            'G#4': 415.30, 'A4': 440.00, 'A#4': 466.16, 'B4': 493.88,
+            'C5': 523.25, 'C#5': 554.37, 'D5': 587.33
+        };
+
+        const songs = {
+            twinkle: {
+                name: 'Twinkle Twinkle Little Star',
+                notes: [
+                    {note: 'C4', duration: 400}, {note: 'C4', duration: 400},
+                    {note: 'G4', duration: 400}, {note: 'G4', duration: 400},
+                    {note: 'A4', duration: 400}, {note: 'A4', duration: 400},
+                    {note: 'G4', duration: 800},
+                    {note: 'F4', duration: 400}, {note: 'F4', duration: 400},
+                    {note: 'E4', duration: 400}, {note: 'E4', duration: 400},
+                    {note: 'D4', duration: 400}, {note: 'D4', duration: 400},
+                    {note: 'C4', duration: 800}
+                ]
+            },
+            happy: {
+                name: 'Happy Birthday',
+                notes: [
+                    {note: 'C4', duration: 300}, {note: 'C4', duration: 200},
+                    {note: 'D4', duration: 500}, {note: 'C4', duration: 500},
+                    {note: 'F4', duration: 500}, {note: 'E4', duration: 800},
+                    {note: 'C4', duration: 300}, {note: 'C4', duration: 200},
+                    {note: 'D4', duration: 500}, {note: 'C4', duration: 500},
+                    {note: 'G4', duration: 500}, {note: 'F4', duration: 800}
+                ]
+            },
+            mary: {
+                name: 'Mary Had a Little Lamb',
+                notes: [
+                    {note: 'E4', duration: 400}, {note: 'D4', duration: 400},
+                    {note: 'C4', duration: 400}, {note: 'D4', duration: 400},
+                    {note: 'E4', duration: 400}, {note: 'E4', duration: 400},
+                    {note: 'E4', duration: 800},
+                    {note: 'D4', duration: 400}, {note: 'D4', duration: 400},
+                    {note: 'D4', duration: 800},
+                    {note: 'E4', duration: 400}, {note: 'G4', duration: 400},
+                    {note: 'G4', duration: 800}
+                ]
+            },
+            jingle: {
+                name: 'Jingle Bells',
+                notes: [
+                    {note: 'E4', duration: 400}, {note: 'E4', duration: 400},
+                    {note: 'E4', duration: 800},
+                    {note: 'E4', duration: 400}, {note: 'E4', duration: 400},
+                    {note: 'E4', duration: 800},
+                    {note: 'E4', duration: 400}, {note: 'G4', duration: 400},
+                    {note: 'C4', duration: 400}, {note: 'D4', duration: 400},
+                    {note: 'E4', duration: 1000}
+                ]
+            }
+        };
+
+        const keyMap = {
+            'a': 'C4', 'w': 'C#4', 's': 'D4', 'e': 'D#4', 'd': 'E4',
+            'f': 'F4', 't': 'F#4', 'g': 'G4', 'y': 'G#4', 'h': 'A4',
+            'u': 'A#4', 'j': 'B4', 'k': 'C5', 'o': 'C#5', 'l': 'D5'
+        };
+
+        let currentSong = null;
+        let isPlaying = false;
+        let tutorialTimeout = null;
+        let score = 0;
+        let keyElements = {};
+
+        function playNote(frequency, duration = 0.3) {
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = frequency;
+            oscillator.type = 'sine';
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + duration);
+        }
+
+        function createParticles(x, y) {
+            for (let i = 0; i < 5; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = x + 'px';
+                particle.style.top = y + 'px';
+                particle.style.animationDelay = (i * 0.1) + 's';
+                document.body.appendChild(particle);
+                
+                setTimeout(() => particle.remove(), 3000);
+            }
+        }
+
+        function createPiano() {
+            const piano = document.getElementById('piano');
+            const whiteNotes = ['C4', 'D4', 'E4', 'F4', 'G4', 'A4', 'B4', 'C5', 'D5'];
+            const blackNotes = {
+                'C#4': 1, 'D#4': 2, 'F#4': 4, 'G#4': 5, 'A#4': 6, 'C#5': 8
+            };
+
+            whiteNotes.forEach((note, index) => {
+                const key = document.createElement('div');
+                key.className = 'white-key';
+                key.dataset.note = note;
+                key.textContent = note;
+                key.addEventListener('mousedown', (e) => {
+                    handleKeyPress(note);
+                    createParticles(e.clientX, e.clientY);
+                });
+                key.addEventListener('mouseup', () => handleKeyRelease(note));
+                piano.appendChild(key);
+                keyElements[note] = key;
+            });
+
+            Object.entries(blackNotes).forEach(([note, position]) => {
+                const key = document.createElement('div');
+                key.className = 'black-key';
+                key.dataset.note = note;
+                key.textContent = note;
+                key.style.left = `${position * 68 - 22}px`;
+                key.addEventListener('mousedown', (e) => {
+                    handleKeyPress(note);
+                    createParticles(e.clientX, e.clientY);
+                });
+                key.addEventListener('mouseup', () => handleKeyRelease(note));
+                piano.appendChild(key);
+                keyElements[note] = key;
+            });
+        }
+
+        function handleKeyPress(note) {
+            if (notes[note]) {
+                playNote(notes[note]);
+                keyElements[note].classList.add('active');
+                if (currentSong && isPlaying) {
+                    score += 10;
+                    updateScore();
+                }
+            }
+        }
+
+        function handleKeyRelease(note) {
+            keyElements[note].classList.remove('active');
+        }
+
+        function updateScore() {
+            document.getElementById('score').textContent = score;
+        }
+
+        function highlightKey(note, duration) {
+            if (keyElements[note]) {
+                keyElements[note].classList.add('highlight', 'active');
+                setTimeout(() => {
+                    keyElements[note].classList.remove('highlight', 'active');
+                }, duration);
+            }
+        }
+
+        async function playTutorial() {
+            if (!currentSong || isPlaying) return;
+            
+            isPlaying = true;
+            const song = songs[currentSong];
+            document.getElementById('tutorialDisplay').textContent = `🎵 Playing: ${song.name}`;
+            
+            for (let i = 0; i < song.notes.length; i++) {
+                if (!isPlaying) break;
+                
+                const {note, duration} = song.notes[i];
+                const nextNote = song.notes[i + 1]?.note || '🎉 End';
+                
+                document.getElementById('tutorialDisplay').textContent = 
+                    `🎹 Playing: ${note} → Next: ${nextNote}`;
+                
+                playNote(notes[note], duration / 1000);
+                highlightKey(note, duration);
+                
+                await new Promise(resolve => {
+                    tutorialTimeout = setTimeout(resolve, duration + 100);
+                });
+            }
+            
+            if (isPlaying) {
+                document.getElementById('tutorialDisplay').textContent = 
+                    `✨ ${song.name} Complete! Final Score: ${score} 🏆`;
+                isPlaying = false;
+            }
+        }
+
+        function stopTutorial() {
+            isPlaying = false;
+            if (tutorialTimeout) {
+                clearTimeout(tutorialTimeout);
+            }
+            document.getElementById('tutorialDisplay').textContent = 
+                '⏸️ Tutorial stopped. Ready to play again!';
+        }
+
+        document.querySelectorAll('.song-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.song-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentSong = btn.dataset.song;
+                document.getElementById('currentSong').textContent = songs[currentSong].name;
+                score = 0;
+                updateScore();
+                document.getElementById('tutorialDisplay').textContent = 
+                    `🎯 Ready: ${songs[currentSong].name}. Press PLAY to start!`;
+            });
+        });
+
+        document.getElementById('playBtn').addEventListener('click', playTutorial);
+        document.getElementById('stopBtn').addEventListener('click', stopTutorial);
+
+        document.addEventListener('keydown', (e) => {
+            const key = e.key.toLowerCase();
+            if (keyMap[key] && !e.repeat) {
+                handleKeyPress(keyMap[key]);
+            }
+        });
+
+        document.addEventListener('keyup', (e) => {
+            const key = e.key.toLowerCase();
+            if (keyMap[key]) {
+                handleKeyRelease(keyMap[key]);
+            }
+        });
+
+        createPiano();
+    </script>
+</body>
+</html>
