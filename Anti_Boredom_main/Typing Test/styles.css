@@ -1,0 +1,275 @@
+/* Custom properties for easy theme switching later */
+:root {
+    --bg-color: #2c2e31;
+    /* Dark background */
+    --main-color: #e2e2e3;
+    /* Main text color */
+    --sub-color: #6d6f73;
+    /* Muted text for labels, disabled states */
+    --accent-color: #1e88e5;
+    /* A vibrant blue accent (can be changed to teal, purple etc.) */
+    --error-color: #ef5350;
+    /* Red for incorrect */
+    --correct-color: #4CAF50;
+    /* Green for correct */
+    --current-char-bg: #4a4d52;
+    /* Background for current character */
+    --current-char-underline: var(--accent-color);
+    /* Underline for current char */
+    --input-border-focus: var(--accent-color);
+}
+
+body {
+    font-family: 'Inter', 'Roboto Mono', monospace, sans-serif;
+    /* Prioritize monospaced for typing */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    background-color: var(--bg-color);
+    color: var(--main-color);
+    font-size: 1.1em;
+    line-height: 1.6;
+}
+
+/* Optional: Import a nice font like Inter or Roboto Mono */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Roboto+Mono:wght@400;500;700&display=swap');
+
+
+.container {
+    background-color: var(--bg-color);
+    /* Maintain dark background */
+    padding: 30px;
+    border-radius: 8px;
+    /* Monkeytype usually doesn't have a strong box-shadow by default on the main container,
+       it's more about the flat colors. */
+    text-align: center;
+    width: 90%;
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    /* Spacing between sections */
+}
+
+.logo {
+    color: var(--accent-color);
+    /* Use accent color for the logo */
+    font-size: 2.5em;
+    font-weight: 700;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+    text-transform: lowercase;
+    /* Monkeytype's logo is usually lowercase */
+}
+
+.test-area {
+    margin-bottom: 25px;
+}
+
+#quote-display {
+    background-color: transparent;
+    /* Transparent background */
+    border: none;
+    /* No border */
+    padding: 0;
+    /* Remove padding */
+    font-size: 1.8em;
+    /* Larger font for the quote */
+    line-height: 1.6;
+    text-align: center;
+    /* Center the text for a clean look */
+    margin-bottom: 20px;
+    min-height: 120px;
+    /* Ensure a consistent height */
+    display: flex;
+    flex-wrap: wrap;
+    /* Allow words to wrap naturally */
+    justify-content: center;
+    align-items: center;
+    color: var(--main-color);
+    overflow: hidden;
+    /* Hide overflowing text */
+    position: relative;
+    max-height: 150px;
+    /* Limit height to prevent too much text showing */
+}
+
+#quote-display span {
+    transition: color 0.05s ease-out, background-color 0.05s ease-out;
+    /* Smooth transitions */
+    white-space: pre;
+    /* Preserve spaces between words */
+}
+
+/* Styling for correct and incorrect characters */
+#quote-display .correct {
+    color: var(--main-color);
+    /* Correct characters blend with main text */
+}
+
+#quote-display .incorrect {
+    color: var(--error-color);
+    /* Red for incorrect */
+    /* text-decoration: underline; -- Monkeytype often just changes color */
+    border-bottom: 1px solid var(--error-color);
+    /* Subtle underline for errors */
+}
+
+#quote-display .current {
+    position: relative;
+    color: var(--accent-color);
+    /* Highlight current character with accent */
+}
+
+#quote-display .current::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    /* Position it below the character */
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--current-char-underline);
+    /* Underline current character */
+}
+
+/* Handle spaces for highlighting more gracefully */
+
+
+
+#quote-input {
+    width: 100%;
+    /* Full width */
+    padding: 15px 20px;
+    font-size: 1.5em;
+    /* Larger font for typing */
+    border: none;
+    /* No border */
+    border-radius: 5px;
+    box-sizing: border-box;
+    resize: none;
+    outline: none;
+    background-color: var(--sub-color);
+    /* Muted background for input */
+    color: var(--main-color);
+    text-align: center;
+    /* Center input text */
+    caret-color: var(--accent-color);
+    /* Cursor color */
+    height: 0;
+    /* Initially hidden */
+    padding: 0;
+    /* Initially no padding */
+    opacity: 0;
+    /* Initially invisible */
+    transition: all 0.2s ease-in-out;
+}
+
+#quote-input.active {
+    height: 60px;
+    /* Expand when active */
+    padding: 15px 20px;
+    opacity: 1;
+    background-color: #4a4d52;
+    /* Slightly darker when active */
+}
+
+
+#quote-input:disabled {
+    background-color: var(--sub-color);
+    cursor: not-allowed;
+}
+
+#start-button {
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    font-size: 1.2em;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.2s ease-in-out, transform 0.1s ease-out;
+}
+
+#start-button:hover {
+    background-color: color-mix(in srgb, var(--accent-color) 80%, black);
+    /* Slightly darker on hover */
+    transform: translateY(-2px);
+    /* Subtle lift */
+}
+
+#start-button:active {
+    transform: translateY(0);
+}
+
+.results {
+    margin-top: 30px;
+    /* Monkeytype usually has a clean line, or just separation */
+    border-top: 1px solid var(--sub-color);
+    padding-top: 20px;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    /* Allow wrapping on smaller screens */
+    color: var(--sub-color);
+    /* Muted color for result labels */
+}
+
+.result-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px 20px;
+}
+
+.results .label {
+    font-size: 0.8em;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+}
+
+.results .value {
+    font-size: 2em;
+    /* Larger values */
+    font-weight: 700;
+    color: var(--main-color);
+    /* Main text color for values */
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .container {
+        padding: 20px;
+    }
+
+    h1.logo {
+        font-size: 2em;
+    }
+
+    #quote-display {
+        font-size: 1.5em;
+        min-height: 100px;
+    }
+
+    #quote-input.active {
+        height: 50px;
+        font-size: 1.2em;
+    }
+
+    #start-button {
+        padding: 10px 20px;
+        font-size: 1em;
+    }
+
+    .result-item {
+        margin: 5px 10px;
+    }
+
+    .results .value {
+        font-size: 1.8em;
+    }
+}
