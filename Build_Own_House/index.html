@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>House Builder</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>House Builder</h1>
+  <div class="container">
+    <div class="toolbar">
+      <h3>Elements</h3>
+      <div class="element" draggable="true" data-type="wall">Wall</div>
+      <div class="element" draggable="true" data-type="door">Door</div>
+      <div class="element" draggable="true" data-type="window">Window</div>
+      <div class="element" draggable="true" data-type="roof">Roof</div>
+
+      <h3>Customization</h3>
+      <label>Color: <input type="color" id="colorPicker"></label>
+      <label>Roof Style:
+        <select id="roofStyle">
+          <option value="gabled">Gabled</option>
+          <option value="hip">Hip</option>
+          <option value="flat">Flat</option>
+        </select>
+      </label>
+      <label>Window Type:
+        <select id="windowType">
+          <option value="classic">Classic</option>
+          <option value="modern">Modern</option>
+          <option value="arched">Arched</option>
+        </select>
+      </label>
+      <button id="resetBtn">Reset</button>
+    </div>
+
+    <div class="canvas" id="canvas"></div>
+  </div>
+
+<script src="script.js"></script>
+</body>
+</html>
