@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Live Football Dashboard — Demo</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <h1>Live Football Dashboard</h1>
+        <div class="controls">
+          <button id="simulateGoal" class="simulate">Simulate Goal</button>
+          <div class="muted">Client: <span id="clientId"></span></div>
+        </div>
+      </header>
+
+      <div class="grid">
+        <section class="card">
+          <h2>Match Predictions</h2>
+          <div class="small">
+            Predict match outcome or scorer. Everyone in other tabs sees updates
+            instantly.
+          </div>
+          <div style="margin-top: 12px" class="predictions cardless">
+            <label class="small">Predict winner:</label>
+            <div style="display: flex; gap: 8px; margin-top: 8px">
+              <button class="pred-btn" data-pred="home">Home Win</button>
+              <button class="pred-btn" data-pred="draw">Draw</button>
+              <button class="pred-btn" data-pred="away">Away Win</button>
+            </div>
+
+            <div style="margin-top: 14px">
+              <label class="small">Predict a goal scorer (type name):</label>
+              <div style="display: flex; gap: 8px; margin-top: 8px">
+                <input
+                  id="scorerInput"
+                  placeholder="Player name"
+                  style="
+                    flex: 1;
+                    padding: 8px;
+                    border-radius: 8px;
+                    background: transparent;
+                    border: 1px solid rgba(255, 255, 255, 0.04);
+                    color: inherit;
+                  "
+                />
+                <button id="scorerBtn" class="pred-btn">Predict</button>
+              </div>
+            </div>
+
+            <div id="predStats" style="margin-top: 16px"></div>
+          </div>
+
+          <hr
+            style="
+              margin: 14px 0;
+              border: none;
+              border-top: 1px solid rgba(255, 255, 255, 0.03);
+            "
+          />
+
+          <h3>Players & Live Ratings</h3>
+          <div class="players" id="playersList" style="margin-top: 12px"></div>
+        </section>
+
+        <aside>
+          <div class="card">
+            <h3>Discussion Board</h3>
+            <div
+              class="discussion"
+              id="discussionList"
+              style="margin-top: 12px"
+            ></div>
+            <textarea
+              id="postText"
+              placeholder="Write a comment..."
+              aria-label="Write a comment"
+            ></textarea>
+            <div style="display: flex; gap: 8px; margin-top: 8px">
+              <button id="postBtn" class="pred-btn">Post</button>
+              <button id="clearBtn" class="secondary">Clear</button>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+
+    <div class="notify-wrap" id="notifyWrap" aria-live="polite"></div>
+
+    <script src="./script.js" defer></script>
+  </body>
+</html>
