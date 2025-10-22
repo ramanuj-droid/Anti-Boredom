@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Typing Test</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- You might want to link a custom font here later, like 'Roboto Mono' or 'Fira Code' -->
+    <!-- <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet"> -->
+</head>
+
+<body data-theme="dark-monkeytype">
+    <div class="container">
+        <h1 class="logo">typemaster</h1> <!-- Changed title to a logo-like text -->
+        <div class="test-area">
+            <p id="quote-display"></p>
+            <textarea id="quote-input" placeholder="Start typing..." rows="6" spellcheck="false" disabled></textarea>
+            <button id="start-button">Start Test</button>
+        </div>
+        <div class="results">
+            <div class="result-item">
+                <span class="label">time</span>
+                <span id="time" class="value">0s</span>
+            </div>
+            <div class="result-item">
+                <span class="label">wpm</span>
+                <span id="wpm" class="value">0</span>
+            </div>
+            <div class="result-item">
+                <span class="label">acc</span>
+                <span id="accuracy" class="value">0%</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
