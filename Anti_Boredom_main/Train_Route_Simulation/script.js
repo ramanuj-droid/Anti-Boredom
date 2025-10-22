@@ -9,6 +9,8 @@ let mode = 'none'; // 'addCity', 'connect', 'none'
 let selectedCity = null;
 let cityIdCounter = 1;
 let trainIdCounter = 1;
+let mouseX = 0;
+let mouseY = 0;
 
 // City class
 class City {
@@ -219,13 +221,14 @@ canvas.addEventListener('click', (e) => {
 
 canvas.addEventListener('mousemove', (e) => {
     const rect = canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    mouseX = e.clientX - rect.left;
+    mouseY = e.clientY - rect.top;
 
     cities.forEach(city => {
-        city.isHovered = city.contains(x, y);
+        city.isHovered = city.contains(mouseX, mouseY);
     });
 });
+
 
 // Animation loop
 function animate() {
@@ -253,34 +256,17 @@ function animate() {
     tracks.forEach(track => track.draw());
 
     // Draw connection line when selecting
-    if (mode === 'connect' && selectedCity) {
-        const rect = canvas.getBoundingClientRect();
-        // Use e.clientX/Y from the last mousemove event if available, 
-        // otherwise default to a position. Since 'mousemove' is attached 
-        // to the canvas, 'event' inside the animation loop won't work 
-        // directly unless captured. For simplicity, we'll use a placeholder
-        // or ensure mouse position is tracked. For now, let's assume 'event' 
-        // is captured or use a tracked variable (which isn't set up). 
-        // I will re-add the mouse tracking to the `mousemove` handler.
-        
-        // This part needs adjustment as `event` is not defined in `animate`.
-        // To fix it, we'll track mouse position in `mousemove` and use it here.
-        // **I will keep the original logic as provided in the monolithic block, assuming a global `event` 
-        // or a similar mechanism was implicitly relied upon, but note it's not best practice.**
-        // For the sake of separating the code without changing its core logic, I'll keep the original reference.
+if (mode === 'connect' && selectedCity) {
+    ctx.strokeStyle = 'rgba(255, 152, 0, 0.7)';
+    ctx.lineWidth = 3;
+    ctx.setLineDash([6, 6]);
+    ctx.beginPath();
+    ctx.moveTo(selectedCity.x, selectedCity.y);
+    ctx.lineTo(mouseX, mouseY);
+    ctx.stroke();
+    ctx.setLineDash([]);
+}
 
-        const mouseX = event.clientX - rect.left;
-        const mouseY = event.clientY - rect.top;
-        
-        ctx.strokeStyle = 'rgba(255, 152, 0, 0.5)';
-        ctx.lineWidth = 3;
-        ctx.setLineDash([5, 5]);
-        ctx.beginPath();
-        ctx.moveTo(selectedCity.x, selectedCity.y);
-        ctx.lineTo(mouseX, mouseY);
-        ctx.stroke();
-        ctx.setLineDash([]);
-    }
 
     // Highlight selected city
     if (selectedCity) {
