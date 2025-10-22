@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Train Route Simulator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="header">
+        <h1>🚂 Train Route Simulator</h1>
+        <p>Design your railway network and watch trains travel!</p>
+    </div>
+
+    <div class="controls">
+        <button class="btn btn-primary" id="addCityBtn">Add City</button>
+        <button class="btn btn-secondary" id="connectBtn">Connect Cities</button>
+        <button class="btn btn-primary" id="addTrainBtn">Add Train</button>
+        <button class="btn btn-danger" id="clearBtn">Clear All</button>
+    </div>
+
+    <div class="canvas-container">
+        <canvas id="gameCanvas" width="800" height="600"></canvas>
+    </div>
+
+    <div class="info-panel">
+        <h3>Instructions</h3>
+        <p><strong>Add City:</strong> Click this button, then click anywhere on the canvas to place a city.</p>
+        <p><strong>Connect Cities:</strong> Click this button, then click on two cities to connect them with tracks.</p>
+        <p><strong>Add Train:</strong> Click to add a train that will travel along your connected routes.</p>
+        <p><strong>Clear All:</strong> Remove all cities, tracks, and trains to start fresh.</p>
+        <div class="stats">
+            <div class="stat-item">Cities: <span id="cityCount">0</span></div>
+            <div class="stat-item">Routes: <span id="routeCount">0</span></div>
+            <div class="stat-item">Trains: <span id="trainCount">0</span></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
