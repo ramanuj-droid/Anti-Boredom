@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Anti-Boredom — Welcome</title>
+    <style>
+      :root {
+        --bg: #060617;
+        --accent: #7b5cff;
+        --accent2: #6ee7b7;
+      }
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        font-family: Inter, system-ui, Segoe UI, Roboto, "Helvetica Neue", Arial;
+      }
+      body {
+        background: radial-gradient(
+          ellipse at 10% 10%,
+          #071024 0%,
+          #020312 40%,
+          #000 100%
+        );
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* Fullscreen intro */
+      .intro {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        color: #fff;
+      }
+      canvas#starfield {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+
+      .logo-wrap {
+        position: relative;
+        z-index: 3;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 18px;
+      }
+      .logo {
+        width: 96px;
+        height: 96px;
+        filter: drop-shadow(0 10px 30px rgba(123, 92, 255, 0.18));
+        border-radius: 14px;
+        background: linear-gradient(135deg, var(--accent), #9fb8ff);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .logo img {
+        width: 80%;
+        height: 80%;
+        object-fit: contain;
+      }
+      h1.title {
+        font-size: 28px;
+        letter-spacing: 2px;
+        margin: 0;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+      p.tag {
+        margin: 0;
+        opacity: 0.9;
+        color: rgba(255, 255, 255, 0.85);
+      }
+
+      /* pulse + glow */
+      .pulse {
+        position: absolute;
+        z-index: 2;
+        width: 300px;
+        height: 300px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle at 30% 30%,
+          rgba(123, 92, 255, 0.18),
+          rgba(123, 92, 255, 0.06) 30%,
+          transparent 60%
+        );
+        filter: blur(18px);
+        animation: pulse 3.5s ease-out forwards;
+      }
+      @keyframes pulse {
+        0% {
+          transform: scale(0.6);
+          opacity: 1;
+        }
+        70% {
+          transform: scale(1.15);
+          opacity: 0.9;
+        }
+        100% {
+          transform: scale(1.6);
+          opacity: 0;
+        }
+      }
+
+      /* loader */
+      .loader {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+      }
+      .loader span {
+        width: 10px;
+        height: 10px;
+        background: linear-gradient(180deg, var(--accent), var(--accent2));
+        border-radius: 50%;
+        opacity: 0.95;
+        transform: translateY(0);
+        animation: jump 1s infinite;
+      }
+      .loader span:nth-child(2) {
+        animation-delay: 0.12s;
+      }
+      .loader span:nth-child(3) {
+        animation-delay: 0.24s;
+      }
+      @keyframes jump {
+        0% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-12px);
+        }
+        100% {
+          transform: translateY(0);
+        }
+      }
+
+      /* small skip hint */
+      .skip {
+        position: fixed;
+        right: 18px;
+        bottom: 18px;
+        background: rgba(255, 255, 255, 0.06);
+        color: #fff;
+        padding: 8px 12px;
+        border-radius: 999px;
+        font-size: 13px;
+        backdrop-filter: blur(6px);
+        z-index: 4;
+      }
+
+      /* responsive tweaks */
+      @media (max-width: 520px) {
+        .logo {
+          width: 74px;
+          height: 74px;
+        }
+        .logo img {
+          width: 70%;
+        }
+        .title {
+          font-size: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="intro" id="intro">
+      <canvas id="starfield"></canvas>
+      <div class="pulse" aria-hidden></div>
+      <div class="logo-wrap">
+        <div class="logo" id="logo">
+          <img
+            src="Anti_Boredom_main/media/anti_boredom_main.png"
+            alt="Anti Boredom"
+            onerror="this.style.display='none'"
+          />
+        </div>
+        <h1 class="title">Anti‑Boredom</h1>
+        <p class="tag">Mini‑games, tools & experiments — stay curious</p>
+        <div class="loader" aria-hidden>
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+      <div class="skip" id="skip">Click or press any key to skip</div>
+    </div>
+
+    <script>
+      // Small starfield and timed redirect. Click/press to skip.
+      (function () {
+        const redirectTo = "Anti_Boredom_main/index.html";
+        const duration = 3500; // ms (3.5s)
+        const canvas = document.getElementById("starfield");
+        const ctx = canvas.getContext("2d");
+        let stars = [];
+
+        function resize() {
+          const dpr = Math.max(1, window.devicePixelRatio || 1);
+          canvas.width = innerWidth * dpr;
+          canvas.height = innerHeight * dpr;
+          canvas.style.width = innerWidth + "px";
+          canvas.style.height = innerHeight + "px";
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+
+        function initStars() {
+          stars = [];
+          const count = Math.round((innerWidth + innerHeight) / 12);
+          for (let i = 0; i < count; i++) {
+            stars.push({
+              x: Math.random() * innerWidth,
+              y: Math.random() * innerHeight,
+              z: Math.random() * 1.2 + 0.2,
+              r: Math.random() * 1.2 + 0.2,
+            });
+          }
+        }
+
+        function draw(t) {
+          ctx.clearRect(0, 0, innerWidth, innerHeight);
+          // subtle gradient
+          const g = ctx.createLinearGradient(0, 0, 0, innerHeight);
+          g.addColorStop(0, "rgba(20,22,40,0.08)");
+          g.addColorStop(1, "rgba(0,0,0,0.25)");
+          ctx.fillStyle = g;
+          ctx.fillRect(0, 0, innerWidth, innerHeight);
+
+          for (let i = 0; i < stars.length; i++) {
+            const s = stars[i];
+            s.x += 0.02 * s.z * (1 + Math.sin(t / 6000));
+            s.y += 0.01 * s.z;
+            if (s.x > innerWidth) s.x = 0;
+            if (s.y > innerHeight) s.y = 0;
+            ctx.beginPath();
+            ctx.fillStyle = "rgba(255,255,255," + 0.4 * s.z + ")";
+            ctx.arc(s.x, s.y, s.r * s.z, 0, Math.PI * 2);
+            ctx.fill();
+          }
+          // gentle blur overlay
+          ctx.globalCompositeOperation = "lighter";
+          ctx.globalCompositeOperation = "source-over";
+        }
+
+        let rafId;
+        function loop(ts) {
+          draw(ts);
+          rafId = requestAnimationFrame(loop);
+        }
+
+        function start() {
+          resize();
+          initStars();
+          rafId = requestAnimationFrame(loop);
+        }
+        window.addEventListener("resize", () => {
+          resize();
+          initStars();
+        });
+        start();
+
+        // Redirect handling
+        let done = false;
+        function finish() {
+          if (done) return;
+          done = true;
+          cancelAnimationFrame(rafId);
+          document.getElementById("intro").style.transition = "opacity .4s";
+          document.getElementById("intro").style.opacity = 0;
+          setTimeout(() => {
+            location.href = redirectTo;
+          }, 420);
+        }
+
+        // Auto finish after duration
+        const timeoutId = setTimeout(finish, duration);
+
+        // Skip handlers
+        function skip() {
+          clearTimeout(timeoutId);
+          finish();
+        }
+        document
+          .getElementById("intro")
+          .addEventListener("click", skip, { passive: true });
+        document.addEventListener("keydown", skip, { passive: true });
+      })();
+    </script>
+  </body>
+</html>
