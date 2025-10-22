@@ -3,25 +3,22 @@
     --bg-color: #2c2e31;
     /* Dark background */
     --main-color: #e2e2e3;
-    /* Main text color */
+    /* Main text color for typed correct text */
+    --untyped-color: #6d6f73;
+    /* Muted text for untyped words */
     --sub-color: #6d6f73;
-    /* Muted text for labels, disabled states */
+    /* Muted text for labels, disabled states (reusing untyped-color) */
+
     --accent-color: #1e88e5;
     /* A vibrant blue accent (can be changed to teal, purple etc.) */
     --error-color: #ef5350;
     /* Red for incorrect */
-    --correct-color: #4CAF50;
-    /* Green for correct */
-    --current-char-bg: #4a4d52;
-    /* Background for current character */
     --current-char-underline: var(--accent-color);
     /* Underline for current char */
-    --input-border-focus: var(--accent-color);
 }
 
 body {
     font-family: 'Inter', 'Roboto Mono', monospace, sans-serif;
-    /* Prioritize monospaced for typing */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -29,153 +26,232 @@ body {
     margin: 0;
     background-color: var(--bg-color);
     color: var(--main-color);
+    /* Default body text color */
     font-size: 1.1em;
     line-height: 1.6;
 }
 
-/* Optional: Import a nice font like Inter or Roboto Mono */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Roboto+Mono:wght@400;500;700&display=swap');
-
 
 .container {
     background-color: var(--bg-color);
-    /* Maintain dark background */
     padding: 30px;
     border-radius: 8px;
-    /* Monkeytype usually doesn't have a strong box-shadow by default on the main container,
-       it's more about the flat colors. */
     text-align: center;
     width: 90%;
     max-width: 800px;
     display: flex;
     flex-direction: column;
     gap: 25px;
-    /* Spacing between sections */
 }
 
 .logo {
     color: var(--accent-color);
-    /* Use accent color for the logo */
     font-size: 2.5em;
     font-weight: 700;
     margin-bottom: 20px;
     letter-spacing: 2px;
     text-transform: lowercase;
-    /* Monkeytype's logo is usually lowercase */
+}
+
+/* Options section for the checkbox */
+.options {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+/* Custom Checkbox Styling (unchanged, but ensuring it matches theme) */
+.checkbox-container {
+    display: block;
+    position: relative;
+    padding-left: 30px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    font-size: 0.9em;
+    color: var(--untyped-color);
+    /* Use untyped-color for label */
+    user-select: none;
+    text-align: left;
+}
+
+.checkbox-container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    background-color: #555;
+    border-radius: 3px;
+    transition: background-color 0.2s ease;
+}
+
+.checkbox-container:hover input~.checkmark {
+    background-color: #666;
+}
+
+.checkbox-container input:checked~.checkmark {
+    background-color: var(--accent-color);
+}
+
+.checkmark::after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.checkbox-container input:checked~.checkmark::after {
+    display: block;
+}
+
+.checkbox-container .checkmark::after {
+    left: 7px;
+    top: 3px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    transform: rotate(45deg);
 }
 
 .test-area {
     margin-bottom: 25px;
 }
 
+#quote-scroll-container {
+    max-height: 150px;
+    overflow: hidden;
+    /* We'll control scrolling with JS transform, so hidden is fine */
+    position: relative;
+    margin-bottom: 20px;
+    padding: 20px 0;
+    background-color: transparent;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    /* Keep text centered horizontally within its view */
+    align-items: center;
+    /* Vertically center if quote is short */
+    /* If you want a more rigid top alignment for long quotes that scroll, use flex-start */
+    /* align-items: flex-start; */
+}
+
 #quote-display {
     background-color: transparent;
-    /* Transparent background */
     border: none;
-    /* No border */
     padding: 0;
-    /* Remove padding */
     font-size: 1.8em;
-    /* Larger font for the quote */
     line-height: 1.6;
     text-align: center;
-    /* Center the text for a clean look */
-    margin-bottom: 20px;
     min-height: 120px;
-    /* Ensure a consistent height */
     display: flex;
     flex-wrap: wrap;
-    /* Allow words to wrap naturally */
     justify-content: center;
-    align-items: center;
-    color: var(--main-color);
-    overflow: hidden;
-    /* Hide overflowing text */
+    align-content: flex-start;
+    /* Aligns lines to the top within the flex container */
+    color: var(--untyped-color);
+    /* Default color for all text in display is untyped */
     position: relative;
-    max-height: 150px;
-    /* Limit height to prevent too much text showing */
+    transition: transform 0.1s ease-out;
+    will-change: transform;
 }
 
 #quote-display span {
-    transition: color 0.05s ease-out, background-color 0.05s ease-out;
-    /* Smooth transitions */
+    transition: color 0.05s ease-out, background-color 0.05s ease-out, border-color 0.05s ease-out;
     white-space: pre;
-    /* Preserve spaces between words */
+    position: relative;
+    display: inline-block;
+    padding: 0 1px;
+    /* Small padding for highlight visibility */
+    border-radius: 2px;
 }
 
 /* Styling for correct and incorrect characters */
 #quote-display .correct {
     color: var(--main-color);
-    /* Correct characters blend with main text */
+    /* Correct characters stand out slightly from untyped */
 }
 
 #quote-display .incorrect {
-    color: var(--error-color);
-    /* Red for incorrect */
-    /* text-decoration: underline; -- Monkeytype often just changes color */
+    /* Removed red text color */
+    background-color: rgba(239, 83, 80, 0.2);
+    /* Subtle red background */
     border-bottom: 1px solid var(--error-color);
-    /* Subtle underline for errors */
+    /* Subtle red underline */
+    color: var(--main-color);
+    /* Keep the text readable, not red */
+}
+
+/* Blinking Cursor for current character */
+@keyframes blink {
+    0%, 100% {
+        border-color: transparent;
+    }
+
+    /* Blink the border color */
+    50% {
+        border-color: var(--current-char-underline);
+    }
 }
 
 #quote-display .current {
+    /* The default color for the char itself can remain untyped-color or main-color */
+    color: var(--untyped-color);
+    /* This character hasn't been typed yet, so its text color is untyped */
     position: relative;
-    color: var(--accent-color);
-    /* Highlight current character with accent */
+    /* We'll use a border for the cursor, not a background */
+    border-bottom: 2px solid transparent;
+    /* Default transparent border */
+    animation: blink 1s step-end infinite;
+    /* Blinking animation on the border */
 }
 
-#quote-display .current::after {
-    content: '';
-    position: absolute;
-    bottom: -3px;
-    /* Position it below the character */
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background-color: var(--current-char-underline);
-    /* Underline current character */
+#quote-display .current.correct {
+    /* If the current char happens to be correct (e.g., after backspace) */
+    color: var(--main-color);
 }
 
-/* Handle spaces for highlighting more gracefully */
-
+#quote-display .current.incorrect {
+    /* If the current char happens to be incorrect */
+    color: var(--main-color);
+}
 
 
 #quote-input {
     width: 100%;
-    /* Full width */
     padding: 15px 20px;
     font-size: 1.5em;
-    /* Larger font for typing */
     border: none;
-    /* No border */
     border-radius: 5px;
     box-sizing: border-box;
     resize: none;
     outline: none;
-    background-color: var(--sub-color);
-    /* Muted background for input */
+    background-color: #4a4d52;
+    /* Slightly darker than sub-color for better contrast */
     color: var(--main-color);
     text-align: center;
-    /* Center input text */
     caret-color: var(--accent-color);
-    /* Cursor color */
     height: 0;
-    /* Initially hidden */
     padding: 0;
-    /* Initially no padding */
     opacity: 0;
-    /* Initially invisible */
     transition: all 0.2s ease-in-out;
 }
 
 #quote-input.active {
     height: 60px;
-    /* Expand when active */
     padding: 15px 20px;
     opacity: 1;
     background-color: #4a4d52;
-    /* Slightly darker when active */
 }
-
 
 #quote-input:disabled {
     background-color: var(--sub-color);
@@ -196,9 +272,7 @@ body {
 
 #start-button:hover {
     background-color: color-mix(in srgb, var(--accent-color) 80%, black);
-    /* Slightly darker on hover */
     transform: translateY(-2px);
-    /* Subtle lift */
 }
 
 #start-button:active {
@@ -207,15 +281,12 @@ body {
 
 .results {
     margin-top: 30px;
-    /* Monkeytype usually has a clean line, or just separation */
     border-top: 1px solid var(--sub-color);
     padding-top: 20px;
     display: flex;
     justify-content: space-around;
     flex-wrap: wrap;
-    /* Allow wrapping on smaller screens */
     color: var(--sub-color);
-    /* Muted color for result labels */
 }
 
 .result-item {
@@ -234,13 +305,11 @@ body {
 
 .results .value {
     font-size: 2em;
-    /* Larger values */
     font-weight: 700;
     color: var(--main-color);
-    /* Main text color for values */
 }
 
-/* Responsive adjustments */
+/* Responsive adjustments (unchanged) */
 @media (max-width: 600px) {
     .container {
         padding: 20px;

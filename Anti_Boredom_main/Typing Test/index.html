@@ -6,15 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Typing Test</title>
     <link rel="stylesheet" href="styles.css">
-    <!-- You might want to link a custom font here later, like 'Roboto Mono' or 'Fira Code' -->
-    <!-- <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet"> -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Roboto+Mono:wght@400;500;700&display=swap"
+        rel="stylesheet">
 </head>
 
 <body data-theme="dark-monkeytype">
     <div class="container">
-        <h1 class="logo">typemaster</h1> <!-- Changed title to a logo-like text -->
+        <h1 class="logo">typemaster</h1>
+
+        <div class="options">
+            <label class="checkbox-container">Stop on First Mistake
+                <input type="checkbox" id="stop-on-mistake-checkbox">
+                <span class="checkmark"></span>
+            </label>
+        </div>
+
         <div class="test-area">
-            <p id="quote-display"></p>
+            <!-- Add a div for scrolling if quote-display itself doesn't scroll -->
+            <div id="quote-scroll-container">
+                <p id="quote-display"></p>
+            </div>
             <textarea id="quote-input" placeholder="Start typing..." rows="6" spellcheck="false" disabled></textarea>
             <button id="start-button">Start Test</button>
         </div>
