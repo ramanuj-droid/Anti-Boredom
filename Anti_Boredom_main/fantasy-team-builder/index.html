@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fantasy Cricket Team Builder</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+            background: #0a0e27;
+            min-height: 100vh;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        .background-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(74, 144, 226, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(138, 43, 226, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 30px 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeInDown 0.6s ease-out;
+        }
+
+        .header h1 {
+            font-size: 3.5em;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            letter-spacing: -1px;
+        }
+
+        .header p {
+            color: #a0aec0;
+            font-size: 1.1em;
+        }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1fr 420px;
+            gap: 30px;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .stats-sidebar {
+            position: sticky;
+            top: 30px;
+            height: fit-content;
+            animation: fadeInRight 0.6s ease-out;
+        }
+
+        .stats-content {
+            padding: 30px;
+        }
+
+        .stats-header {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stats-header h2 {
+            font-size: 1.8em;
+            margin-bottom: 5px;
+        }
+
+        .budget-display {
+            margin-bottom: 30px;
+        }
+
+        .budget-amount {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .budget-spent {
+            font-size: 2em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .budget-limit {
+            color: #718096;
+            font-size: 1.1em;
+        }
+
+        .progress-container {
+            position: relative;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 20px;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-bar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        .progress-bar.warning {
+            background: linear-gradient(90deg, #f59e0b, #d97706);
+        }
+
+        .progress-bar.danger {
+            background: linear-gradient(90deg, #ef4444, #dc2626);
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes shimmer {
+            to { left: 100%; }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        .stat-grid {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .stat-label {
+            color: #a0aec0;
+            font-size: 0.9em;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stat-value {
+            font-size: 1.8em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .action-button {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 16px;
+            color: white;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .action-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+        }
+
+        .action-button.danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            box-shadow: 0 10px 30px rgba(239, 68, 68, 0.3);
+        }
+
+        .action-button.danger:hover {
+            box-shadow: 0 15px 40px rgba(239, 68, 68, 0.4);
+        }
+
+        .main-content {
+            animation: fadeInLeft 0.6s ease-out;
+        }
+
+        .team-section {
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            font-weight: 700;
+        }
+
+        .team-counter {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(102, 126, 234, 0.2);
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 20px;
+            min-height: 300px;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 20px;
+            border: 2px dashed rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .team-grid.drag-over {
+            background: rgba(102, 126, 234, 0.1);
+            border-color: #667eea;
+            transform: scale(1.01);
+        }
+
+        .empty-team {
+            grid-column: 1 / -1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            color: #718096;
+        }
+
+        .empty-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .players-section {
+            padding: 30px;
+        }
+
+        .filters-container {
+            margin-bottom: 25px;
+        }
+
+        .filter-row {
+            margin-bottom: 15px;
+        }
+
+        .filter-label {
+            color: #a0aec0;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+            display: block;
+            font-weight: 600;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-chip {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            color: #a0aec0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 0.95em;
+        }
+
+        .filter-chip:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .filter-chip.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .search-box {
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            color: white;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .search-input::placeholder {
+            color: #718096;
+        }
+
+        .players-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .player-card {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            border-radius: 20px;
+            padding: 20px;
+            cursor: move;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .player-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .player-card:hover::before {
+            opacity: 1;
+        }
+
+        .player-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+            border-color: rgba(102, 126, 234, 0.5);
+        }
+
+        .player-card.dragging {
+            opacity: 0.5;
+            transform: scale(0.95);
+        }
+
+        .player-card.in-team {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.15), rgba(22, 163, 74, 0.15));
+            border-color: rgba(34, 197, 94, 0.3);
+            cursor: pointer;
+        }
+
+        .player-card.in-team:hover {
+            border-color: rgba(34, 197, 94, 0.5);
+        }
+
+        .player-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .player-info {
+            flex: 1;
+        }
+
+        .player-name {
+            font-size: 1.2em;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+
+        .player-meta {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .player-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-role {
+            background: rgba(102, 126, 234, 0.2);
+            color: #667eea;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+        }
+
+        .badge-country {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .player-price-tag {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1.1em;
+            white-space: nowrap;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .player-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .player-stat-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px;
+            border-radius: 12px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .player-stat-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .stat-item-label {
+            font-size: 0.75em;
+            color: #a0aec0;
+            margin-bottom: 4px;
+        }
+
+        .stat-item-value {
+            font-size: 1.1em;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-sidebar {
+                position: relative;
+                top: 0;
+                order: -1;
+            }
+
+            .header h1 {
+                font-size: 2.5em;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .players-grid,
+            .team-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .main-layout {
+                gap: 20px;
+            }
+
+            .glass-card {
+                border-radius: 16px;
+            }
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-pattern"></div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>🏏 Fantasy Cricket League</h1>
+            <p>Build your dream team within ₹100 Cr budget</p>
+        </div>
+
+        <div class="main-layout">
+            <div class="main-content">
+                <!-- Selected Team Section -->
+                <div class="glass-card team-section">
+                    <div class="section-header">
+                        <h2 class="section-title">My Dream XI</h2>
+                        <div class="team-counter">
+                            <span id="teamCount">0/11</span>
+                            <span>Players</span>
+                        </div>
+                    </div>
+                    <div class="team-grid" id="teamGrid">
+                        <div class="empty-team">
+                            <div class="empty-icon">🏏</div>
+                            <h3>Your team is empty</h3>
+                            <p>Drag players here or click to add them</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Available Players Section -->
+                <div class="glass-card players-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Available Players</h2>
+                    </div>
+
+                    <div class="search-box">
+                        <input 
+                            type="text" 
+                            class="search-input" 
+                            id="searchInput" 
+                            placeholder="🔍 Search players by name..."
+                        >
+                    </div>
+
+                    <div class="filters-container">
+                        <div class="filter-row">
+                            <label class="filter-label">Filter by Role</label>
+                            <div class="filter-buttons" id="roleFilters">
+                                <div class="filter-chip active" data-role="all">All Players</div>
+                                <div class="filter-chip" data-role="Batsman">Batsmen</div>
+                                <div class="filter-chip" data-role="Bowler">Bowlers</div>
+                                <div class="filter-chip" data-role="All-rounder">All-rounders</div>
+                                <div class="filter-chip" data-role="Wicket-keeper">Wicket-keepers</div>
+                            </div>
+                        </div>
+
+                        <div class="filter-row">
+                            <label class="filter-label">Filter by Nationality</label>
+                            <div class="filter-buttons" id="countryFilters"></div>
+                        </div>
+                    </div>
+
+                    <div class="players-grid" id="playersGrid"></div>
+                </div>
+            </div>
+
+            <!-- Stats Sidebar -->
+            <div class="stats-sidebar glass-card">
+                <div class="stats-content">
+                    <div class="stats-header">
+                        <h2>Team Statistics</h2>
+                    </div>
+
+                    <div class="budget-display">
+                        <div class="budget-amount">
+                            <span class="budget-spent" id="budgetSpent">₹0 Cr</span>
+                            <span class="budget-limit">/ ₹100 Cr</span>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <div class="stat-grid">
+                        <div class="stat-card">
+                            <div class="stat-label">💰 Remaining Budget</div>
+                            <div class="stat-value" id="remainingBudget">₹100 Cr</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">🏃 Total Runs</div>
+                            <div class="stat-value" id="totalRuns">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">🎯 Total Wickets</div>
+                            <div class="stat-value" id="totalWickets">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">⚡ Avg Strike Rate</div>
+                            <div class="stat-value" id="avgStrikeRate">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">📊 Avg Economy</div>
+                            <div class="stat-value" id="avgEconomy">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">⚖️ Team Balance</div>
+                            <div class="stat-value" id="teamBalance">-</div>
+                        </div>
+                    </div>
+
+                    <button class="action-button danger" onclick="resetTeam()">
+                        Reset Team
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const BUDGET_LIMIT = 100;
+        
+        const players = [
+            // India
+            { id: 1, name: "Virat Kohli", role: "Batsman", country: "India", price: 12, runs: 8200, wickets: 4, strikeRate: 137, economy: 8.5 },
+            { id: 2, name: "Rohit Sharma", role: "Batsman", country: "India", price: 11, runs: 7800, wickets: 8, strikeRate: 139, economy: 7.2 },
+            { id: 3, name: "Jasprit Bumrah", role: "Bowler", country: "India", price: 11, runs: 120, wickets: 145, strikeRate: 95, economy: 6.8 },
+            { id: 4, name: "Ravindra Jadeja", role: "All-rounder", country: "India", price: 10, runs: 2400, wickets: 132, strikeRate: 127, economy: 7.4 },
+            { id: 5, name: "KL Rahul", role: "Wicket-keeper", country: "India", price: 10, runs: 3800, wickets: 0, strikeRate: 135, economy: 0 },
+            { id: 6, name: "Hardik Pandya", role: "All-rounder", country: "India", price: 10, runs: 1900, wickets: 62, strikeRate: 145, economy: 8.9 },
+            { id: 7, name: "MS Dhoni", role: "Wicket-keeper", country: "India", price: 9, runs: 5200, wickets: 0, strikeRate: 136, economy: 0 },
+            { id: 8, name: "Yuzvendra Chahal", role: "Bowler", country: "India", price: 8, runs: 150, wickets: 125, strikeRate: 110, economy: 7.9 },
+            { id: 9, name: "Shikhar Dhawan", role: "Batsman", country: "India", price: 9, runs: 6200, wickets: 0, strikeRate: 126, economy: 0 },
+            { id: 10, name: "Mohammed Shami", role: "Bowler", country: "India", price: 9, runs: 85, wickets: 108, strikeRate: 98, economy: 8.2 },
+            { id: 11, name: "Rishabh Pant", role: "Wicket-keeper", country: "India", price: 10, runs: 2800, wickets: 0, strikeRate: 147, economy: 0 },
+            { id: 12, name: "Suryakumar Yadav", role: "Batsman", country: "India", price: 9, runs: 2400, wickets: 0, strikeRate: 143, economy: 0 },
+            { id: 13, name: "Ravichandran Ashwin", role: "All-rounder", country: "India", price: 8, runs: 950, wickets: 158, strikeRate: 115, economy: 6.9 },
+            { id: 14, name: "Bhuvneshwar Kumar", role: "Bowler", country: "India", price: 8, runs: 180, wickets: 142, strikeRate: 100, economy: 7.3 },
+            { id: 15, name: "Washington Sundar", role: "All-rounder", country: "India", price: 7, runs: 480, wickets: 45, strikeRate: 128, economy: 7.6 },
+            
+            // Australia
+            { id: 16, name: "Steve Smith", role: "Batsman", country: "Australia", price: 11, runs: 7500, wickets: 0, strikeRate: 128, economy: 0 },
+            { id: 17, name: "David Warner", role: "Batsman", country: "Australia", price: 10, runs: 7200, wickets: 0, strikeRate: 142, economy: 0 },
+            { id: 18, name: "Pat Cummins", role: "Bowler", country: "Australia", price: 10, runs: 350, wickets: 135, strikeRate: 105, economy: 7.1 },
+            { id: 19, name: "Mitchell Starc", role: "Bowler", country: "Australia", price: 10, runs: 280, wickets: 138, strikeRate: 98, economy: 8.4 },
+            { id: 20, name: "Glenn Maxwell", role: "All-rounder", country: "Australia", price: 9, runs: 3200, wickets: 55, strikeRate: 154, economy: 8.2 },
+            { id: 21, name: "Adam Zampa", role: "Bowler", country: "Australia", price: 8, runs: 85, wickets: 95, strikeRate: 102, economy: 7.8 },
+            { id: 22, name: "Aaron Finch", role: "Batsman", country: "Australia", price: 8, runs: 4500, wickets: 0, strikeRate: 138, economy: 0 },
+            { id: 23, name: "Josh Hazlewood", role: "Bowler", country: "Australia", price: 9, runs: 95, wickets: 112, strikeRate: 94, economy: 7.4 },
+            { id: 24, name: "Marcus Stoinis", role: "All-rounder", country: "Australia", price: 8, runs: 2100, wickets: 48, strikeRate: 135, economy: 8.5 },
+            { id: 25, name: "Alex Carey", role: "Wicket-keeper", country: "Australia", price: 7, runs: 1850, wickets: 0, strikeRate: 124, economy: 0 },
+            
+            // England
+            { id: 26, name: "Jos Buttler", role: "Wicket-keeper", country: "England", price: 11, runs: 4800, wickets: 0, strikeRate: 149, economy: 0 },
+            { id: 27, name: "Ben Stokes", role: "All-rounder", country: "England", price: 11, runs: 3900, wickets: 92, strikeRate: 133, economy: 7.9 },
+            { id: 28, name: "Joe Root", role: "Batsman", country: "England", price: 10, runs: 6500, wickets: 28, strikeRate: 124, economy: 8.1 },
+            { id: 29, name: "Jofra Archer", role: "Bowler", country: "England", price: 10, runs: 125, wickets: 98, strikeRate: 118, economy: 7.2 },
+            { id: 30, name: "Jonny Bairstow", role: "Wicket-keeper", country: "England", price: 9, runs: 3600, wickets: 0, strikeRate: 132, economy: 0 },
+            { id: 31, name: "Chris Woakes", role: "All-rounder", country: "England", price: 8, runs: 920, wickets: 102, strikeRate: 122, economy: 7.5 },
+            { id: 32, name: "Adil Rashid", role: "Bowler", country: "England", price: 8, runs: 180, wickets: 108, strikeRate: 105, economy: 7.7 },
+            { id: 33, name: "Sam Curran", role: "All-rounder", country: "England", price: 8, runs: 850, wickets: 65, strikeRate: 141, economy: 8.3 },
+            { id: 34, name: "Mark Wood", role: "Bowler", country: "England", price: 7, runs: 95, wickets: 78, strikeRate: 115, economy: 8.6 },
+            { id: 35, name: "Moeen Ali", role: "All-rounder", country: "England", price: 7, runs: 2200, wickets: 85, strikeRate: 134, economy: 7.8 },
+            
+            // Pakistan
+            { id: 36, name: "Babar Azam", role: "Batsman", country: "Pakistan", price: 11, runs: 5400, wickets: 0, strikeRate: 129, economy: 0 },
+            { id: 37, name: "Shaheen Afridi", role: "Bowler", country: "Pakistan", price: 10, runs: 145, wickets: 112, strikeRate: 108, economy: 7.1 },
+            { id: 38, name: "Mohammad Rizwan", role: "Wicket-keeper", country: "Pakistan", price: 9, runs: 3200, wickets: 0, strikeRate: 127, economy: 0 },
+            { id: 39, name: "Shadab Khan", role: "All-rounder", country: "Pakistan", price: 8, runs: 1450, wickets: 88, strikeRate: 132, economy: 7.6 },
+            { id: 40, name: "Haris Rauf", role: "Bowler", country: "Pakistan", price: 8, runs: 75, wickets: 82, strikeRate: 112, economy: 8.1 },
+            { id: 41, name: "Fakhar Zaman", role: "Batsman", country: "Pakistan", price: 8, runs: 3100, wickets: 0, strikeRate: 136, economy: 0 },
+            { id: 42, name: "Hasan Ali", role: "Bowler", country: "Pakistan", price: 7, runs: 185, wickets: 95, strikeRate: 103, economy: 7.9 },
+            { id: 43, name: "Imad Wasim", role: "All-rounder", country: "Pakistan", price: 7, runs: 1200, wickets: 72, strikeRate: 125, economy: 7.3 },
+            { id: 44, name: "Mohammad Hafeez", role: "All-rounder", country: "Pakistan", price: 7, runs: 2800, wickets: 58, strikeRate: 123, economy: 7.8 },
+            { id: 45, name: "Naseem Shah", role: "Bowler", country: "Pakistan", price: 6, runs: 65, wickets: 48, strikeRate: 118, economy: 8.4 },
+            
+            // South Africa
+            { id: 46, name: "Quinton de Kock", role: "Wicket-keeper", country: "South Africa", price: 10, runs: 5100, wickets: 0, strikeRate: 135, economy: 0 },
+            { id: 47, name: "Kagiso Rabada", role: "Bowler", country: "South Africa", price: 10, runs: 165, wickets: 128, strikeRate: 106, economy: 7.4 },
+            { id: 48, name: "AB de Villiers", role: "Batsman", country: "South Africa", price: 11, runs: 5100, wickets: 0, strikeRate: 151, economy: 0 },
+            { id: 49, name: "Faf du Plessis", role: "Batsman", country: "South Africa", price: 8, runs: 4200, wickets: 0, strikeRate: 127, economy: 0 },
+            { id: 50, name: "Anrich Nortje", role: "Bowler", country: "South Africa", price: 8, runs: 95, wickets: 78, strikeRate: 110, economy: 7.8 },
+            { id: 51, name: "Tabraiz Shamsi", role: "Bowler", country: "South Africa", price: 7, runs: 120, wickets: 68, strikeRate: 108, economy: 7.5 },
+            { id: 52, name: "David Miller", role: "Batsman", country: "South Africa", price: 8, runs: 2800, wickets: 0, strikeRate: 139, economy: 0 },
+            { id: 53, name: "Lungi Ngidi", role: "Bowler", country: "South Africa", price: 7, runs: 85, wickets: 72, strikeRate: 104, economy: 8.2 },
+            
+            // New Zealand
+            { id: 54, name: "Kane Williamson", role: "Batsman", country: "New Zealand", price: 10, runs: 5800, wickets: 0, strikeRate: 125, economy: 0 },
+            { id: 55, name: "Trent Boult", role: "Bowler", country: "New Zealand", price: 10, runs: 145, wickets: 138, strikeRate: 99, economy: 7.2 },
+            { id: 56, name: "Martin Guptill", role: "Batsman", country: "New Zealand", price: 8, runs: 3900, wickets: 0, strikeRate: 134, economy: 0 },
+            { id: 57, name: "Tim Southee", role: "Bowler", country: "New Zealand", price: 8, runs: 185, wickets: 118, strikeRate: 101, economy: 7.8 },
+            { id: 58, name: "Mitchell Santner", role: "All-rounder", country: "New Zealand", price: 7, runs: 950, wickets: 82, strikeRate: 120, economy: 7.4 },
+            { id: 59, name: "Devon Conway", role: "Wicket-keeper", country: "New Zealand", price: 8, runs: 1850, wickets: 0, strikeRate: 128, economy: 0 },
+            { id: 60, name: "Lockie Ferguson", role: "Bowler", country: "New Zealand", price: 8, runs: 95, wickets: 88, strikeRate: 113, economy: 8.1 },
+            
+            // West Indies
+            { id: 61, name: "Chris Gayle", role: "Batsman", country: "West Indies", price: 9, runs: 4800, wickets: 18, strikeRate: 146, economy: 9.2 },
+            { id: 62, name: "Andre Russell", role: "All-rounder", country: "West Indies", price: 10, runs: 1850, wickets: 78, strikeRate: 169, economy: 9.4 },
+            { id: 63, name: "Kieron Pollard", role: "All-rounder", country: "West Indies", price: 8, runs: 2400, wickets: 68, strikeRate: 142, economy: 8.8 },
+            { id: 64, name: "Nicholas Pooran", role: "Wicket-keeper", country: "West Indies", price: 8, runs: 1650, wickets: 0, strikeRate: 141, economy: 0 },
+            { id: 65, name: "Sunil Narine", role: "All-rounder", country: "West Indies", price: 8, runs: 1200, wickets: 92, strikeRate: 138, economy: 6.8 },
+            { id: 66, name: "Jason Holder", role: "All-rounder", country: "West Indies", price: 7, runs: 1100, wickets: 85, strikeRate: 125, economy: 7.9 },
+            { id: 67, name: "Shimron Hetmyer", role: "Batsman", country: "West Indies", price: 7, runs: 1450, wickets: 0, strikeRate: 137, economy: 0 },
+            
+            // Sri Lanka
+            { id: 68, name: "Lasith Malinga", role: "Bowler", country: "Sri Lanka", price: 9, runs: 185, wickets: 142, strikeRate: 105, economy: 7.6 },
+            { id: 69, name: "Wanindu Hasaranga", role: "All-rounder", country: "Sri Lanka", price: 8, runs: 850, wickets: 78, strikeRate: 135, economy: 7.2 },
+            { id: 70, name: "Angelo Mathews", role: "All-rounder", country: "Sri Lanka", price: 7, runs: 2800, wickets: 65, strikeRate: 118, economy: 8.1 },
+            { id: 71, name: "Kusal Perera", role: "Wicket-keeper", country: "Sri Lanka", price: 7, runs: 2200, wickets: 0, strikeRate: 129, economy: 0 },
+            { id: 72, name: "Dushmantha Chameera", role: "Bowler", country: "Sri Lanka", price: 6, runs: 75, wickets: 58, strikeRate: 108, economy: 8.3 },
+            
+            // Bangladesh
+            { id: 73, name: "Shakib Al Hasan", role: "All-rounder", country: "Bangladesh", price: 9, runs: 3200, wickets: 128, strikeRate: 121, economy: 7.5 },
+            { id: 74, name: "Mushfiqur Rahim", role: "Wicket-keeper", country: "Bangladesh", price: 7, runs: 2900, wickets: 0, strikeRate: 119, economy: 0 },
+            { id: 75, name: "Mustafizur Rahman", role: "Bowler", country: "Bangladesh", price: 7, runs: 95, wickets: 88, strikeRate: 102, economy: 7.8 },
+            { id: 76, name: "Tamim Iqbal", role: "Batsman", country: "Bangladesh", price: 7, runs: 2850, wickets: 0, strikeRate: 116, economy: 0 },
+            { id: 77, name: "Mehidy Hasan", role: "All-rounder", country: "Bangladesh", price: 6, runs: 750, wickets: 62, strikeRate: 115, economy: 7.6 },
+            
+            // Afghanistan
+            { id: 78, name: "Rashid Khan", role: "Bowler", country: "Afghanistan", price: 10, runs: 350, wickets: 145, strikeRate: 128, economy: 6.4 },
+            { id: 79, name: "Mohammad Nabi", role: "All-rounder", country: "Afghanistan", price: 8, runs: 1850, wickets: 75, strikeRate: 126, economy: 7.3 },
+            { id: 80, name: "Mujeeb Ur Rahman", role: "Bowler", country: "Afghanistan", price: 7, runs: 85, wickets: 68, strikeRate: 98, economy: 6.9 },
+            
+            // Additional top players
+            { id: 81, name: "Ishan Kishan", role: "Wicket-keeper", country: "India", price: 8, runs: 1650, wickets: 0, strikeRate: 138, economy: 0 },
+            { id: 82, name: "Shardul Thakur", role: "All-rounder", country: "India", price: 7, runs: 620, wickets: 72, strikeRate: 142, economy: 8.8 },
+            { id: 83, name: "Axar Patel", role: "All-rounder", country: "India", price: 7, runs: 680, wickets: 58, strikeRate: 125, economy: 7.2 },
+            { id: 84, name: "Prithvi Shaw", role: "Batsman", country: "India", price: 7, runs: 1350, wickets: 0, strikeRate: 148, economy: 0 },
+            { id: 85, name: "Shreyas Iyer", role: "Batsman", country: "India", price: 8, runs: 2650, wickets: 0, strikeRate: 130, economy: 0 },
+            { id: 86, name: "Deepak Chahar", role: "Bowler", country: "India", price: 7, runs: 185, wickets: 68, strikeRate: 106, economy: 7.9 },
+            { id: 87, name: "Ruturaj Gaikwad", role: "Batsman", country: "India", price: 6, runs: 950, wickets: 0, strikeRate: 135, economy: 0 },
+            { id: 88, name: "Venkatesh Iyer", role: "All-rounder", country: "India", price: 6, runs: 580, wickets: 18, strikeRate: 140, economy: 8.5 },
+            { id: 89, name: "Travis Head", role: "Batsman", country: "Australia", price: 8, runs: 2200, wickets: 0, strikeRate: 133, economy: 0 },
+            { id: 90, name: "Mitchell Marsh", role: "All-rounder", country: "Australia", price: 8, runs: 1850, wickets: 52, strikeRate: 131, economy: 8.4 },
+            { id: 91, name: "Josh Inglis", role: "Wicket-keeper", country: "Australia", price: 7, runs: 980, wickets: 0, strikeRate: 142, economy: 0 },
+            { id: 92, name: "Liam Livingstone", role: "All-rounder", country: "England", price: 8, runs: 1200, wickets: 42, strikeRate: 148, economy: 8.2 },
+            { id: 93, name: "Jason Roy", role: "Batsman", country: "England", price: 7, runs: 2400, wickets: 0, strikeRate: 139, economy: 0 },
+            { id: 94, name: "Dawid Malan", role: "Batsman", country: "England", price: 7, runs: 1850, wickets: 0, strikeRate: 127, economy: 0 },
+            { id: 95, name: "Reece Topley", role: "Bowler", country: "England", price: 7, runs: 65, wickets: 58, strikeRate: 104, economy: 7.8 },
+            { id: 96, name: "Rassie van der Dussen", role: "Batsman", country: "South Africa", price: 7, runs: 1650, wickets: 0, strikeRate: 124, economy: 0 },
+            { id: 97, name: "Aiden Markram", role: "All-rounder", country: "South Africa", price: 7, runs: 1850, wickets: 38, strikeRate: 128, economy: 7.9 },
+            { id: 98, name: "Marco Jansen", role: "All-rounder", country: "South Africa", price: 6, runs: 420, wickets: 48, strikeRate: 135, economy: 8.1 },
+            { id: 99, name: "Daryl Mitchell", role: "All-rounder", country: "New Zealand", price: 7, runs: 1200, wickets: 32, strikeRate: 126, economy: 8.3 },
+            { id: 100, name: "Kyle Jamieson", role: "Bowler", country: "New Zealand", price: 7, runs: 185, wickets: 62, strikeRate: 98, economy: 7.6 }
+        ];
+
+        let selectedTeam = [];
+        let currentRoleFilter = 'all';
+        let currentCountryFilter = 'all';
+        let searchQuery = '';
+
+        // Get unique countries
+        const countries = ['all', ...new Set(players.map(p => p.country))].sort();
+
+        function initializeFilters() {
+            const countryFilters = document.getElementById('countryFilters');
+            countryFilters.innerHTML = countries.map(country => 
+                `<div class="filter-chip ${country === 'all' ? 'active' : ''}" data-country="${country}">
+                    ${country === 'all' ? 'All Countries' : country}
+                </div>`
+            ).join('');
+
+            // Role filter listeners
+            document.querySelectorAll('#roleFilters .filter-chip').forEach(chip => {
+                chip.addEventListener('click', () => {
+                    document.querySelectorAll('#roleFilters .filter-chip').forEach(c => c.classList.remove('active'));
+                    chip.classList.add('active');
+                    currentRoleFilter = chip.dataset.role;
+                    renderPlayers();
+                });
+            });
+
+            // Country filter listeners
+            document.querySelectorAll('#countryFilters .filter-chip').forEach(chip => {
+                chip.addEventListener('click', () => {
+                    document.querySelectorAll('#countryFilters .filter-chip').forEach(c => c.classList.remove('active'));
+                    chip.classList.add('active');
+                    currentCountryFilter = chip.dataset.country;
+                    renderPlayers();
+                });
+            });
+
+            // Search input listener
+            document.getElementById('searchInput').addEventListener('input', (e) => {
+                searchQuery = e.target.value.toLowerCase();
+                renderPlayers();
+            });
+        }
+
+        function getFilteredPlayers() {
+            return players.filter(player => {
+                const matchesRole = currentRoleFilter === 'all' || player.role === currentRoleFilter;
+                const matchesCountry = currentCountryFilter === 'all' || player.country === currentCountryFilter;
+                const matchesSearch = searchQuery === '' || player.name.toLowerCase().includes(searchQuery);
+                return matchesRole && matchesCountry && matchesSearch;
+            });
+        }
+
+        function renderPlayers() {
+            const grid = document.getElementById('playersGrid');
+            const filteredPlayers = getFilteredPlayers();
+            
+            if (filteredPlayers.length === 0) {
+                grid.innerHTML = '<div class="empty-team" style="grid-column: 1/-1;"><div class="empty-icon">🔍</div><p>No players found matching your filters</p></div>';
+                return;
+            }
+
+            grid.innerHTML = filteredPlayers.map(player => {
+                const inTeam = selectedTeam.some(p => p.id === player.id);
+                return `
+                    <div class="player-card ${inTeam ? 'in-team' : ''}" 
+                         draggable="true" 
+                         data-player-id="${player.id}"
+                         onclick="togglePlayer(${player.id})">
+                        <div class="player-top">
+                            <div class="player-info">
+                                <div class="player-name">${player.name}</div>
+                                <div class="player-meta">
+                                    <span class="player-badge badge-role">${player.role}</span>
+                                    <span class="player-badge badge-country">${player.country}</span>
+                                </div>
+                            </div>
+                            <div class="player-price-tag">₹${player.price} Cr</div>
+                        </div>
+                        <div class="player-stats-grid">
+                            <div class="player-stat-item">
+                                <div class="stat-item-label">Runs</div>
+                                <div class="stat-item-value">${player.runs}</div>
+                            </div>
+                            <div class="player-stat-item">
+                                <div class="stat-item-label">Wickets</div>
+                                <div class="stat-item-value">${player.wickets}</div>
+                            </div>
+                            <div class="player-stat-item">
+                                <div class="stat-item-label">Strike Rate</div>
+                                <div class="stat-item-value">${player.strikeRate}</div>
+                            </div>
+                            <div class="player-stat-item">
+                                <div class="stat-item-label">Economy</div>
+                                <div class="stat-item-value">${player.economy || '-'}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            setupDragAndDrop();
+        }
+
+        function renderTeam() {
+            const grid = document.getElementById('teamGrid');
+            
+            if (selectedTeam.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-team">
+                        <div class="empty-icon">🏏</div>
+                        <h3>Your team is empty</h3>
+                        <p>Drag players here or click to add them</p>
+                    </div>
+                `;
+            } else {
+                grid.innerHTML = selectedTeam.map(player => `
+                    <div class="player-card in-team" 
+                         data-player-id="${player.id}"
+                         onclick="removePlayer(${player.id})">
+                        <div class="player-top">
+                            <div class="player-info">
+                                <div class="player-name">${player.name}</div>
+                                <div class="player-meta">
+                                    <span class="player-badge badge-role">${player.role}</span>
+                                    <span class="player-badge badge-country">${player.country}</span>
+                                </div>
+                            </div>
+                            <div class="player-price-tag">₹${player.price} Cr</div>
+                        </div>
+                        <div class="player-stats-grid">
+                            <div class="player-stat-item">
+                                <div class="stat-item-label">Runs</div>
+                                <div class="stat-item-value">${player.runs}</div>
+                            </div>
+                            <div class="player-stat-item">
+                                <div class="stat-item-label">Wickets</div>
+                                <div class="stat-item-value">${player.wickets}</div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            updateStats();
+        }
+
+        function togglePlayer(playerId) {
+            const player = players.find(p => p.id === playerId);
+            const inTeam = selectedTeam.some(p => p.id === playerId);
+
+            if (inTeam) {
+                removePlayer(playerId);
+            } else {
+                addPlayer(player);
+            }
+        }
+
+        function addPlayer(player) {
+            if (selectedTeam.length >= 11) {
+                alert('⚠️ Team is full! Maximum 11 players allowed.');
+                return;
+            }
+
+            if (selectedTeam.some(p => p.id === player.id)) {
+                return;
+            }
+
+            const totalCost = selectedTeam.reduce((sum, p) => sum + p.price, 0) + player.price;
+            
+            if (totalCost > BUDGET_LIMIT) {
+                const remaining = BUDGET_LIMIT - selectedTeam.reduce((sum, p) => sum + p.price, 0);
+                alert(`💰 Budget exceeded!\n\nPlayer: ${player.name}\nPrice: ₹${player.price} Cr\nRemaining Budget: ₹${remaining} Cr`);
+                return;
+            }
+
+            selectedTeam.push(player);
+            renderTeam();
+            renderPlayers();
+        }
+
+        function removePlayer(playerId) {
+            selectedTeam = selectedTeam.filter(p => p.id !== playerId);
+            renderTeam();
+            renderPlayers();
+        }
+
+        function updateStats() {
+            const totalCost = selectedTeam.reduce((sum, p) => sum + p.price, 0);
+            const totalRuns = selectedTeam.reduce((sum, p) => sum + p.runs, 0);
+            const totalWickets = selectedTeam.reduce((sum, p) => sum + p.wickets, 0);
+            const avgStrikeRate = selectedTeam.length > 0 
+                ? (selectedTeam.reduce((sum, p) => sum + p.strikeRate, 0) / selectedTeam.length).toFixed(1)
+                : 0;
+            const bowlers = selectedTeam.filter(p => p.economy > 0);
+            const avgEconomy = bowlers.length > 0 
+                ? (bowlers.reduce((sum, p) => sum + p.economy, 0) / bowlers.length).toFixed(2)
+                : 0;
+
+            // Update budget
+            const budgetPercentage = (totalCost / BUDGET_LIMIT) * 100;
+            const progressBar = document.getElementById('progressBar');
+            progressBar.style.width = `${Math.min(budgetPercentage, 100)}%`;
+            
+            progressBar.className = 'progress-bar';
+            if (totalCost > BUDGET_LIMIT) {
+                progressBar.classList.add('danger');
+            } else if (budgetPercentage > 80) {
+                progressBar.classList.add('warning');
+            }
+
+            document.getElementById('budgetSpent').textContent = `₹${totalCost} Cr`;
+            document.getElementById('remainingBudget').textContent = `₹${BUDGET_LIMIT - totalCost} Cr`;
+            document.getElementById('totalRuns').textContent = totalRuns.toLocaleString();
+            document.getElementById('totalWickets').textContent = totalWickets;
+            document.getElementById('avgStrikeRate').textContent = avgStrikeRate;
+            document.getElementById('avgEconomy').textContent = avgEconomy || '-';
+            document.getElementById('teamCount').textContent = `${selectedTeam.length}/11`;
+
+            // Team balance
+            const roleCount = {
+                'Batsman': 0,
+                'Bowler': 0,
+                'All-rounder': 0,
+                'Wicket-keeper': 0
+            };
+            selectedTeam.forEach(p => roleCount[p.role]++);
+            
+            let balance = 'Balanced ⚖️';
+            if (roleCount['Batsman'] > 5) balance = 'Bat Heavy 🏏';
+            else if (roleCount['Bowler'] > 5) balance = 'Bowl Heavy 🎯';
+            else if (roleCount['All-rounder'] > 4) balance = 'AR Heavy 💪';
+            
+            document.getElementById('teamBalance').textContent = balance;
+        }
+
+        function setupDragAndDrop() {
+            const playerCards = document.querySelectorAll('.player-card:not(.in-team)');
+            const teamGrid = document.getElementById('teamGrid');
+
+            playerCards.forEach(card => {
+                card.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('playerId', card.dataset.playerId);
+                    card.classList.add('dragging');
+                });
+
+                card.addEventListener('dragend', (e) => {
+                    card.classList.remove('dragging');
+                });
+            });
+
+            teamGrid.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                teamGrid.classList.add('drag-over');
+            });
+
+            teamGrid.addEventListener('dragleave', () => {
+                teamGrid.classList.remove('drag-over');
+            });
+
+            teamGrid.addEventListener('drop', (e) => {
+                e.preventDefault();
+                teamGrid.classList.remove('drag-over');
+                const playerId = parseInt(e.dataTransfer.getData('playerId'));
+                const player = players.find(p => p.id === playerId);
+                if (player) {
+                    addPlayer(player);
+                }
+            });
+        }
+
+        function resetTeam() {
+            if (selectedTeam.length > 0 && !confirm('🔄 Are you sure you want to reset your team?\n\nThis will remove all selected players.')) {
+                return;
+            }
+            selectedTeam = [];
+            renderTeam();
+            renderPlayers();
+        }
+
+        // Initialize
+        initializeFilters();
+        renderPlayers();
+        renderTeam();
+    </script>
+</body>
+</html>
