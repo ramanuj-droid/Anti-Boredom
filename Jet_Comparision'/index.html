@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jet Comparison Challenge</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Jet Comparison Challenge</h1>
+  <div id="scoreboard">Score: 0</div>
+  <div class="jet-container">
+    <!-- F-22 Raptor -->
+    <div class="jet-card" data-jet="F-22 Raptor" data-speed="2410" data-range="2963" data-ceiling="20000">
+      <img src="f22.jpeg" alt="F-22 Raptor">
+      <h3>F-22 Raptor</h3>
+      <ul>
+        <li>Top Speed: 2410 km/h</li>
+        <li>Range: 2963 km</li>
+        <li>Service Ceiling: 20000 m</li>
+      </ul>
+    </div>
+
+    <!-- Su-35 -->
+    <div class="jet-card" data-jet="Su-35" data-speed="2500" data-range="3600" data-ceiling="19000">
+      <img src="su35.jpeg" alt="Su-35">
+      <h3>Su-35</h3>
+      <ul>
+        <li>Top Speed: 2500 km/h</li>
+        <li>Range: 3600 km</li>
+        <li>Service Ceiling: 19000 m</li>
+      </ul>
+    </div>
+
+    <!-- F-16 -->
+    <div class="jet-card" data-jet="F-16" data-speed="2120" data-range="4220" data-ceiling="15000">
+      <img src="f16.jpeg" alt="F-16">
+      <h3>F-16</h3>
+      <ul>
+        <li>Top Speed: 2120 km/h</li>
+        <li>Range: 4220 km</li>
+        <li>Service Ceiling: 15000 m</li>
+      </ul>
+    </div>
+
+    <!-- Tejas -->
+    <div class="jet-card" data-jet="Tejas" data-speed="1910" data-range="3000" data-ceiling="15000">
+      <img src="tejas.jpeg" alt="Tejas">
+      <h3>Tejas</h3>
+      <ul>
+        <li>Top Speed: 1910 km/h</li>
+        <li>Range: 3000 km</li>
+        <li>Service Ceiling: 15000 m</li>
+      </ul>
+    </div>
+
+    <!-- JF-17 -->
+    <div class="jet-card" data-jet="JF-17" data-speed="1800" data-range="1200" data-ceiling="15000">
+      <img src="jf17.jpeg" alt="JF-17">
+      <h3>JF-17</h3>
+      <ul>
+        <li>Top Speed: 1800 km/h</li>
+        <li>Range: 1200 km</li>
+        <li>Service Ceiling: 15000 m</li>
+      </ul>
+    </div>
+
+    <!-- Rafale -->
+    <div class="jet-card" data-jet="Rafale" data-speed="1910" data-range="3700" data-ceiling="15000">
+      <img src="rafale.jpeg" alt="Rafale">
+      <h3>Rafale</h3>
+      <ul>
+        <li>Top Speed: 1910 km/h</li>
+        <li>Range: 3700 km</li>
+        <li>Service Ceiling: 15000 m</li>
+      </ul>
+    </div>
+  </div>
+
+  <div id="question-container"></div>
+
+  <div id="end-game" style="display:none;">
+    <h2>Well Done!</h2>
+    <p>Your final score is: <span id="final-score"></span></p>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
