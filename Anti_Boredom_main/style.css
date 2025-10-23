@@ -251,29 +251,35 @@ h1 {
   background: linear-gradient(135deg, #ff9a6c 0%, #ff7b47 100%);
   transform: rotate(-8deg) translateY(40px);
   z-index: 1;
+  height: 290px;
 }
 
 .card:nth-child(2) {
   background: linear-gradient(135deg, #90ee90 0%, #66cc66 100%);
   transform: rotate(-4deg) translateY(20px);
   z-index: 2;
+  height: 290px;
+  
 }
 
 .card:nth-child(3) {
   background: linear-gradient(135deg, #b19af7 0%, #9575f5 100%);
   z-index: 3;
+  height: 290px;
 }
 
 .card:nth-child(4) {
   background: linear-gradient(135deg, #ffb3a7 0%, #ff9688 100%);
   transform: rotate(4deg) translateY(20px);
   z-index: 2;
+  height: 320px;
 }
 
 .card:nth-child(5) {
   background: linear-gradient(135deg, #6ec8ff 0%, #4db8ff 100%);
   transform: rotate(8deg) translateY(40px);
   z-index: 1;
+  height: 220px;
 }
 
 .card:hover {
@@ -284,12 +290,18 @@ h1 {
 
 @media (max-width: 768px) {
   .cards {
-    gap: -10px;
+    gap: 10px;
+    margin: 10px;
   }
 
   .card {
     width: clamp(100px, 18vw, 200px);
     height: clamp(140px, 25vw, 280px);
+  }
+  .card-content{
+    text-align: center;
+    font-size: medium;
+    font-weight: 600;
   }
 }
 /* reveal-on-scroll */
