@@ -129,6 +129,14 @@ We welcome contributions of all kinds! You can:
   * Fix bugs or improve performance.
   * Read the [Contribution Guide](https://github.com/ramanuj-droid/Anti-Boredom/blob/main/Contribution.md) for detailed steps.
 
+## ⚙️ How It Works
+
+- Each mini-game lives in its own folder for easy management.
+- The main page dynamically links to all games using simple JS routing.
+- Fun facts, jokes, and trivia are fetched via public APIs or stored JSON data.
+- Designed for plug-and-play — just drop your game folder in and it works!
+
+
 ## ║ 🧑‍💻 Contributors ║
 
 Thank you to all the wonderful people who have contributed to Anti-Boredom!
