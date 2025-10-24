@@ -3,7 +3,7 @@
 ## ╚══════════════════════════════════════════╝
 
 **Beat boredom anytime!**
-Anti-Boredom is your ultimate hub to play mini-games, explore fun facts, take quick quizzes, and learn something new — all in one place. Perfect for a quick break or when you just want to have fun\!
+Anti-Boredom is your ultimate hub to play mini-games, explore fun facts, take quick quizzes, and learn something new — all in one place. Perfect for a quick break or when you just want to have fun!
 
 ## ║ 🌟 Features ║
 
@@ -43,6 +43,7 @@ All games and features reside in their own dedicated folders for easy maintenanc
 │   ├── media/
 │   └── NewsHub/
 |   |__ Tic_Tac_Toe
+|   |__ snake_game
 ├── README.md
 └── Contribution.md
 ```
@@ -79,6 +80,7 @@ All games and features reside in their own dedicated folders for easy maintenanc
 | **Who_the_pokemon** | **< A 'Who's that Pokemon?' style game\>** |  
 | **Drum-Pad** | **< A virtual drum instrument for making beats\>** | 
 | **Tic-Tac-Toe** | **< A fun little webgame to play with a friend\>** |
+| **Snake Game** | **< Classic Snake Game.\>** |
 
 *NOTE: Please replace the bold placeholder text above with your final, official  summaries.*
 
