@@ -1,0 +1,218 @@
+:root {
+  --bg-color: #0a0a1a;
+  --bg-gradient-start: #0a0a1a;
+  --bg-gradient-end: #1a1a3e;
+  --text-color: #ffffff;
+  --accent-color: #00ffff;
+  --accent-secondary: #ff00ff;
+  --button-bg: rgba(0, 255, 255, 0.1);
+  --button-border: #00ffff;
+  --button-hover: rgba(0, 255, 255, 0.2);
+  --button-active: rgba(0, 255, 255, 0.4);
+  --font-primary: "Courier New", Courier, monospace;
+  --canvas-margin: 20px;
+  --title-padding: 10px;
+  --shadow-color: rgba(0, 255, 255, 0.5);
+  --glow-color: rgba(255, 0, 255, 0.3);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: linear-gradient(
+    135deg,
+    var(--bg-gradient-start) 0%,
+    var(--bg-gradient-end) 100%
+  );
+  background-attachment: fixed;
+  color: var(--text-color);
+  font-family: var(--font-primary);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  overflow-x: hidden;
+}
+
+#root {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  max-width: 100%;
+}
+
+#root > h1 {
+  margin: 0;
+  padding: var(--title-padding) 0;
+  color: var(--text-color);
+  font-size: 3.5rem;
+  font-weight: bold;
+  letter-spacing: 0.5rem;
+  text-transform: uppercase;
+  text-shadow: 0 0 10px var(--shadow-color), 0 0 20px var(--shadow-color),
+    0 0 30px var(--shadow-color), 0 0 40px var(--glow-color);
+  animation: glow 2s ease-in-out infinite alternate;
+  background: linear-gradient(
+    45deg,
+    var(--accent-color),
+    var(--accent-secondary)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+@keyframes glow {
+  from {
+    filter: drop-shadow(0 0 10px var(--shadow-color))
+      drop-shadow(0 0 20px var(--shadow-color));
+  }
+  to {
+    filter: drop-shadow(0 0 20px var(--shadow-color))
+      drop-shadow(0 0 40px var(--glow-color));
+  }
+}
+
+#game-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  max-width: 500px;
+}
+
+#root > canvas {
+  display: block;
+  margin: var(--canvas-margin) auto;
+  border-radius: 12px;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.8), 0 0 50px var(--shadow-color),
+    inset 0 0 20px rgba(0, 0, 0, 0.3);
+  border: 3px solid var(--accent-color);
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* Mobile Controls */
+.mobile-controls {
+  display: none;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.controls-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 15px;
+  border: 2px solid var(--button-border);
+  box-shadow: 0 0 20px var(--shadow-color);
+}
+
+.control-btn {
+  background: var(--button-bg);
+  border: 2px solid var(--button-border);
+  border-radius: 10px;
+  color: var(--text-color);
+  font-family: var(--font-primary);
+  font-size: 1.2rem;
+  font-weight: bold;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-shadow: 0 0 10px var(--accent-color);
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.control-btn:hover {
+  background: var(--button-hover);
+  box-shadow: 0 0 25px var(--shadow-color);
+  transform: translateY(-2px);
+}
+
+.control-btn:active {
+  background: var(--button-active);
+  box-shadow: 0 0 35px var(--accent-color), inset 0 0 15px var(--accent-color);
+  transform: translateY(0);
+}
+
+.control-btn.rotate {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.control-btn.left {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.control-btn.down {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+.control-btn.right {
+  grid-column: 3;
+  grid-row: 2;
+}
+
+.control-btn.start-pause {
+  grid-column: 1 / 4;
+  grid-row: 3;
+  background: linear-gradient(135deg, var(--button-bg), rgba(255, 0, 255, 0.1));
+  border-color: var(--accent-secondary);
+  font-size: 1.1rem;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  body {
+    padding: 5px;
+  }
+
+  #root > h1 {
+    font-size: 2.5rem;
+    letter-spacing: 0.3rem;
+    padding: 5px 0;
+  }
+
+  #root > canvas {
+    max-width: 95vw;
+    height: auto;
+    margin: 10px auto;
+  }
+
+  .mobile-controls {
+    display: block;
+  }
+}
+
+@media (max-width: 480px) {
+  #root > h1 {
+    font-size: 2rem;
+    letter-spacing: 0.2rem;
+  }
+
+  .control-btn {
+    padding: 15px;
+    font-size: 1rem;
+  }
+
+  .controls-container {
+    gap: 8px;
+    padding: 15px;
+  }
+}
