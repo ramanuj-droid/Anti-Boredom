@@ -357,3 +357,113 @@ h1 {
   font-size: 22px;
   cursor: pointer;
 }
+
+/* Search box styling */
+/* ===================
+   SEARCH STYLING
+==================== */
+
+.search-container {
+  /* This centers the search bar and gives it a max width */
+  max-width: 600px;
+  margin: 0 auto 2.5rem auto; /* Top, horizontal, bottom margin */
+  padding: 0 1rem;
+}
+
+/* Wrapper for input and button */
+.search-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+#search-input {
+  width: 100%;
+  font-size: 1rem;
+  padding: 0.8rem 1.2rem;
+  /* Add padding to the right to make space for the icon button */
+  padding-right: 3.5rem;
+  border: 1px solid var(--border-color, #ccc);
+  border-radius: 50px; /* Pill shape */
+  box-sizing: border-box; /* Ensures padding doesn't break layout */
+  transition: border-color 0.2s, box-shadow 0.2s;
+  background-color: var(--background-color, #fff);
+  color: var(--text-color, #222);
+}
+
+#search-input:focus {
+  outline: none;
+  border-color: var(--primary-color, #007bff);
+  box-shadow: 0 0 0 3px var(--primary-focus-shadow, rgba(0, 123, 255, 0.25));
+}
+
+/* Style for the search button */
+.search-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 3.5rem;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+
+.search-button:hover,
+.search-button:focus {
+  opacity: 1;
+}
+
+.search-icon {
+  /* Sets the icon color to your theme's text color */
+  stroke: var(--text-color, #333);
+}
+
+/* Styling for the live results dropdown */
+#search-results {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0 0 0;
+  border-radius: 8px;
+  /* Hide by default, JS will show it */
+  display: none;
+  max-height: 300px;
+  overflow-y: auto;
+  /* Uses your theme's background color */
+  background: var(--card-background, #fff);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--border-color, #eee);
+}
+
+#search-results li a {
+  display: block;
+  padding: 0.75rem 1rem;
+  text-decoration: none;
+  color: var(--text-color, #333);
+  transition: background-color 0.2s;
+}
+
+/* Use a subtle hover color */
+#search-results li a:hover,
+#search-results li a:focus {
+  background-color: var(--hover-color, rgba(0, 0, 0, 0.05));
+  outline: none;
+}
+
+/* For the "No results" message */
+.search-no-results {
+  padding: 0.75rem 1rem;
+  font-style: italic;
+  color: var(--text-color-muted, #666);
+}
+
+/* Show the results container ONLY if it has children */
+#search-results:not(:empty) {
+  display: block;
+}

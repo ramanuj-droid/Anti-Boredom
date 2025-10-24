@@ -1,119 +1,111 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-@import url('https://fonts.googleapis.com/css2?family=BBH+Sans+Bogle&family=Noto+Sans+JP:wght@100..900&display=swap');
-/* enable smooth in-page scrolling */
-html { scroll-behavior: smooth; }
-</style>
-    <title>ANTI-BOREDOM</title>
-    <link rel="stylesheet" href="style.css" />
-    <script defer src="script.js"></script>
-  </head>
-  <body>
-  <!-- Theme toggle button (Top-Right) -->
-  <button id="themeBtn" class="theme-toggle" aria-label="Toggle theme" title="Toggle light/dark">🌙</button>
+    @import url("https://fonts.googleapis.com/css2?family=BBH+Sans+Bogle&family=Noto+Sans+JP:wght@100..900&display=swap");
+
+    /* enable smooth in-page scrolling */
+    html {
+      scroll-behavior: smooth;
+    }
+  </style>
+  <title>ANTI-BOREDOM</title>
+  <link rel="stylesheet" href="style.css" />
+  <script defer src="script.js"></script>
+</head>
+
+<body>
+  <button id="themeBtn" class="theme-toggle" aria-label="Toggle theme" title="Toggle light/dark">
+    🌙
+  </button>
   <div id="top" class="container">
-      <h1>ANTI-BOREDOM</h1>
-      <p class="subtitle">
-        The #1 website for curing your boredom, everything from games to jokes -
-        here<br />
-        at one spot!
-        <br><br>
-      </p>
+    <h1>ANTI-BOREDOM</h1>
+    <p class="subtitle">
+      The #1 website for curing your boredom, everything from games to jokes -
+      here<br />
+      at one spot!
+      <br /><br />
+    </p>
 
-      <div class="cards">
-        <div class="card reveal">
-          <div class="card-content">
-            <h3>Games</h3>
-            <p>Quick browser games and small challenges to kill boredom and train your reflexes.</p>
-            <br><br><br>
-            <a href="Mini_Mystery/index.html" class="btn" aria-label="Open Solve a Mini-Mystery">Solve a Mini‑Mystery</a>
-          </div>
+    <section class="search-container">
+      <form role="search" id="search-form">
+        <div class="search-wrapper">
+          <input type="search" id="search-input" placeholder="Search for an app..."
+            aria-label="Search for an app on this site" autocomplete="off" />
+          <button type="submit" class="search-button" aria-label="Search">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="search-icon">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </button>
         </div>
+      </form>
 
-        <div class="card reveal">
-          <div class="card-content">
-            <h3>Sports</h3>
-            <p>Live scores, highlights and short updates so you never miss the action.</p>
-            <br><br><br><br>
-            <a href="Sports_Live/index.html" class="btn" aria-label="Sports">Watch Sports</a>
-          </div>
-        </div>
-
-        <div class="card reveal">
-          <div class="card-content">
-            <h3>Media</h3>
-            <p>Short clips, demos and curated media to entertain and inspire.</p>
-              <br><br><br><br>
-            <a href="media/" class="btn" aria-label="Media">View Media</a>
-          </div>
-        </div>
-
-        <div class="card reveal">
-          <div class="card-content">
-            <h3>Random Facts</h3>
-            <p>Fun facts and trivia to learn something new in under a minute.</p>
-              <br><br><br><br><br><br>
-            <a href="Random_Facts/index.html" class="btn" aria-label="Random Facts">Get Random Fact</a>
-          </div>
-        </div>
-
-        <div class="card reveal">
-          <div class="card-content">
-            <h3>Guess the Flag</h3>
-            <p>A quick geography game: identify the flag and earn virtual bragging rights.</p>
-              <br><br>
-             <a href="Guess_The_Flag/index.html" class="btn" aria-label="Guess The Flag">Guess Flags</a>
-          </div>
+      <ul id="search-results">
+      </ul>
+    </section>
+    <div class="cards">
+      <div class="card reveal">
+        <div class="card-content">
+          <h3>Games</h3>
+          <p>
+            Quick browser games and small challenges to kill boredom and train
+            your reflexes.
+          </p>
+          <br /><br /><br />
+          <a href="Mini_Mystery/index.html" class="btn" aria-label="Open Solve a Mini-Mystery">Solve a Mini‑Mystery</a>
         </div>
       </div>
 
-    <script>
-      // Modal logic for card buttons
-      document.addEventListener('DOMContentLoaded', function () {
-        const modal = document.getElementById('modal');
-        const modalTitle = document.getElementById('modal-title');
-        const modalBody = document.getElementById('modal-body');
+      <div class="card reveal">
+        <div class="card-content">
+          <h3>Sports</h3>
+          <p>
+            Live scores, highlights and short updates so you never miss the
+            action.
+          </p>
+          <br /><br /><br /><br />
+          <a href="Sports_Live/index.html" class="btn" aria-label="Sports">Watch Sports</a>
+        </div>
+      </div>
 
-        function openModal(title) {
-          modalTitle.textContent = title || 'Coming soon';
-          modalBody.textContent = 'This feature is coming soon — stay tuned!';
-          modal.setAttribute('aria-hidden', 'false');
-          modal.classList.add('open');
-        }
+      <div class="card reveal">
+        <div class="card-content">
+          <h3>Media</h3>
+          <p>
+            Short clips, demos and curated media to entertain and inspire.
+          </p>
+          <br /><br /><br /><br />
+          <a href="media/" class="btn" aria-label="Media">View Media</a>
+        </div>
+      </div>
 
-        function closeModal() {
-          modal.setAttribute('aria-hidden', 'true');
-          modal.classList.remove('open');
-        }
+      <div class="card reveal">
+        <div class="card-content">
+          <h3>Random Facts</h3>
+          <p>Fun facts and trivia to learn something new in under a minute.</p>
+          <br /><br /><br /><br /><br /><br />
+          <a href="Random_Facts/index.html" class="btn" aria-label="Random Facts">Get Random Fact</a>
+        </div>
+      </div>
 
-        document.querySelectorAll('.card-btn').forEach(btn => {
-          btn.addEventListener('click', () => openModal(btn.dataset.title));
-        });
+      <div class="card reveal">
+        <div class="card-content">
+          <h3>Guess the Flag</h3>
+          <p>
+            A quick geography game: identify the flag and earn virtual bragging
+            rights.
+          </p>
+          <br /><br />
+          <a href="Guess_The_Flag/index.html" class="btn" aria-label="Guess The Flag">Guess Flags</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
 
-        document.querySelectorAll('[data-close]').forEach(el => el.addEventListener('click', closeModal));
-
-        document.addEventListener('keydown', (e) => {
-          if (e.key === 'Escape') closeModal();
-        });
-
-        // Reveal on scroll using IntersectionObserver
-        const reveals = document.querySelectorAll('.reveal');
-        const io = new IntersectionObserver((entries) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add('visible');
-              // optionally unobserve to run once
-              io.unobserve(entry.target);
-            }
-          });
-        }, { threshold: 0.12 });
-
-        reveals.forEach(r => io.observe(r));
-      });
-    </script>
-  </body>
 </html>
