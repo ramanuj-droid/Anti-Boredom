@@ -1,0 +1,200 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 480px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        .pulse-red {
+            animation: pulse-red 1.5s infinite;
+        }
+        @keyframes pulse-red {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 15px rgba(239, 68, 68, 0);
+            }
+        }
+        .disabled-btn {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+
+:root {
+  --bg: #060617;
+  --accent: #7b5cff;
+  --accent2: #6ee7b7;
+}
+html,
+body {
+  height: 100%;
+  margin: 0;
+  font-family: Inter, system-ui, Segoe UI, Roboto, "Helvetica Neue", Arial;
+}
+body {
+  background: radial-gradient(
+    ellipse at 10% 10%,
+    #071024 0%,
+    #020312 40%,
+    #000 100%
+  );
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Fullscreen intro */
+.intro {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  color: #fff;
+}
+canvas#starfield {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.logo-wrap {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+.logo {
+  width: 96px;
+  height: 96px;
+  filter: drop-shadow(0 10px 30px rgba(123, 92, 255, 0.18));
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--accent), #9fb8ff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.logo img {
+  width: 80%;
+  height: 80%;
+  object-fit: contain;
+}
+h1.title {
+  font-size: 28px;
+  letter-spacing: 2px;
+  margin: 0;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+p.tag {
+  margin: 0;
+  opacity: 0.9;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* pulse + glow */
+.pulse {
+  position: absolute;
+  z-index: 2;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(123, 92, 255, 0.18),
+    rgba(123, 92, 255, 0.06) 30%,
+    transparent 60%
+  );
+  filter: blur(18px);
+  animation: pulse 3.5s ease-out forwards;
+}
+@keyframes pulse {
+  0% {
+    transform: scale(0.6);
+    opacity: 1;
+  }
+  70% {
+    transform: scale(1.15);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+/* loader */
+.loader {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+.loader span {
+  width: 10px;
+  height: 10px;
+  background: linear-gradient(180deg, var(--accent), var(--accent2));
+  border-radius: 50%;
+  opacity: 0.95;
+  transform: translateY(0);
+  animation: jump 1s infinite;
+}
+.loader span:nth-child(2) {
+  animation-delay: 0.12s;
+}
+.loader span:nth-child(3) {
+  animation-delay: 0.24s;
+}
+@keyframes jump {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* small skip hint */
+.skip {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  backdrop-filter: blur(6px);
+  z-index: 4;
+}
+
+/* responsive tweaks */
+@media (max-width: 520px) {
+  .logo {
+    width: 74px;
+    height: 74px;
+  }
+  .logo img {
+    width: 70%;
+  }
+  .title {
+    font-size: 20px;
+  }
+}
