@@ -1,158 +1,200 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
-/* base layout tweaks */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 480px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        .pulse-red {
+            animation: pulse-red 1.5s infinite;
+        }
+        @keyframes pulse-red {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 15px rgba(239, 68, 68, 0);
+            }
+        }
+        .disabled-btn {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+
+:root {
+  --bg: #060617;
+  --accent: #7b5cff;
+  --accent2: #6ee7b7;
+}
+html,
 body {
-  font-family: 'Inter', sans-serif;
-  background: linear-gradient(180deg,#0f1724 0%, #071024 50%, #041025 100%);
-  min-height: 100vh;
+  height: 100%;
+  margin: 0;
+  font-family: Inter, system-ui, Segoe UI, Roboto, "Helvetica Neue", Arial;
+}
+body {
+  background: radial-gradient(
+    ellipse at 10% 10%,
+    #071024 0%,
+    #020312 40%,
+    #000 100%
+  );
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
 }
 
-/* app glass card with animated gradient */
-.container.glass {
+/* Fullscreen intro */
+.intro {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  color: #fff;
+}
+canvas#starfield {
+  position: absolute;
+  inset: 0;
   width: 100%;
-  max-width: 640px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.03));
-  border-radius: 20px;
-  padding: 28px;
+  height: 100%;
+  display: block;
+}
+
+.logo-wrap {
   position: relative;
-  overflow: hidden;
-  box-shadow: 0 10px 40px rgba(2,6,23,0.7);
-  border: 1px solid rgba(255,255,255,0.03);
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+.logo {
+  width: 96px;
+  height: 96px;
+  filter: drop-shadow(0 10px 30px rgba(123, 92, 255, 0.18));
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--accent), #9fb8ff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.logo img {
+  width: 80%;
+  height: 80%;
+  object-fit: contain;
+}
+h1.title {
+  font-size: 28px;
+  letter-spacing: 2px;
+  margin: 0;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+p.tag {
+  margin: 0;
+  opacity: 0.9;
+  color: rgba(255, 255, 255, 0.85);
 }
 
-/* animated background blobs */
-.bg-blob {
+/* pulse + glow */
+.pulse {
   position: absolute;
-  filter: blur(36px) saturate(140%);
-  opacity: 0.55;
-  transform: translateZ(0);
-  pointer-events: none;
-}
-.blob-1 {
-  width: 320px; height: 320px;
-  right: -80px; top: -60px;
-  background: radial-gradient(circle at 30% 30%, rgba(123,92,255,0.9), rgba(123,92,255,0.25) 40%, transparent 70%);
-  animation: floaty 8s ease-in-out infinite;
-}
-.blob-2 {
-  width: 260px; height: 260px;
-  left: -60px; bottom: -40px;
-  background: radial-gradient(circle at 60% 60%, rgba(110,231,183,0.85), rgba(110,231,183,0.18) 38%, transparent 68%);
-  animation: floaty 10s ease-in-out infinite reverse;
-}
-@keyframes floaty {
-  0% { transform: translateY(0) translateX(0) scale(1); }
-  50% { transform: translateY(-18px) translateX(8px) scale(1.02); }
-  100% { transform: translateY(0) translateX(0) scale(1); }
-}
-
-/* app title animation */
-.app-title {
-  display: inline-block;
-  background: linear-gradient(90deg, #fff, #dbeafe);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  animation: title-pop 1.2s ease both;
-}
-@keyframes title-pop {
-  0% { transform: translateY(-8px) scale(0.98); opacity: 0; filter: blur(6px); }
-  60% { transform: translateY(2px) scale(1.02); opacity: 1; filter: blur(0); }
-  100% { transform: translateY(0) scale(1); opacity: 1; }
-}
-
-/* record button styling and burst */
-.record-btn {
-  position: relative;
-  z-index: 10;
-  transition: transform .18s cubic-bezier(.22,.9,.35,1), box-shadow .18s;
-}
-.record-btn.recording {
-  transform: scale(1.05);
-  box-shadow: 0 20px 60px rgba(255, 56, 93, 0.18), 0 6px 20px rgba(0,0,0,0.35) inset;
-  animation: heartbeat 1.2s infinite;
-}
-@keyframes heartbeat {
-  0% { transform: scale(1.04); }
-  30% { transform: scale(1.12); }
-  60% { transform: scale(1.06); }
-  100% { transform: scale(1.04); }
-}
-
-/* small pulsing ring around record button */
-.record-btn::after {
-  content: "";
-  position: absolute;
-  inset: -12px;
+  z-index: 2;
+  width: 300px;
+  height: 300px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255,99,132,0.12), transparent 40%);
-  opacity: 0;
-  transition: opacity .28s;
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(123, 92, 255, 0.18),
+    rgba(123, 92, 255, 0.06) 30%,
+    transparent 60%
+  );
+  filter: blur(18px);
+  animation: pulse 3.5s ease-out forwards;
 }
-.record-btn.recording::after { opacity: 1; animation: ring-pulse 1.6s infinite; }
-@keyframes ring-pulse {
-  0% { transform: scale(0.8); opacity: .7; }
-  80% { transform: scale(1.6); opacity: 0; }
-  100% { opacity: 0; }
+@keyframes pulse {
+  0% {
+    transform: scale(0.6);
+    opacity: 1;
+  }
+  70% {
+    transform: scale(1.15);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
 }
 
-/* particle burst elements (created by JS) */
-#particles {
-  position: absolute;
-  left: 0; top: 0;
-  right: 0; bottom: 0;
-  pointer-events: none;
-  z-index: 5;
+/* loader */
+.loader {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
 }
-.particle {
-  position: absolute;
-  width: 10px; height: 10px;
+.loader span {
+  width: 10px;
+  height: 10px;
+  background: linear-gradient(180deg, var(--accent), var(--accent2));
   border-radius: 50%;
   opacity: 0.95;
-  transform-origin: center;
-  will-change: transform, opacity;
-  animation: particle-move 700ms cubic-bezier(.2,.9,.3,1) forwards;
+  transform: translateY(0);
+  animation: jump 1s infinite;
 }
-@keyframes particle-move {
-  to { transform: translate(var(--tx), var(--ty)) scale(0.2); opacity: 0; }
+.loader span:nth-child(2) {
+  animation-delay: 0.12s;
 }
-
-/* effect buttons - lively hover/focus */
-.effect-btn {
-  transition: transform .18s, box-shadow .18s;
+.loader span:nth-child(3) {
+  animation-delay: 0.24s;
 }
-.effect-btn:hover { transform: translateY(-6px) scale(1.03); box-shadow: 0 12px 30px rgba(2,6,23,0.2); }
-.effect-btn.ring-4 { box-shadow: 0 12px 30px rgba(99,102,241,0.18); transform: translateY(-6px) scale(1.04); }
-
-/* play button active pulse */
-#play-btn.playing {
-  animation: play-pulse 1s infinite;
-}
-@keyframes play-pulse {
-  0% { box-shadow: 0 6px 18px rgba(34,197,94,0.18); transform: translateY(0); }
-  50% { box-shadow: 0 18px 40px rgba(34,197,94,0.08); transform: translateY(-2px); }
-  100% { box-shadow: 0 6px 18px rgba(34,197,94,0.18); transform: translateY(0); }
+@keyframes jump {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+  100% {
+    transform: translateY(0);
+  }
 }
 
-/* visualizer */
-#visualizer {
-  width: 100%;
-  height: 80px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-  border-radius: 10px;
-  display: block;
-  image-rendering: pixelated;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.02), 0 8px 30px rgba(2,6,23,0.6);
+/* small skip hint */
+.skip {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  backdrop-filter: blur(6px);
+  z-index: 4;
 }
 
-/* small accessibility helpers */
-.disabled-btn { opacity: .6; cursor: not-allowed; pointer-events: none; }
-
-/* responsive */
+/* responsive tweaks */
 @media (max-width: 520px) {
-  .container.glass { padding: 18px; }
-  .record-btn { width: 22vw; height: 22vw; min-width: 64px; min-height: 64px; }
+  .logo {
+    width: 74px;
+    height: 74px;
+  }
+  .logo img {
+    width: 70%;
+  }
+  .title {
+    font-size: 20px;
+  }
 }
