@@ -10,6 +10,8 @@ const effectButtons = document.querySelectorAll('.effect-btn');
 const micIcon = document.getElementById('mic-icon');
 const stopIcon = document.getElementById('stop-icon');
 const playText = document.getElementById('play-text');
+const particles = document.getElementById('particles');
+const visualizerCanvas = document.getElementById('visualizer');
 
 let mediaRecorder = null;
 let audioChunks = [];
@@ -17,52 +19,14 @@ let audioBlob = null;
 let selectedEffect = 'chipmunk';
 let isRecording = false;
 
+let visualizerAnim = null;
+let analyserNode = null;
+
 // EFFECT CONFIG
 const EFFECTS = {
   chipmunk: { pitch: 4, rate: 1.5, delay: 0, feedback: 0 },
   ogre: { pitch: -6, rate: 0.8, delay: 0, feedback: 0 },
   robot: { pitch: 0, rate: 1.0, delay: 0.4, feedback: 0.7 }
-};
-
-// Helper: convert AudioBuffer to WAV Blob
-const bufferToWav = (buffer) => {
-  const numChannels = buffer.numberOfChannels;
-  const sampleRate = buffer.sampleRate;
-  const length = buffer.length;
-  const numSamples = length * numChannels;
-  const channels = new Array(numChannels).fill(0).map((_, i) => buffer.getChannelData(i));
-
-  const bufferArray = new ArrayBuffer(44 + numSamples * 2);
-  const view = new DataView(bufferArray);
-  let offset = 0;
-  const writeString = (s) => {
-    for (let i = 0; i < s.length; i++) view.setUint8(offset++, s.charCodeAt(i));
-  };
-
-  writeString('RIFF');
-  view.setUint32(offset, 36 + numSamples * 2, true); offset += 4;
-  writeString('WAVE');
-  writeString('fmt ');
-  view.setUint32(offset, 16, true); offset += 4;
-  view.setUint16(offset, 1, true); offset += 2;
-  view.setUint16(offset, numChannels, true); offset += 2;
-  view.setUint32(offset, sampleRate, true); offset += 4;
-  view.setUint32(offset, sampleRate * numChannels * 2, true); offset += 4;
-  view.setUint16(offset, numChannels * 2, true); offset += 2;
-  view.setUint16(offset, 16, true); offset += 2;
-  writeString('data');
-  view.setUint32(offset, numSamples * 2, true); offset += 4;
-
-  for (let i = 0; i < length; i++) {
-    for (let ch = 0; ch < numChannels; ch++) {
-      let s = channels[ch][i];
-      s = Math.max(-1, Math.min(1, s));
-      view.setInt16(offset, s * 0x7fff, true);
-      offset += 2;
-    }
-  }
-
-  return new Blob([view], { type: 'audio/wav' });
 };
 
 const setStatus = (message, colorClass = 'bg-indigo-100 text-indigo-700') => {
@@ -72,12 +36,12 @@ const setStatus = (message, colorClass = 'bg-indigo-100 text-indigo-700') => {
 
 const updateControls = (recording, recorded) => {
   if (recording) {
-    recordBtn.classList.add('pulse-red');
+    recordBtn.classList.add('recording');
     micIcon.classList.add('hidden');
     stopIcon.classList.remove('hidden');
     setStatus('Recording...', 'bg-red-100 text-red-700');
   } else {
-    recordBtn.classList.remove('pulse-red');
+    recordBtn.classList.remove('recording');
     micIcon.classList.remove('hidden');
     stopIcon.classList.add('hidden');
   }
@@ -97,6 +61,33 @@ const updateControls = (recording, recorded) => {
   }
   playText.textContent = `Play ${selectedEffect.charAt(0).toUpperCase() + selectedEffect.slice(1)} Voice`;
 };
+
+// small particle burst around the record button
+function burstParticles(count = 14) {
+  const rect = recordBtn.getBoundingClientRect();
+  for (let i = 0; i < count; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    // random color blend
+    const hue = 330 + Math.round(Math.random() * 60);
+    p.style.background = `linear-gradient(90deg, hsl(${hue} 90% 60%), rgba(255,255,255,0.18))`;
+    // start near center of button
+    const startX = rect.left + rect.width / 2;
+    const startY = rect.top + rect.height / 2;
+    p.style.left = `${startX - document.documentElement.clientLeft}px`;
+    p.style.top = `${startY - document.documentElement.clientTop}px`;
+    // random translate
+    const angle = Math.random() * Math.PI * 2;
+    const dist = 60 + Math.random() * 80;
+    const tx = Math.cos(angle) * dist + 'px';
+    const ty = Math.sin(angle) * dist + 'px';
+    p.style.setProperty('--tx', tx);
+    p.style.setProperty('--ty', ty);
+    particles.appendChild(p);
+    // cleanup after animation
+    p.addEventListener('animationend', () => p.remove());
+  }
+}
 
 // RECORDING
 const startRecording = async () => {
@@ -124,6 +115,7 @@ const startRecording = async () => {
 
     mediaRecorder.start();
     updateControls(true, false);
+    burstParticles(20);
   } catch (err) {
     console.error('Microphone access error', err);
     setStatus('Error: Microphone access denied or failed.', 'bg-red-100 text-red-700');
@@ -135,8 +127,73 @@ const stopRecording = () => {
     mediaRecorder.stop();
     // stop tracks so browser can release mic
     mediaRecorder.stream?.getTracks?.().forEach(t => t.stop());
+    burstParticles(10);
   }
 };
+
+// visualizer helpers
+function resizeCanvas(canvas) {
+  const dpr = Math.max(1, window.devicePixelRatio || 1);
+  canvas.width = canvas.clientWidth * dpr;
+  canvas.height = canvas.clientHeight * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  return ctx;
+}
+
+function startVisualizerForNode(node) {
+  stopVisualizer();
+  if (!visualizerCanvas) return;
+  const ctx = resizeCanvas(visualizerCanvas);
+  analyserNode = Tone.context.createAnalyser();
+  analyserNode.fftSize = 256;
+  // connect the node to analyser, and analyser to destination if needed
+  try {
+    node.connect(analyserNode);
+  } catch (e) {
+    // fallback: if node is a Tone.Player use its output
+    if (node.output) node.output.connect(analyserNode);
+  }
+  analyserNode.connect(Tone.context.destination);
+
+  const bufferLength = analyserNode.frequencyBinCount;
+  const data = new Uint8Array(bufferLength);
+
+  function draw() {
+    visualizerAnim = requestAnimationFrame(draw);
+    analyserNode.getByteFrequencyData(data);
+
+    // clear
+    ctx.clearRect(0, 0, visualizerCanvas.clientWidth, visualizerCanvas.clientHeight);
+
+    const barWidth = Math.max(2, visualizerCanvas.clientWidth / bufferLength);
+    let x = 0;
+    for (let i = 0; i < bufferLength; i++) {
+      const v = data[i] / 255;
+      const barHeight = v * visualizerCanvas.clientHeight;
+      const hue = 200 + i / bufferLength * 120;
+      ctx.fillStyle = `hsl(${hue} 80% ${30 + v * 40}%)`;
+      ctx.fillRect(x, visualizerCanvas.clientHeight - barHeight, barWidth * 0.85, barHeight);
+      x += barWidth;
+    }
+  }
+  draw();
+}
+
+function stopVisualizer() {
+  if (visualizerAnim) {
+    cancelAnimationFrame(visualizerAnim);
+    visualizerAnim = null;
+  }
+  if (analyserNode) {
+    try { analyserNode.disconnect(); } catch {}
+    analyserNode = null;
+  }
+  if (visualizerCanvas) {
+    const ctx = visualizerCanvas.getContext('2d');
+    ctx && ctx.clearRect(0, 0, visualizerCanvas.clientWidth, visualizerCanvas.clientHeight);
+  }
+}
 
 // APPLY EFFECT AND PLAY (using Tone.js)
 const applyEffectAndPlay = async () => {
@@ -146,7 +203,7 @@ const applyEffectAndPlay = async () => {
   }
 
   playBtn.disabled = true;
-  playBtn.classList.add('disabled-btn');
+  playBtn.classList.add('disabled-btn', 'playing');
   setStatus(`Applying and playing ${selectedEffect}...`, 'bg-blue-100 text-blue-700');
 
   try {
@@ -160,25 +217,28 @@ const applyEffectAndPlay = async () => {
 
     // Player and effects
     const player = new Tone.Player(audioBuffer).toDestination();
+    player.autostart = false;
     player.playbackRate = cfg.rate;
 
-    const pitchShift = new Tone.PitchShift({ pitch: cfg.pitch });
-    const feedbackDelay = new Tone.FeedbackDelay(cfg.delay, cfg.feedback);
+    const pitchShift = new Tone.PitchShift({ pitch: cfg.pitch }).toDestination();
+    const feedbackDelay = new Tone.FeedbackDelay(cfg.delay, cfg.feedback).toDestination();
 
     // Chain: player -> pitchShift -> delay -> destination
     player.connect(pitchShift);
     pitchShift.connect(feedbackDelay);
     feedbackDelay.toDestination();
 
+    // For visualizer we connect player -> analyser
+    startVisualizerForNode(player);
+
     player.onstop = () => {
       updateControls(false, true);
       setStatus(`Finished playing ${selectedEffect}.`, 'bg-green-100 text-green-700');
       playBtn.disabled = false;
-      playBtn.classList.remove('disabled-btn');
+      playBtn.classList.remove('disabled-btn', 'playing');
       // dispose nodes
-      player.dispose();
-      pitchShift.dispose();
-      feedbackDelay.dispose();
+      try { player.dispose(); pitchShift.dispose(); feedbackDelay.dispose(); } catch {}
+      stopVisualizer();
     };
 
     player.start();
@@ -187,7 +247,8 @@ const applyEffectAndPlay = async () => {
     setStatus('An error occurred during playback. Try recording again.', 'bg-red-100 text-red-700');
     updateControls(false, true);
     playBtn.disabled = false;
-    playBtn.classList.remove('disabled-btn');
+    playBtn.classList.remove('disabled-btn', 'playing');
+    stopVisualizer();
   }
 };
 
@@ -200,7 +261,6 @@ const downloadAudio = async () => {
 
   setStatus('Preparing download...', 'bg-blue-100 text-blue-700');
 
-  // For simplicity we download the recorded blob and name it to indicate the effect.
   const fileName = `voice_${selectedEffect}.webm`;
   const url = URL.createObjectURL(audioBlob);
   const a = document.createElement('a');
@@ -213,6 +273,8 @@ const downloadAudio = async () => {
   a.remove();
 
   setStatus(`Downloaded ${fileName}!`, 'bg-green-100 text-green-700');
+  // small confetti-like burst
+  burstParticles(18);
 };
 
 // EFFECT BUTTONS
@@ -234,8 +296,19 @@ recordBtn.addEventListener('click', startRecording);
 playBtn.addEventListener('click', applyEffectAndPlay);
 downloadBtn.addEventListener('click', downloadAudio);
 
+// handle keyboard space to toggle record
+document.addEventListener('keydown', (e) => {
+  if (e.code === 'Space') {
+    e.preventDefault();
+    recordBtn.click();
+  }
+});
+
 // Init UI
 window.addEventListener('load', () => {
   updateControls(false, false);
-  console.log('Mimic app ready.');
+  // ensure canvas sized
+  if (visualizerCanvas) resizeCanvas(visualizerCanvas);
+  window.addEventListener('resize', () => { if (visualizerCanvas) resizeCanvas(visualizerCanvas); });
+  console.log('Mimic app ready with animations.');
 });
