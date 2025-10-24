@@ -42,6 +42,7 @@ All games and features reside in their own dedicated folders for easy maintenanc
 |   |   └── src
 │   ├── media/
 │   └── NewsHub/
+|   |__ Tic_Tac_Toe
 ├── README.md
 └── Contribution.md
 ```
@@ -77,8 +78,9 @@ All games and features reside in their own dedicated folders for easy maintenanc
 | **Recipe_Finder** | **< Tool for finding recipes\>** | 
 | **Who_the_pokemon** | **< A 'Who's that Pokemon?' style game\>** |  
 | **Drum-Pad** | **< A virtual drum instrument for making beats\>** | 
+| **Tic-Tac-Toe** | **< A fun little webgame to play with a friend\>** |
 
-*NOTE: Please replace the bold placeholder text above with your final, officia  summaries.*
+*NOTE: Please replace the bold placeholder text above with your final, official  summaries.*
 
 ## ║ 💻 Techstack   &   Demo ║
 
@@ -129,7 +131,7 @@ We welcome contributions of all kinds! You can:
   * Fix bugs or improve performance.
   * Read the [Contribution Guide](https://github.com/ramanuj-droid/Anti-Boredom/blob/main/Contribution.md) for detailed steps.
 
-## ⚙️ How It Works
+## ║⚙️ How It Works ║
 
 - Each mini-game lives in its own folder for easy management.
 - The main page dynamically links to all games using simple JS routing.
@@ -163,3 +165,4 @@ Thank you to all the wonderful people who have contributed to Anti-Boredom!
   * @kumaradarsh2
   * @prakhar-174
   * @shrav784
+  * @ayesha-xainab
