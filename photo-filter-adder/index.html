@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📸 Snapchat-like Photo Filter Adder</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            min-height: 100vh;
+            padding: 20px;
+            color: #fff;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Floating particles background */
+        .particle {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: float 8s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) translateX(100px); opacity: 0; }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 72px;
+            font-weight: 900;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #FFFC00, #FF00FF, #00FFFF, #FFFC00);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: rainbowText 4s ease infinite, glow 2s ease-in-out infinite;
+            text-shadow: 0 0 30px rgba(255, 252, 0, 0.8);
+            letter-spacing: 3px;
+        }
+
+        @keyframes rainbowText {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes glow {
+            0%, 100% { filter: drop-shadow(0 0 10px rgba(255, 252, 0, 0.8)); }
+            50% { filter: drop-shadow(0 0 30px rgba(255, 0, 255, 1)); }
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 20px;
+            color: #fff;
+            margin-bottom: 40px;
+            opacity: 0.95;
+            font-weight: 300;
+            letter-spacing: 2px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.8; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+
+        .upload-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .upload-btn-wrapper {
+            position: relative;
+            display: inline-block;
+            overflow: hidden;
+        }
+
+        .upload-btn {
+            padding: 20px 60px;
+            font-size: 24px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #FFFC00 0%, #FF00FF 50%, #00FFFF 100%);
+            background-size: 200% 200%;
+            color: #000;
+            border: 5px solid transparent;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 0 8px 0 rgba(0, 0, 0, 0.3), 0 15px 40px rgba(255, 252, 0, 0.6);
+            position: relative;
+            overflow: hidden;
+            animation: buttonGradient 3s ease infinite;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        @keyframes buttonGradient {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .upload-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .upload-btn:hover {
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 12px 0 rgba(0, 0, 0, 0.3), 0 20px 50px rgba(255, 0, 255, 0.8);
+        }
+
+        .upload-btn:active {
+            transform: translateY(0) scale(1.05);
+            box-shadow: 0 5px 0 rgba(0, 0, 0, 0.3), 0 10px 30px rgba(255, 0, 255, 0.6);
+        }
+
+        .upload-btn-wrapper input[type=file] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .editor-container {
+            display: none;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(20px);
+            border: 5px solid transparent;
+            border-radius: 30px;
+            padding: 40px;
+            margin-top: 30px;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), inset 0 0 50px rgba(255, 255, 255, 0.1);
+            animation: containerGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes containerGlow {
+            0%, 100% { box-shadow: 0 20px 60px rgba(255, 252, 0, 0.3), inset 0 0 50px rgba(255, 255, 255, 0.1); }
+            50% { box-shadow: 0 20px 60px rgba(255, 0, 255, 0.5), inset 0 0 50px rgba(255, 0, 255, 0.2); }
+        }
+
+        .editor-container::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            background: linear-gradient(45deg, #FFFC00, #FF00FF, #00FFFF, #FFFC00);
+            background-size: 400% 400%;
+            border-radius: 30px;
+            z-index: -1;
+            animation: borderGradient 4s ease infinite;
+        }
+
+        @keyframes borderGradient {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .editor-container.active {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 40px;
+            animation: slideIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: scale(0.8) translateY(50px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        /* Sidebar */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .filter-section, .sticker-section {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border: 3px solid rgba(255, 252, 0, 0.5);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.4s;
+        }
+
+        .filter-section:hover, .sticker-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(255, 0, 255, 0.5);
+            border-color: rgba(255, 0, 255, 0.8);
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #FFFC00, #FF00FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            text-align: center;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .filter-btn, .sticker-item {
+            padding: 14px;
+            margin-bottom: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            text-align: center;
+            font-weight: 700;
+            font-size: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .filter-btn::before, .sticker-item::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 252, 0, 0.4);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .filter-btn:hover::before, .sticker-item:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .filter-btn:hover, .sticker-item:hover {
+            background: rgba(255, 252, 0, 0.3);
+            transform: scale(1.1) translateY(-3px);
+            border-color: #FFFC00;
+            box-shadow: 0 10px 25px rgba(255, 252, 0, 0.5);
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(135deg, #FFFC00, #FF00FF);
+            color: #000;
+            border-color: #FFFC00;
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(255, 252, 0, 0.7);
+            animation: activeGlow 1.5s ease-in-out infinite;
+        }
+
+        @keyframes activeGlow {
+            0%, 100% { box-shadow: 0 10px 30px rgba(255, 252, 0, 0.7); }
+            50% { box-shadow: 0 10px 40px rgba(255, 0, 255, 1); }
+        }
+
+        .slider-control {
+            margin-bottom: 20px;
+        }
+
+        .slider-control label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #FFFC00;
+            text-shadow: 0 0 10px rgba(255, 252, 0, 0.8);
+        }
+
+        .slider-control input[type="range"] {
+            width: 100%;
+            height: 10px;
+            border-radius: 10px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .slider-control input[type="range"]:hover {
+            background: linear-gradient(90deg, #FFFC00, #FF00FF);
+        }
+
+        .slider-control input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FFFC00, #FF00FF);
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255, 0, 255, 0.7);
+            transition: all 0.3s;
+        }
+
+        .slider-control input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.3);
+            box-shadow: 0 8px 20px rgba(255, 252, 0, 1);
+        }
+
+        .sticker-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .sticker-item {
+            font-size: 36px;
+            padding: 12px;
+            margin: 0;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .sticker-item:hover {
+            transform: scale(1.3) rotate(10deg);
+        }
+
+        /* Canvas Area */
+        .canvas-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .canvas-wrapper {
+            position: relative;
+            background: #000;
+            border: 5px solid transparent;
+            border-radius: 25px;
+            overflow: hidden;
+            max-width: 850px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+            animation: canvasFloat 4s ease-in-out infinite;
+        }
+
+        @keyframes canvasFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .canvas-wrapper::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            background: linear-gradient(45deg, #FFFC00, #FF00FF, #00FFFF, #FFFC00);
+            background-size: 400% 400%;
+            border-radius: 25px;
+            z-index: -1;
+            animation: borderGradient 3s ease infinite;
+        }
+
+        #photoCanvas {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            border-radius: 20px;
+        }
+
+        .placed-sticker {
+            position: absolute;
+            font-size: 70px;
+            cursor: move;
+            user-select: none;
+            text-shadow: 0 0 20px rgba(255, 252, 0, 0.8);
+            z-index: 10;
+            transition: all 0.3s;
+            animation: stickerBounce 2s ease-in-out infinite;
+        }
+
+        @keyframes stickerBounce {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.1) rotate(5deg); }
+        }
+
+        .placed-sticker:hover {
+            transform: scale(1.3) rotate(15deg);
+            filter: drop-shadow(0 0 15px rgba(255, 0, 255, 1));
+        }
+
+        .delete-sticker {
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            background: linear-gradient(135deg, #FF0000, #FF00FF);
+            color: white;
+            border: 3px solid white;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 11;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(255, 0, 0, 0.7);
+        }
+
+        .delete-sticker:hover {
+            transform: scale(1.3) rotate(90deg);
+            box-shadow: 0 8px 25px rgba(255, 0, 255, 1);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .action-btn {
+            padding: 18px 45px;
+            font-size: 20px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00D9FF 0%, #00A8CC 100%);
+            color: white;
+            border: 4px solid transparent;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 0 8px 0 rgba(0, 0, 0, 0.3), 0 12px 30px rgba(0, 217, 255, 0.5);
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .action-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .action-btn:hover::before {
+            width: 400px;
+            height: 400px;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 12px 0 rgba(0, 0, 0, 0.3), 0 20px 50px rgba(0, 217, 255, 0.8);
+        }
+
+        .action-btn:active {
+            transform: translateY(3px) scale(1.05);
+            box-shadow: 0 5px 0 rgba(0, 0, 0, 0.3), 0 10px 25px rgba(0, 217, 255, 0.6);
+        }
+
+        .action-btn.download {
+            background: linear-gradient(135deg, #00FF88 0%, #00CC66 100%);
+            box-shadow: 0 8px 0 rgba(0, 0, 0, 0.3), 0 12px 30px rgba(0, 255, 136, 0.5);
+            animation: downloadPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes downloadPulse {
+            0%, 100% { box-shadow: 0 8px 0 rgba(0, 0, 0, 0.3), 0 12px 30px rgba(0, 255, 136, 0.5); }
+            50% { box-shadow: 0 8px 0 rgba(0, 0, 0, 0.3), 0 12px 50px rgba(0, 255, 136, 1); }
+        }
+
+        .action-btn.download:hover {
+            box-shadow: 0 12px 0 rgba(0, 0, 0, 0.3), 0 20px 50px rgba(0, 255, 136, 0.9);
+        }
+
+        .action-btn.reset {
+            background: linear-gradient(135deg, #FF6B6B 0%, #FF4444 100%);
+            box-shadow: 0 8px 0 rgba(0, 0, 0, 0.3), 0 12px 30px rgba(255, 107, 107, 0.5);
+        }
+
+        .action-btn.reset:hover {
+            box-shadow: 0 12px 0 rgba(0, 0, 0, 0.3), 0 20px 50px rgba(255, 107, 107, 0.9);
+        }
+
+        @media (max-width: 1024px) {
+            .editor-container.active {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 48px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 36px;
+            }
+
+            .sticker-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .placed-sticker {
+                font-size: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating particles -->
+    <script>
+        for (let i = 0; i < 30; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 8 + 's';
+            particle.style.animationDuration = (Math.random() * 5 + 5) + 's';
+            document.body.appendChild(particle);
+        }
+    </script>
+
+    <div class="container">
+        <h1>📸 PHOTO FILTER ADDER</h1>
+        <p class="subtitle">✨ Upload • Filter • Sticker • Download ✨</p>
+
+        <div class="upload-section">
+            <div class="upload-btn-wrapper">
+                <button class="upload-btn">📷 Upload Your Photo</button>
+                <input type="file" id="photoUpload" accept="image/*">
+            </div>
+        </div>
+
+        <div class="editor-container" id="editorContainer">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <!-- Filters Section -->
+                <div class="filter-section">
+                    <div class="section-title">🎨 Filters</div>
+                    <button class="filter-btn active" onclick="applyFilter('none')">✨ Original</button>
+                    <button class="filter-btn" onclick="applyFilter('grayscale')">⚫ Grayscale</button>
+                    <button class="filter-btn" onclick="applyFilter('sepia')">🟤 Sepia</button>
+                    <button class="filter-btn" onclick="applyFilter('invert')">🔄 Invert</button>
+                    <button class="filter-btn" onclick="applyFilter('blur')">💫 Blur</button>
+                    <button class="filter-btn" onclick="applyFilter('vintage')">📸 Vintage</button>
+                    <button class="filter-btn" onclick="applyFilter('cool')">❄️ Cool</button>
+                    <button class="filter-btn" onclick="applyFilter('warm')">🔥 Warm</button>
+
+                    <div class="slider-control">
+                        <label>💡 Brightness: <span id="brightnessValue">100</span>%</label>
+                        <input type="range" id="brightness" min="0" max="200" value="100" oninput="adjustFilter()">
+                    </div>
+
+                    <div class="slider-control">
+                        <label>🎭 Contrast: <span id="contrastValue">100</span>%</label>
+                        <input type="range" id="contrast" min="0" max="200" value="100" oninput="adjustFilter()">
+                    </div>
+
+                    <div class="slider-control">
+                        <label>🌈 Saturate: <span id="saturateValue">100</span>%</label>
+                        <input type="range" id="saturate" min="0" max="200" value="100" oninput="adjustFilter()">
+                    </div>
+                </div>
+
+                <!-- Stickers Section -->
+                <div class="sticker-section">
+                    <div class="section-title">😊 Stickers</div>
+                    <div class="sticker-grid">
+                        <div class="sticker-item" onclick="addSticker('😀')">😀</div>
+                        <div class="sticker-item" onclick="addSticker('😎')">😎</div>
+                        <div class="sticker-item" onclick="addSticker('🥳')">🥳</div>
+                        <div class="sticker-item" onclick="addSticker('😍')">😍</div>
+                        <div class="sticker-item" onclick="addSticker('🤩')">🤩</div>
+                        <div class="sticker-item" onclick="addSticker('😂')">😂</div>
+                        <div class="sticker-item" onclick="addSticker('❤️')">❤️</div>
+                        <div class="sticker-item" onclick="addSticker('⭐')">⭐</div>
+                        <div class="sticker-item" onclick="addSticker('🔥')">🔥</div>
+                        <div class="sticker-item" onclick="addSticker('✨')">✨</div>
+                        <div class="sticker-item" onclick="addSticker('💯')">💯</div>
+                        <div class="sticker-item" onclick="addSticker('👑')">👑</div>
+                        <div class="sticker-item" onclick="addSticker('🎉')">🎉</div>
+                        <div class="sticker-item" onclick="addSticker('🎊')">🎊</div>
+                        <div class="sticker-item" onclick="addSticker('🌟')">🌟</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Canvas Area -->
+            <div class="canvas-area">
+                <div class="canvas-wrapper" id="canvasWrapper">
+                    <canvas id="photoCanvas"></canvas>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="action-btn reset" onclick="resetFilters()">🔄 Reset Filters</button>
+                    <button class="action-btn reset" onclick="clearStickers()">🗑️ Clear Stickers</button>
+                    <button class="action-btn download" onclick="downloadImage()">💾 Download Image</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let uploadedImage = null;
+        let currentFilter = 'none';
+        let brightness = 100;
+        let contrast = 100;
+        let saturate = 100;
+
+        const canvas = document.getElementById('photoCanvas');
+        const ctx = canvas.getContext('2d');
+        const canvasWrapper = document.getElementById('canvasWrapper');
+
+        // Handle image upload
+        document.getElementById('photoUpload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const img = new Image();
+                    img.onload = function() {
+                        uploadedImage = img;
+                        
+                        const maxWidth = 850;
+                        const maxHeight = 650;
+                        let width = img.width;
+                        let height = img.height;
+                        
+                        if (width > maxWidth) {
+                            height = (maxWidth / width) * height;
+                            width = maxWidth;
+                        }
+                        
+                        if (height > maxHeight) {
+                            width = (maxHeight / height) * width;
+                            height = maxHeight;
+                        }
+                        
+                        canvas.width = width;
+                        canvas.height = height;
+                        
+                        drawImage();
+                        document.getElementById('editorContainer').classList.add('active');
+                    };
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function drawImage() {
+            if (!uploadedImage) return;
+            
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            let filterString = '';
+            
+            switch(currentFilter) {
+                case 'grayscale': filterString = 'grayscale(100%)'; break;
+                case 'sepia': filterString = 'sepia(100%)'; break;
+                case 'invert': filterString = 'invert(100%)'; break;
+                case 'blur': filterString = 'blur(3px)'; break;
+                case 'vintage': filterString = 'sepia(50%) contrast(110%) brightness(110%)'; break;
+                case 'cool': filterString = 'saturate(150%) hue-rotate(180deg)'; break;
+                case 'warm': filterString = 'saturate(130%) hue-rotate(-15deg)'; break;
+                default: filterString = '';
+            }
+            
+            filterString += ` brightness(${brightness}%) contrast(${contrast}%) saturate(${saturate}%)`;
+            ctx.filter = filterString;
+            ctx.drawImage(uploadedImage, 0, 0, canvas.width, canvas.height);
+            ctx.filter = 'none';
+        }
+
+        function applyFilter(filter) {
+            currentFilter = filter;
+            drawImage();
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function adjustFilter() {
+            brightness = document.getElementById('brightness').value;
+            contrast = document.getElementById('contrast').value;
+            saturate = document.getElementById('saturate').value;
+            
+            document.getElementById('brightnessValue').textContent = brightness;
+            document.getElementById('contrastValue').textContent = contrast;
+            document.getElementById('saturateValue').textContent = saturate;
+            
+            drawImage();
+        }
+
+        function resetFilters() {
+            currentFilter = 'none';
+            brightness = 100;
+            contrast = 100;
+            saturate = 100;
+            
+            document.getElementById('brightness').value = 100;
+            document.getElementById('contrast').value = 100;
+            document.getElementById('saturate').value = 100;
+            document.getElementById('brightnessValue').textContent = 100;
+            document.getElementById('contrastValue').textContent = 100;
+            document.getElementById('saturateValue').textContent = 100;
+            
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector('.filter-btn').classList.add('active');
+            drawImage();
+        }
+
+        function addSticker(emoji) {
+            const sticker = document.createElement('div');
+            sticker.className = 'placed-sticker';
+            sticker.textContent = emoji;
+            sticker.style.left = '50%';
+            sticker.style.top = '50%';
+            
+            const deleteBtn = document.createElement('div');
+            deleteBtn.className = 'delete-sticker';
+            deleteBtn.textContent = '×';
+            deleteBtn.onclick = function(e) {
+                e.stopPropagation();
+                canvasWrapper.removeChild(sticker);
+            };
+            
+            sticker.appendChild(deleteBtn);
+            canvasWrapper.appendChild(sticker);
+            makeDraggable(sticker);
+        }
+
+        function makeDraggable(element) {
+            let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+            element.onmousedown = dragMouseDown;
+            
+            function dragMouseDown(e) {
+                e.preventDefault();
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                document.onmouseup = closeDragElement;
+                document.onmousemove = elementDrag;
+            }
+            
+            function elementDrag(e) {
+                e.preventDefault();
+                pos1 = pos3 - e.clientX;
+                pos2 = pos4 - e.clientY;
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                element.style.top = (element.offsetTop - pos2) + 'px';
+                element.style.left = (element.offsetLeft - pos1) + 'px';
+            }
+            
+            function closeDragElement() {
+                document.onmouseup = null;
+                document.onmousemove = null;
+            }
+        }
+
+        function clearStickers() {
+            document.querySelectorAll('.placed-sticker').forEach(sticker => sticker.remove());
+        }
+
+        function downloadImage() {
+            const tempCanvas = document.createElement('canvas');
+            const tempCtx = tempCanvas.getContext('2d');
+            tempCanvas.width = canvas.width;
+            tempCanvas.height = canvas.height;
+            
+            let filterString = '';
+            switch(currentFilter) {
+                case 'grayscale': filterString = 'grayscale(100%)'; break;
+                case 'sepia': filterString = 'sepia(100%)'; break;
+                case 'invert': filterString = 'invert(100%)'; break;
+                case 'blur': filterString = 'blur(3px)'; break;
+                case 'vintage': filterString = 'sepia(50%) contrast(110%) brightness(110%)'; break;
+                case 'cool': filterString = 'saturate(150%) hue-rotate(180deg)'; break;
+                case 'warm': filterString = 'saturate(130%) hue-rotate(-15deg)'; break;
+            }
+            filterString += ` brightness(${brightness}%) contrast(${contrast}%) saturate(${saturate}%)`;
+            tempCtx.filter = filterString;
+            tempCtx.drawImage(uploadedImage, 0, 0, tempCanvas.width, tempCanvas.height);
+            tempCtx.filter = 'none';
+            
+            const stickerElements = document.querySelectorAll('.placed-sticker');
+            stickerElements.forEach(sticker => {
+                const rect = sticker.getBoundingClientRect();
+                const canvasRect = canvas.getBoundingClientRect();
+                const x = rect.left - canvasRect.left;
+                const y = rect.top - canvasRect.top;
+                
+                tempCtx.font = '70px Arial';
+                tempCtx.textAlign = 'center';
+                tempCtx.textBaseline = 'middle';
+                tempCtx.shadowColor = 'rgba(0,0,0,0.5)';
+                tempCtx.shadowBlur = 4;
+                tempCtx.shadowOffsetX = 2;
+                tempCtx.shadowOffsetY = 2;
+                tempCtx.fillText(sticker.textContent.replace('×', ''), x + 35, y + 35);
+                tempCtx.shadowColor = 'transparent';
+            });
+            
+            const link = document.createElement('a');
+            link.download = 'filtered-photo-' + Date.now() + '.png';
+            link.href = tempCanvas.toDataURL();
+            link.click();
+        }
+    </script>
+</body>
+</html>
