@@ -281,6 +281,13 @@ h1 {
   z-index: 1;
   height: 220px;
 }
+.card:nth-child(6) {
+  background: linear-gradient(135deg, #ffcc70 0%, #ffb347 100%);
+  transform: rotate(10deg) translateY(30px);
+  z-index: 1;
+  height: 280px;
+}
+
 
 .card:hover {
   transform: translateY(-12px) scale(1.04) !important;
