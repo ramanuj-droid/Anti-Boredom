@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Horoscope - Your Cosmic Guide</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <span class="sparkle">✨</span>
+                <h1>Daily Horoscope</h1>
+                <span class="sparkle">✨</span>
+            </div>
+            <p class="date" id="currentDate"></p>
+        </header>
+
+        <!-- Zodiac Selection -->
+        <div id="zodiacSelection" class="zodiac-selection">
+            <h2 class="selection-title">
+                <span class="moon-icon">🌙</span>
+                Choose Your Zodiac Sign
+                <span class="sun-icon">☀️</span>
+            </h2>
+            <div class="zodiac-grid" id="zodiacGrid"></div>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loadingState" class="loading-state hidden">
+            <div class="loading-icons">
+                <span class="star-icon spinning">⭐</span>
+                <span class="sparkle-icon pulsing">✨</span>
+                <span class="star-icon spinning">⭐</span>
+            </div>
+            <p class="loading-text">Reading the stars for you...</p>
+        </div>
+
+        <!-- Horoscope Display -->
+        <div id="horoscopeDisplay" class="horoscope-display hidden">
+            <!-- Sign Header -->
+            <div class="sign-header card">
+                <div class="sign-info">
+                    <div class="sign-icon" id="signIcon"></div>
+                    <div class="sign-details">
+                        <h2 id="signName"></h2>
+                        <p id="signDates"></p>
+                    </div>
+                </div>
+                <button class="change-sign-btn" id="changeSignBtn">Change Sign</button>
+            </div>
+
+            <!-- Horoscope Content -->
+            <div class="horoscope-content card">
+                <div class="content-header">
+                    <span class="sparkle-small">✨</span>
+                    <h3>Today's Reading</h3>
+                </div>
+                <p class="horoscope-text" id="horoscopeText"></p>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Lucky Color</div>
+                        <div class="stat-value" id="luckyColor"></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Lucky Number</div>
+                        <div class="stat-value" id="luckyNumber"></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Lucky Time</div>
+                        <div class="stat-value" id="luckyTime"></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Mood</div>
+                        <div class="stat-value" id="mood"></div>
+                    </div>
+                </div>
+
+                <!-- Compatibility -->
+                <div class="compatibility-card">
+                    <div class="stat-label">Compatibility</div>
+                    <div class="stat-value" id="compatibility"></div>
+                </div>
+            </div>
+
+            <!-- Refresh Button -->
+            <div class="refresh-section">
+                <button class="refresh-btn" id="refreshBtn">Refresh Horoscope</button>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p class="footer-text">✨ Your cosmic guide to the day ahead ✨</p>
+            <div class="footer-credits">
+                <span class="star-small">⭐</span>
+                <span>Made with love and stardust</span>
+                <span class="star-small">⭐</span>
+            </div>
+            <div class="github-link">
+                <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="github-btn">
+                    ⭐ Star this project on GitHub
+                </a>
+            </div>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
