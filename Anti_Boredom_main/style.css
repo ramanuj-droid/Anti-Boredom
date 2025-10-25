@@ -74,6 +74,78 @@ body[data-theme="light"] .theme-toggle::after {
   }
 }
 
+/* Language Selector Styles */
+.language-selector {
+  position: fixed;
+  top: 14px;
+  right: 80px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.language-icon {
+  font-size: 20px;
+}
+
+#google_translate_element {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  padding: 5px 12px;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+#google_translate_element select {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 14px;
+  padding: 2px 5px;
+  cursor: pointer;
+  outline: none;
+  font-family: "Noto Sans", sans-serif;
+}
+
+#google_translate_element select option {
+  background: #2d2d2d;
+  color: #fff;
+}
+
+body[data-theme="light"] #google_translate_element {
+  background: rgba(0, 0, 0, 0.06);
+  border-color: rgba(0, 0, 0, 0.12);
+}
+
+body[data-theme="light"] #google_translate_element select {
+  color: #111827;
+}
+
+body[data-theme="light"] #google_translate_element select option {
+  background: #f7f7f9;
+  color: #111827;
+}
+
+/* Hide Google Translate branding */
+.goog-te-banner-frame.skiptranslate {
+  display: none !important;
+}
+
+body {
+  top: 0 !important;
+}
+
+.goog-te-gadget {
+  color: transparent !important;
+  font-size: 0 !important;
+}
+
+.goog-te-gadget .goog-te-combo {
+  margin: 0 !important;
+}
+
 /* Grid background */
 body::before {
   content: "";
@@ -157,7 +229,6 @@ h1 {
   line-height: 1.6;
 }
 
-/* Cards container */
 .cards {
   display: flex;
   justify-content: center;
@@ -288,7 +359,44 @@ h1 {
     inset 0 -6px 20px rgba(0, 0, 0, 0.06);
 }
 
+.reveal {
+  opacity: 0;
+  transform: translateY(18px) scale(0.995);
+  transition: opacity 520ms cubic-bezier(0.2, 0.9, 0.2, 1),
+    transform 520ms cubic-bezier(0.2, 0.9, 0.2, 1);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Responsive adjustments */
 @media (max-width: 768px) {
+  .language-selector {
+    top: 10px;
+    right: 70px;
+  }
+
+  .language-icon {
+    font-size: 18px;
+  }
+
+  #google_translate_element {
+    padding: 4px 8px;
+  }
+
+  #google_translate_element select {
+    font-size: 12px;
+  }
+
+  .theme-toggle {
+    top: 10px;
+    right: 10px;
+    width: 50px;
+    height: 28px;
+  }
+
   .cards {
     gap: 10px;
     margin: 10px;
@@ -304,65 +412,74 @@ h1 {
     font-weight: 600;
   }
 }
-/* reveal-on-scroll */
-.reveal {
-  opacity: 0;
-  transform: translateY(18px) scale(0.995);
-  transition: opacity 520ms cubic-bezier(0.2, 0.9, 0.2, 1),
-    transform 520ms cubic-bezier(0.2, 0.9, 0.2, 1);
-}
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0) scale(1);
+
+@media (max-width: 480px) {
+  .language-selector {
+    top: 60px;
+    right: 10px;
+    left: auto;
+  }
+
+  h1 {
+    margin-top: 40px;
+  }
 }
 
-/* modal */
-.modal {
+/* GitHub Star Button */
+.github-star {
   position: fixed;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  pointer-events: none;
-}
-.modal.open {
-  pointer-events: auto;
-}
-.modal-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.5);
-}
-.modal-content {
-  position: relative;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.03),
-    rgba(0, 0, 0, 0.06)
-  );
-  border-radius: 12px;
-  padding: 22px;
-  width: min(520px, 92%);
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
-  z-index: 60;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 10px;
+  padding: 10px 16px;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  text-decoration: none;
   color: #fff;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  transition: transform 0.2s, background 0.2s;
 }
-.modal-close {
-  position: absolute;
-  right: 10px;
-  top: 6px;
-  background: transparent;
-  border: none;
-  color: #fff;
-  font-size: 22px;
-  cursor: pointer;
+
+.github-star:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.github-star svg {
+  width: 20px;
+  height: 20px;
+}
+
+body[data-theme="light"] .github-star {
+  background: rgba(0, 0, 0, 0.06);
+  border-color: rgba(0, 0, 0, 0.12);
+  color: #111827;
+}
+
+@media (max-width: 768px) {
+  .github-star {
+    bottom: 15px;
+    right: 15px;
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+
+  .github-star svg {
+    width: 16px;
+    height: 16px;
+  }
 }
 
 /* Search box styling */
 /* ===================
    SEARCH STYLING
 ==================== */
-
 .search-container {
   /* This centers the search bar and gives it a max width */
   max-width: 600px;
