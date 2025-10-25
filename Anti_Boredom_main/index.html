@@ -126,6 +126,44 @@
       </div>
     </div>
   </div>
+
+  <div id="ab-faq-bot" aria-live="polite">
+    <button class="ab-bot-toggle" aria-label="Open Quipster bot">
+      <img src="media/bot.svg" alt="Quipster bot" class="ab-bot-avatar" />
+    </button>
+
+    <section class="ab-bot-window" role="dialog" aria-modal="false" aria-label="Quipster FAQ Chat" hidden>
+      <header class="ab-bot-header">
+        <div class="ab-bot-brand">
+          <img src="media/bot.svg" alt="Quipster" class="ab-bot-avatar" />
+          <div>
+            <h2 class="ab-bot-title">Quipster</h2>
+            <p class="ab-bot-sub">Ask me about the project</p>
+          </div>
+        </div>
+        <button class="ab-bot-close" aria-label="Close chat">×</button>
+      </header>
+
+      <div class="ab-bot-messages" id="ab-bot-messages" tabindex="0" aria-live="polite"></div>
+
+      <div class="ab-bot-quick" id="ab-bot-quick" aria-label="Quick questions">
+        <button data-q="What is Anti-Boredom?">What is Anti-Boredom?</button>
+        <button data-q="How do I contribute?">How do I contribute?</button>
+        <button data-q="How to run locally?">How to run locally?</button>
+        <button data-q="Where are the mini apps?">Where are the mini apps?</button>
+      </div>
+
+      <form class="ab-bot-input" id="ab-bot-form" aria-label="Ask a question">
+        <input id="ab-bot-text" type="text" placeholder="Type a question about the project..." aria-label="Your question" autocomplete="off" />
+        <button type="submit" class="ab-bot-send" aria-label="Send">Send</button>
+      </form>
+
+      <div class="ab-bot-footer">
+        <a class="ab-star-btn" href="https://github.com/ramanuj-droid/Anti-Boredom" target="_blank" rel="noopener noreferrer" aria-label="Star Anti-Boredom on GitHub">⭐ Star the repo on GitHub</a>
+      </div>
+    </section>
+  </div>
+
   <!-- Google Translate Script -->
   <script type="text/javascript">
     function googleTranslateElementInit() {
