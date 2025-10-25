@@ -169,3 +169,5 @@ Thank you to all the wonderful people who have contributed to Anti-Boredom!
   * @shrav784
   * @ayesha-xainab
   * @sneha-chourey
+  * @nishant2bruteforce
+  * @deepika2k24
