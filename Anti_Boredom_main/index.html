@@ -1,191 +1,284 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=BBH+Sans+Bogle&family=Noto+Sans+JP:wght@100..900&display=swap");
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <style>
-    @import url("https://fonts.googleapis.com/css2?family=BBH+Sans+Bogle&family=Noto+Sans+JP:wght@100..900&display=swap");
+      /* enable smooth in-page scrolling */
+      html {
+        scroll-behavior: smooth;
+      }
+    </style>
+    <title>ANTI-BOREDOM</title>
+    <link rel="stylesheet" href="style.css" />
+    <script defer src="script.js"></script>
+  </head>
 
-    /* enable smooth in-page scrolling */
-    html {
-      scroll-behavior: smooth;
-    }
-  </style>
-  <title>ANTI-BOREDOM</title>
-  <link rel="stylesheet" href="style.css" />
-  <script defer src="script.js"></script>
-</head>
-
-<body>
-  <!-- Language Selector -->
-  <div class="language-selector">
-    <span class="language-icon">🌐</span>
-    <div id="google_translate_element"></div>
-  </div>
-  <button id="themeBtn" class="theme-toggle" aria-label="Toggle theme" title="Toggle light/dark">
-    🌙
-  </button>
-  <a href="https://github.com/ramanuj-droid/Anti-Boredom" target="_blank" class="github-star" aria-label="Star on GitHub">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
-    </svg>
-    Star on GitHub
-  </a>
-  <div id="top" class="container">
-    <h1>ANTI-BOREDOM</h1>
-    <p class="subtitle">
-      The #1 website for curing your boredom, everything from games to jokes -
-      here<br />
-      at one spot!
-      <br /><br />
-    </p>
-
-    <section class="search-container">
-      <form role="search" id="search-form">
-        <div class="search-wrapper">
-          <input type="search" id="search-input" placeholder="Search for an app..."
-            aria-label="Search for an app on this site" autocomplete="off" />
-          <button type="submit" class="search-button" aria-label="Search">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="search-icon">
-              <circle cx="11" cy="11" r="8"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-          </button>
-        </div>
-      </form>
-
-      <ul id="search-results">
-      </ul>
-    </section>
-    <div class="cards">
-      <div class="card reveal">
-        <div class="card-content">
-          <h3>Games</h3>
-          <p>
-            Quick browser games and small challenges to kill boredom and train
-            your reflexes.
-          </p>
-          <br /><br /><br />
-          <a href="Mini_Mystery/index.html" class="btn" aria-label="Open Solve a Mini-Mystery">Solve a Mini‑Mystery</a>
-        </div>
-      </div>
-
-      <div class="card reveal">
-        <div class="card-content">
-          <h3>Sports</h3>
-          <p>
-            Live scores, highlights and short updates so you never miss the
-            action.
-          </p>
-          <br /><br /><br /><br />
-          <a href="Sports_Live/index.html" class="btn" aria-label="Sports">Watch Sports</a>
-        </div>
-      </div>
-
-      <div class="card reveal">
-        <div class="card-content">
-          <h3>Media</h3>
-          <p>
-            Short clips, demos and curated media to entertain and inspire.
-          </p>
-          <br /><br /><br /><br />
-          <a href="media/" class="btn" aria-label="Media">View Media</a>
-        </div>
-      </div>
-      <div class="card reveal">
-  <div class="card-content">
-    <h3>Horoscope</h3>
-    <p>Check your daily horoscope and astrology predictions.</p>
-    <br /><br /><br />
-    <a href="Horoscope/index.html" class="btn" aria-label="Horoscope">View Horoscope</a>
-  </div>
-</div>
-
-
-      <div class="card reveal">
-        <div class="card-content">
-          <h3>Random Facts</h3>
-          <p>Fun facts and trivia to learn something new in under a minute.</p>
-          <br /><br /><br /><br /><br /><br />
-          <a href="Random_Facts/index.html" class="btn" aria-label="Random Facts">Get Random Fact</a>
-        </div>
-      </div>
-
-      <div class="card reveal">
-        <div class="card-content">
-          <h3>Guess the Flag</h3>
-          <p>
-            A quick geography game: identify the flag and earn virtual bragging
-            rights.
-          </p>
-          <br /><br />
-          <a href="Guess_The_Flag/index.html" class="btn" aria-label="Guess The Flag">Guess Flags</a>
-        </div>
-      </div>
-      <div class="card reveal">
-  <div class="card-content">
-    <h3>Emoji Riddle Game</h3>
-    <p>Guess the hidden words or phrases from fun emoji clues and test your imagination!</p>
-    <br /><br />
-    <a href="Emoji_Riddle_Game/index.html" class="btn" aria-label="Emoji Riddle Game">Play Now</a>
-  </div>
-</div>
+  <body>
+    <!-- Language Selector -->
+    <div class="language-selector">
+      <span class="language-icon">🌐</span>
+      <div id="google_translate_element"></div>
     </div>
-  </div>
-
-  <div id="ab-faq-bot" aria-live="polite">
-    <button class="ab-bot-toggle" aria-label="Open Quipster bot">
-      <img src="media/bot.svg" alt="Quipster bot" class="ab-bot-avatar" />
+    <button
+      id="themeBtn"
+      class="theme-toggle"
+      aria-label="Toggle theme"
+      title="Toggle light/dark"
+    >
+      🌙
     </button>
+    <a
+      href="https://github.com/ramanuj-droid/Anti-Boredom"
+      target="_blank"
+      class="github-star"
+      aria-label="Star on GitHub"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+      >
+        <path
+          d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"
+        />
+      </svg>
+      Star on GitHub
+    </a>
+    <div id="top" class="container">
+      <h1>ANTI-BOREDOM</h1>
+      <p class="subtitle">
+        The #1 website for curing your boredom, everything from games to jokes -
+        here<br />
+        at one spot!
+        <br /><br />
+      </p>
 
-    <section class="ab-bot-window" role="dialog" aria-modal="false" aria-label="Quipster FAQ Chat" hidden>
-      <header class="ab-bot-header">
-        <div class="ab-bot-brand">
-          <img src="media/bot.svg" alt="Quipster" class="ab-bot-avatar" />
-          <div>
-            <h2 class="ab-bot-title">Quipster</h2>
-            <p class="ab-bot-sub">Ask me about the project</p>
+      <section class="search-container">
+        <form role="search" id="search-form">
+          <div class="search-wrapper">
+            <input
+              type="search"
+              id="search-input"
+              placeholder="Search for an app..."
+              aria-label="Search for an app on this site"
+              autocomplete="off"
+            />
+            <button type="submit" class="search-button" aria-label="Search">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="search-icon"
+              >
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </button>
+          </div>
+        </form>
+
+        <ul id="search-results"></ul>
+      </section>
+      <div class="cards">
+        <div class="card reveal">
+          <div class="card-content">
+            <h3>Games</h3>
+            <p>
+              Quick browser games and small challenges to kill boredom and train
+              your reflexes.
+            </p>
+            <br /><br /><br />
+            <a
+              href="Mini_Mystery/index.html"
+              class="btn"
+              aria-label="Open Solve a Mini-Mystery"
+              >Solve a Mini‑Mystery</a
+            >
           </div>
         </div>
-        <button class="ab-bot-close" aria-label="Close chat">×</button>
-      </header>
 
-      <div class="ab-bot-messages" id="ab-bot-messages" tabindex="0" aria-live="polite"></div>
+        <div class="card reveal">
+          <div class="card-content">
+            <h3>Sports</h3>
+            <p>
+              Live scores, highlights and short updates so you never miss the
+              action.
+            </p>
+            <br /><br /><br /><br />
+            <a href="Sports_Live/index.html" class="btn" aria-label="Sports"
+              >Watch Sports</a
+            >
+          </div>
+        </div>
 
-      <div class="ab-bot-quick" id="ab-bot-quick" aria-label="Quick questions">
-        <button data-q="What is Anti-Boredom?">What is Anti-Boredom?</button>
-        <button data-q="How do I contribute?">How do I contribute?</button>
-        <button data-q="How to run locally?">How to run locally?</button>
-        <button data-q="Where are the mini apps?">Where are the mini apps?</button>
+        <div class="card reveal">
+          <div class="card-content">
+            <h3>Media</h3>
+            <p>
+              Short clips, demos and curated media to entertain and inspire.
+            </p>
+            <br /><br /><br /><br />
+            <a href="media/" class="btn" aria-label="Media">View Media</a>
+          </div>
+        </div>
+        <div class="card reveal">
+          <div class="card-content">
+            <h3>Horoscope</h3>
+            <p>Check your daily horoscope and astrology predictions.</p>
+            <br /><br /><br />
+            <a href="Horoscope/index.html" class="btn" aria-label="Horoscope"
+              >View Horoscope</a
+            >
+          </div>
+        </div>
+
+        <div class="card reveal">
+          <div class="card-content">
+            <h3>Random Facts</h3>
+            <p>
+              Fun facts and trivia to learn something new in under a minute.
+            </p>
+
+            <a
+              href="Random_Facts/index.html"
+              class="btn"
+              aria-label="Random Facts"
+              >Get Random Fact</a
+            >
+          </div>
+        </div>
+
+        <div class="card reveal">
+          <div class="card-content">
+            <h3>Guess the Flag</h3>
+            <p>
+              A quick geography game: identify the flag and earn virtual
+              bragging rights.
+            </p>
+            <br /><br />
+            <a
+              href="Guess_The_Flag/index.html"
+              class="btn"
+              aria-label="Guess The Flag"
+              >Guess Flags</a
+            >
+          </div>
+        </div>
+        <div class="card reveal">
+          <div class="card-content">
+            <h3>Emoji Riddle Game</h3>
+            <p>
+              Guess the hidden words or phrases from fun emoji clues and test
+              your imagination!
+            </p>
+            <br /><br />
+            <a
+              href="Emoji_Riddle_Game/index.html"
+              class="btn"
+              aria-label="Emoji Riddle Game"
+              >Play Now</a
+            >
+          </div>
+        </div>
       </div>
+    </div>
 
-      <form class="ab-bot-input" id="ab-bot-form" aria-label="Ask a question">
-        <input id="ab-bot-text" type="text" placeholder="Type a question about the project..." aria-label="Your question" autocomplete="off" />
-        <button type="submit" class="ab-bot-send" aria-label="Send">Send</button>
-      </form>
+    <div id="ab-faq-bot" aria-live="polite">
+      <button class="ab-bot-toggle" aria-label="Open Quipster bot">
+        <img src="media/bot.svg" alt="Quipster bot" class="ab-bot-avatar" />
+      </button>
 
-      <div class="ab-bot-footer">
-        <a class="ab-star-btn" href="https://github.com/ramanuj-droid/Anti-Boredom" target="_blank" rel="noopener noreferrer" aria-label="Star Anti-Boredom on GitHub">⭐ Star the repo on GitHub</a>
-      </div>
-    </section>
-  </div>
+      <section
+        class="ab-bot-window"
+        role="dialog"
+        aria-modal="false"
+        aria-label="Quipster FAQ Chat"
+        hidden
+      >
+        <header class="ab-bot-header">
+          <div class="ab-bot-brand">
+            <img src="media/bot.svg" alt="Quipster" class="ab-bot-avatar" />
+            <div>
+              <h2 class="ab-bot-title">Quipster</h2>
+              <p class="ab-bot-sub">Ask me about the project</p>
+            </div>
+          </div>
+          <button class="ab-bot-close" aria-label="Close chat">×</button>
+        </header>
 
-  <!-- Google Translate Script -->
-  <script type="text/javascript">
-    function googleTranslateElementInit() {
-      new google.translate.TranslateElement({
-        pageLanguage: 'en',
-        includedLanguages: 'en,es,fr,de,it,pt,ru,ja,ko,zh-CN,hi,ar,bn,tr,vi,pl,nl,th,id,ms,fil',
-        layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-        autoDisplay: false
-      }, 'google_translate_element');
-    }
-  </script>
-  <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+        <div
+          class="ab-bot-messages"
+          id="ab-bot-messages"
+          tabindex="0"
+          aria-live="polite"
+        ></div>
 
-  
-</body>
+        <div
+          class="ab-bot-quick"
+          id="ab-bot-quick"
+          aria-label="Quick questions"
+        >
+          <button data-q="What is Anti-Boredom?">What is Anti-Boredom?</button>
+          <button data-q="How do I contribute?">How do I contribute?</button>
+          <button data-q="How to run locally?">How to run locally?</button>
+          <button data-q="Where are the mini apps?">
+            Where are the mini apps?
+          </button>
+        </div>
 
+        <form class="ab-bot-input" id="ab-bot-form" aria-label="Ask a question">
+          <input
+            id="ab-bot-text"
+            type="text"
+            placeholder="Type a question about the project..."
+            aria-label="Your question"
+            autocomplete="off"
+          />
+          <button type="submit" class="ab-bot-send" aria-label="Send">
+            Send
+          </button>
+        </form>
+
+        <div class="ab-bot-footer">
+          <a
+            class="ab-star-btn"
+            href="https://github.com/ramanuj-droid/Anti-Boredom"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Star Anti-Boredom on GitHub"
+            >⭐ Star the repo on GitHub</a
+          >
+        </div>
+      </section>
+    </div>
+
+    <!-- Google Translate Script -->
+    <script type="text/javascript">
+      function googleTranslateElementInit() {
+        new google.translate.TranslateElement(
+          {
+            pageLanguage: "en",
+            includedLanguages:
+              "en,es,fr,de,it,pt,ru,ja,ko,zh-CN,hi,ar,bn,tr,vi,pl,nl,th,id,ms,fil",
+            layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+            autoDisplay: false,
+          },
+          "google_translate_element"
+        );
+      }
+    </script>
+    <script
+      type="text/javascript"
+      src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
+    ></script>
+  </body>
 </html>
