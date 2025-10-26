@@ -112,7 +112,7 @@ All games and features reside in their own dedicated folders for easy maintenanc
 | **photo-filter-adder** | **< Upload photos, apply filters & stickers, and download\>** |
 | **piano-type-app** | **< Interactive web piano with songs\>** |
 | **rocket-launch** | **< Interactive rocket countdown with launch animations\>** |
-
+| **emoji-riddle-game** | **< Guess hidden words or phrases using clever emoji clues>** |
 
 
 *NOTE: Please replace the bold placeholder text above with your final, official  summaries.*
@@ -226,7 +226,7 @@ Thank you to all the wonderful people who have contributed to Anti-Boredom!
   * @amritamishra01
   * @ManaswiniN234
   * @Pranay22077
-
+  * @TejKaur04
 
 
 
