@@ -1,0 +1,135 @@
+/* -------------------------
+   GENERAL RESET
+------------------------- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #0b6e4f;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 10px;
+}
+
+header {
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+header h1 {
+    font-size: 2rem;
+}
+
+.controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+button {
+    padding: 5px 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+}
+
+button:hover {
+    background-color: #fff;
+    color: #0b6e4f;
+}
+
+/* -------------------------
+   CARD STYLES
+------------------------- */
+.pile {
+    width: 80px;
+    min-height: 120px;
+    margin: 0 5px;
+    position: relative;
+}
+
+.card {
+    width: 80px;
+    height: 120px;
+    background: #fff;
+    color: #000;
+    border-radius: 6px;
+    border: 1px solid #000;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    cursor: grab;
+    user-select: none;
+}
+
+.card.red {
+    color: red;
+}
+
+.card.back {
+    background: blue;
+    color: blue;
+    border: 1px solid #000;
+}
+
+/* -------------------------
+   TOP ROW (STOCK, WASTE, FOUNDATIONS)
+------------------------- */
+#top-row {
+    display: flex;
+    width: 100%;
+    max-width: 900px;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+#foundations {
+    display: flex;
+    gap: 10px;
+}
+
+/* -------------------------
+   TABLEAU
+------------------------- */
+#tableau {
+    display: flex;
+    width: 100%;
+    max-width: 900px;
+    justify-content: space-between;
+    position: relative;
+}
+
+#tableau .pile {
+    min-height: 400px;
+}
+
+/* -------------------------
+   RESPONSIVE
+------------------------- */
+@media (max-width: 600px) {
+    .pile {
+        width: 50px;
+    }
+
+    .card {
+        width: 50px;
+        height: 80px;
+        font-size: 0.8rem;
+    }
+}
