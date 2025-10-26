@@ -182,6 +182,7 @@ Thank you to all the wonderful people who have contributed to Anti-Boredom!
   * @AkshatOP
   * @teahsea
   * @Techy-ninja
+  * @TejKaur04
   * @rjrahulraj
   * @Aaditya1273
   * @jambhaleAnuj
@@ -226,7 +227,7 @@ Thank you to all the wonderful people who have contributed to Anti-Boredom!
   * @amritamishra01
   * @ManaswiniN234
   * @Pranay22077
-  * @TejKaur04
+  
 
 
 
