@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progressive Path Runner</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1f2937; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 1rem;
+        }
+        #game-container {
+            width: 100%;
+            max-width: 400px; 
+            background-color: #374151; 
+            border-radius: 1rem;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.6);
+            padding: 16px;
+        }
+        canvas {
+            display: block;
+            border-radius: 0.75rem;
+            width: 100%;
+            
+            background: linear-gradient(-45deg, #111827, #1f2937, #111827, #253347);
+            background-size: 400% 400%;
+            animation: gradientShift 10s ease infinite;
+        }
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .info-card {
+            background-color: #4b5563;
+            border-radius: 0.5rem;
+            padding: 8px 16px;
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: #d1d5db;
+        }
+        .game-button {
+            transition: all 0.1s;
+            box-shadow: 0 4px #10b981; 
+        }
+        .game-button:hover {
+            transform: translateY(1px);
+            box-shadow: 0 3px #10b981;
+        }
+        .game-button:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px #10b981;
+        }
+        #message-box {
+            position: fixed; 
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 24px 32px;
+            background-color: #1f2937;
+            border: 4px solid #f97316; 
+            border-radius: 1rem;
+            text-align: center;
+            color: white;
+            z-index: 100;
+            box-shadow: 0 10px 30px rgba(249, 115, 22, 0.4);
+            max-width: 90%;
+        }
+        .avatar-option {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.15s, box-shadow 0.15s;
+            border: 3px solid transparent;
+        }
+        .avatar-option.selected {
+            border-color: #f97316;
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(249, 115, 22, 0.7);
+        }
+        .diamond-shape {
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+        }
+    </style>
+</head>
+<body>
+
+<div id="game-container" class="space-y-4">
+    <div class="flex justify-between items-center">
+        <div id="level-display" class="info-card">Level: 1</div>
+        <div id="difficulty-factor" class="info-card">Speed: 2.0x | Gap: 0.35</div>
+    </div>
+
+    
+    <div class="bg-gray-700 p-3 rounded-xl flex justify-around items-center text-white">
+        <span class="text-sm font-semibold mr-4">Select Avatar:</span>
+        <div id="avatar-cube" class="avatar-option selected" data-avatar="SQUARE" 
+             style="background-color: #fcd34d;"></div>
+        <div id="avatar-diamond" class="avatar-option diamond-shape" data-avatar="DIAMOND" 
+             style="background-color: #38bdf8;"></div>
+    </div>
+
+    <canvas id="gameCanvas" width="368" height="400"></canvas>
+
+    <button id="restart-button" class="game-button w-full bg-emerald-400 text-gray-900 py-3 rounded-xl text-lg font-bold">
+        Restart Game
+    </button>
+</div>
+
+<div id="message-box" class="hidden">
+    <h2 id="message-title" class="text-3xl font-bold mb-2"></h2>
+    <p id="message-text" class="text-lg mb-6"></p>
+    <button id="message-button" class="game-button bg-orange-500 text-white py-2 px-6 rounded-lg text-lg font-bold">
+        Continue
+    </button>
+</div>
+
+<script>
+   
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+
+   
+    const AVATARS = {
+        SQUARE: { id: 'SQUARE', name: 'Cube Runner', color: '#fcd34d', shape: 'square' },
+        DIAMOND: { id: 'DIAMOND', name: 'Aero Gem', color: '#38bdf8', shape: 'diamond' }
+    };
+    
+    let selectedAvatar = AVATARS.SQUARE;
+
+    
+    const SMOOTHING_FACTOR = 0.15; 
+    const INPUT_STEP = 50;         
+
+    
+    const levelDisplay = document.getElementById('level-display');
+    const difficultyFactor = document.getElementById('difficulty-factor');
+    const restartButton = document.getElementById('restart-button');
+    const messageBox = document.getElementById('message-box');
+    const messageTitle = document.getElementById('message-title');
+    const messageText = document.getElementById('message-text');
+    let messageButton = document.getElementById('message-button'); 
+    
+    
+    const avatarCube = document.getElementById('avatar-cube');
+    const avatarDiamond = document.getElementById('avatar-diamond');
+
+
+    
+    const INITIAL_SPEED = 2.0;       
+    const SPEED_INCREMENT = 0.3;     
+    const INITIAL_GAP_FACTOR = 0.35; 
+    const GAP_DECREMENT = 0.02;      
+    const INITIAL_SPAWN_TIME = 1500; 
+    const SPAWN_TIME_DECREMENT = 80; 
+
+    // --- GAME STATE ---
+    let level = 1;
+    let isGameRunning = false;
+    let isGameOver = false;
+    let isLevelClear = false;
+    let player = {};
+    let obstacles = [];
+    let lastSpawnTime = 0;
+    let animationFrameId = null;
+
+    // --- DYNAMIC DIFFICULTY VARIABLES ---
+    let currentSpeed = INITIAL_SPEED;
+    let currentGapFactor = INITIAL_GAP_FACTOR;
+    let currentSpawnTime = INITIAL_SPAWN_TIME;
+    let scoreToNextLevel = 10;
+    let currentScore = 0;
+
+    // --- PLAYER CONFIG ---
+    const PLAYER_WIDTH = 20;
+    const PLAYER_HEIGHT = 20;
+
+    // --- INITIALIZATION AND RESET ---
+
+    function initializeGame() {
+        // Reset dynamic difficulty
+        level = 1;
+        currentSpeed = INITIAL_SPEED;
+        currentGapFactor = INITIAL_GAP_FACTOR;
+        currentSpawnTime = INITIAL_SPAWN_TIME;
+        currentScore = 0;
+
+        // Reset game state
+        isGameOver = false;
+        isGameRunning = false;
+        obstacles = [];
+        lastSpawnTime = 0;
+
+        const initialX = canvas.width / 2 - PLAYER_WIDTH / 2;
+        
+        
+        player = {
+            x: initialX,
+            y: canvas.height - PLAYER_HEIGHT - 30,
+            targetX: initialX, 
+            width: PLAYER_WIDTH,
+            height: PLAYER_HEIGHT,
+            
+        };
+
+        
+        updateUI();
+        hideMessage();
+
+        
+        if (animationFrameId) {
+            cancelAnimationFrame(animationFrameId);
+        }
+
+       
+        showMessage("Path Runner", "Avoid the red obstacles! Use A/D or Left/Right arrows to move. Select your avatar below.", "Start Game", startGame);
+
+        
+        draw();
+    }
+
+   
+    function selectAvatar(avatarKey) {
+        selectedAvatar = AVATARS[avatarKey];
+        
+        
+        avatarCube.classList.remove('selected');
+        avatarDiamond.classList.remove('selected');
+
+        document.querySelector(`[data-avatar="${avatarKey}"]`).classList.add('selected');
+
+        
+        draw();
+    }
+    
+    avatarCube.addEventListener('click', () => selectAvatar('SQUARE'));
+    avatarDiamond.addEventListener('click', () => selectAvatar('DIAMOND'));
+
+    // --- DIFFICULTY LOGIC ---
+
+    function updateDifficulty() {
+        level++;
+        
+        
+        currentSpeed = INITIAL_SPEED + (level - 1) * SPEED_INCREMENT;
+        currentSpawnTime = Math.max(500, INITIAL_SPAWN_TIME - (level - 1) * SPAWN_TIME_DECREMENT); 
+
+       
+        currentGapFactor = Math.max(0.1, INITIAL_GAP_FACTOR - (level - 1) * GAP_DECREMENT); 
+
+      
+        scoreToNextLevel += level * 5;
+
+        console.log(`Level ${level} | Speed: ${currentSpeed.toFixed(2)} | Gap Factor: ${currentGapFactor.toFixed(2)}`);
+
+        updateUI();
+    }
+
+    // --- GAME LOOP AND DRAWING ---
+
+    function drawPlayer() {
+        ctx.fillStyle = selectedAvatar.color;
+        
+        if (selectedAvatar.shape === 'square') {
+           
+            ctx.fillRect(player.x, player.y, player.width, player.height);
+        } else if (selectedAvatar.shape === 'diamond') {
+            
+            const cx = player.x + player.width / 2;
+            const cy = player.y + player.height / 2;
+
+            ctx.beginPath();
+            ctx.moveTo(cx, player.y);                      
+            ctx.lineTo(player.x + player.width, cy);       
+            ctx.lineTo(cx, player.y + player.height);      
+            ctx.lineTo(player.x, cy);                       
+            ctx.closePath();
+            ctx.fill();
+        }
+    }
+
+    function draw() {
+        
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Draw Player
+        drawPlayer();
+
+        // Draw Obstacles
+        ctx.fillStyle = '#ef4444'; // Red for danger
+        obstacles.forEach(obstacle => {
+            ctx.fillRect(obstacle.x1, obstacle.y, obstacle.width1, obstacle.height);
+            ctx.fillRect(obstacle.x2, obstacle.y, obstacle.width2, obstacle.height);
+        });
+    }
+
+    function update(timestamp) {
+        if (!isGameRunning || isGameOver || isLevelClear) {
+            return;
+        }
+
+        
+        if (timestamp - lastSpawnTime > currentSpawnTime) {
+            spawnObstacle();
+            lastSpawnTime = timestamp;
+        }
+
+        
+        player.x += (player.targetX - player.x) * SMOOTHING_FACTOR;
+
+        
+        player.x = Math.max(0, Math.min(canvas.width - player.width, player.x));
+       
+        player.targetX = Math.max(0, Math.min(canvas.width - player.width, player.targetX));
+
+
+        // 3. Move Obstacles (Wave/Speed Difficulty)
+        for (let i = obstacles.length - 1; i >= 0; i--) {
+            const obstacle = obstacles[i];
+            obstacle.y += currentSpeed;
+
+            
+            const isCollidingLeft = (
+                player.x < obstacle.x1 + obstacle.width1 && 
+                player.x + player.width > obstacle.x1 &&
+                player.y < obstacle.y + obstacle.height &&
+                player.y + player.height > obstacle.y
+            );
+
+            const isCollidingRight = (
+                player.x < obstacle.x2 + obstacle.width2 && 
+                player.x + player.width > obstacle.x2 &&
+                player.y < obstacle.y + obstacle.height &&
+                player.y + player.height > obstacle.y
+            );
+
+            if (isCollidingLeft || isCollidingRight) {
+                endGame("Game Over!", `You crashed on Level ${level}. Score: ${currentScore}`);
+                return;
+            }
+
+            // Check if passed the player and add score
+            if (obstacle.y > player.y && !obstacle.scored) {
+                obstacle.scored = true;
+                currentScore++;
+                updateUI();
+                checkLevelUp();
+            }
+
+            // Remove if off screen
+            if (obstacle.y > canvas.height) {
+                obstacles.splice(i, 1);
+            }
+        }
+
+        draw();
+        animationFrameId = requestAnimationFrame(update);
+    }
+
+    function checkLevelUp() {
+        if (currentScore >= scoreToNextLevel) {
+            isLevelClear = true;
+            isGameRunning = false;
+            obstacles = []; // Clear obstacles
+
+            showMessage(
+                `Level ${level} Cleared!`,
+                `Prepare for Level ${level + 1}. Obstacle speed and path complexity have increased.`,
+                `Start Level ${level + 1}`,
+                startNextLevel
+            );
+        }
+    }
+
+    function spawnObstacle() {
+        const OBSTACLE_HEIGHT = 15;
+        const GAP_WIDTH = canvas.width * currentGapFactor; 
+        const gapStart = Math.random() * (canvas.width - GAP_WIDTH);
+
+        // Left block
+        const width1 = gapStart;
+        const x1 = 0;
+
+        // Right block
+        const width2 = canvas.width - (gapStart + GAP_WIDTH);
+        const x2 = gapStart + GAP_WIDTH;
+
+        obstacles.push({
+            y: -OBSTACLE_HEIGHT,
+            height: OBSTACLE_HEIGHT,
+            // Left block data
+            x1: x1,
+            width1: width1,
+            // Right block data
+            x2: x2,
+            width2: width2,
+            scored: false
+        });
+    }
+
+    function updateUI() {
+        levelDisplay.textContent = `Level: ${level} (Goal: ${currentScore}/${scoreToNextLevel})`;
+        difficultyFactor.textContent = `Speed: ${currentSpeed.toFixed(1)}x | Gap Factor: ${currentGapFactor.toFixed(2)}`;
+    }
+
+    // --- GAME CONTROL ---
+
+    function startGame() {
+        hideMessage();
+        isLevelClear = false;
+        isGameRunning = true;
+        // Start the main loop
+        lastSpawnTime = performance.now();
+        animationFrameId = requestAnimationFrame(update);
+    }
+
+    function startNextLevel() {
+        updateDifficulty();
+        startGame();
+    }
+
+    function endGame(title, text) {
+        isGameOver = true;
+        isGameRunning = false;
+        if (animationFrameId) {
+            cancelAnimationFrame(animationFrameId);
+        }
+        showMessage(title, text, "Play Again", initializeGame);
+    }
+
+    // --- MESSAGE HANDLER (Non-Alert/Confirm UI) ---
+
+    function showMessage(title, text, buttonLabel, action) {
+        messageTitle.textContent = title;
+        messageText.textContent = text;
+        messageButton.textContent = buttonLabel;
+        messageBox.classList.remove('hidden');
+
+        
+        const newButton = messageButton.cloneNode(true);
+        
+       
+        if (messageButton.parentNode) {
+            messageButton.parentNode.replaceChild(newButton, messageButton);
+            
+            messageButton = newButton; 
+        } else {
+             
+             messageButton = newButton;
+             document.getElementById('message-box').appendChild(messageButton);
+        }
+
+
+        messageButton.addEventListener('click', action);
+    }
+
+    function hideMessage() {
+        messageBox.classList.add('hidden');
+    }
+
+   
+
+    document.addEventListener('keydown', (e) => {
+        if (!isGameRunning) return;
+
+        
+        if (e.key === 'ArrowLeft' || e.key.toLowerCase() === 'a') {
+            
+            player.targetX = Math.max(0, player.targetX - INPUT_STEP);
+        } else if (e.key === 'ArrowRight' || e.key.toLowerCase() === 'd') {
+            
+            player.targetX = Math.min(canvas.width - player.width, player.targetX + INPUT_STEP);
+        }
+    });
+
+   
+    document.addEventListener('keyup', (e) => {
+        
+    });
+
+    restartButton.addEventListener('click', initializeGame);
+
+   
+    window.onload = initializeGame;
+
+</script>
