@@ -9,21 +9,20 @@
   <body>
     <main class="container">
       <header class="header">
-        <a class="back-link" href="../index.html" aria-label="Back to hub">← Back</a>
-        <h1 class="title">Solve a Mini‑Mystery</h1>
-        <p class="subtitle">Read the clue, pick the answer, then try another.</p>
+        <a class="back-link" href="../index.html">← Back</a>
+        <h1 class="title">Mini Mystery</h1>
+        <p class="subtitle">Read the mystery and pick your answer</p>
       </header>
 
-      <section id="mystery-card" class="card" aria-live="polite">
-        <div class="prompt">
-          <p id="mystery-text">Loading mystery…</p>
-        </div>
-        <div id="options" class="options" role="group" aria-label="Answer choices"></div>
-        <div id="feedback" class="feedback" aria-live="polite"></div>
-        <div class="actions">
-          <button id="nextBtn" class="btn" type="button">Try another</button>
-        </div>
-      </section>
+      <div class="card">
+        <p id="mystery-text" class="mystery-text">Loading mystery…</p>
+        
+        <div id="options" class="options"></div>
+        
+        <div id="feedback" class="feedback"></div>
+        
+        <button id="nextBtn" class="btn">Try Another</button>
+      </div>
     </main>
 
     <script src="script.js" defer></script>
