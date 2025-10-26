@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Klondike Solitaire</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Klondike Solitaire</h1>
+        <div class="controls">
+            <button id="undo">Undo</button>
+            <div id="moves">Moves: 0</div>
+            <div id="timer">00:00</div>
+        </div>
+    </header>
+
+    <main>
+        <section id="top-row">
+            <div id="stock" class="pile"></div>
+            <div id="waste" class="pile"></div>
+            <div id="foundations">
+                <div class="pile"></div>
+                <div class="pile"></div>
+                <div class="pile"></div>
+                <div class="pile"></div>
+            </div>
+        </section>
+
+        <section id="tableau">
+            <div class="pile"></div>
+            <div class="pile"></div>
+            <div class="pile"></div>
+            <div class="pile"></div>
+            <div class="pile"></div>
+            <div class="pile"></div>
+            <div class="pile"></div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
