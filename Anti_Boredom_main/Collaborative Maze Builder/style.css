@@ -1,0 +1,17 @@
+/* Custom styles for a dark, high-contrast builder aesthetic */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a; /* Slate-900 */
+            color: #f1f5f9; /* Slate-100 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container-card {
+            background-color: #1e293b; /* Slate-800 */
+            border: 1px solid #334155; /* Slate-700 */
+        }
+        canvas {
+            touch-action: none; /* Disable default touch actions like scrolling/zooming */
+        }
