@@ -81,6 +81,39 @@ All games and features reside in their own dedicated folders for easy maintenanc
 | **Drum-Pad** | **< A virtual drum instrument for making beats\>** | 
 | **Tic-Tac-Toe** | **< A fun little webgame to play with a friend\>** |
 | **Snake Game** | **< Classic Snake Game.\>** |
+| **2048_game** | **< Minimal 2048 game with score and restart features\>** |
+| **Build_Own_House** | **< Interactive app to build and customize houses\>** |
+| **Chess_Puzzle** | **< Place chess pieces on the board\>** |
+| **Collaborative Maze Builder** | **< Build and edit mazes collaboratively\>** |
+| **Crypto Trading simulator** | **< Simulate crypto trading with live prices\>** |
+| **Guess the Bid Game** | **< Guess auction item prices to earn points\>** |
+| **Horoscope** | **< Get daily horoscope readings with lucky stats\>** |
+| **Jet_Comparision'** | **< Compare jet specs and guess the fastest or farthest\>** |
+| **Live_football_Dashboard** | **< Real-time football dashboard\>** |
+| **Mimic App** | **< Record and transform your voice with fun cartoon effects\>** |
+| **MoralDilemma** | **< Interactive game exploring ethical dilemmas and moral choices\>** |
+| **Movie_Suggestionn** | **< IMDb Top 250 Movies – Browse, filter, and export the top movies\>** |
+| **Multi-Character Chat Interface** | **< Chat with multiple characters in a single app\>** |
+| **Photo_Roast_Machine** | **< Upload a photo and get a random, funny roast instantly\>** |
+| **Quick_Quiz** | **< Test your knowledge with fun, interactive questions and track your score\>** |
+| **Reflex Clicker** | **< Test your reaction speed by clicking targets as fast as you can\>** |
+| **Robot_Designer** | **< Build and customize your own robot with selectable parts\>** |
+| **Tetris** | **< Classic block-stacking puzzle game\>** |
+| **Train_Route_Simulation** | **< Build and manage your own railway network\>** |
+| **Typing Test** | **< Test and improve your typing speed and accuracy with real-time stats\>** |
+| **Underwater-Explorer** | **< Dive deep, collect treasures, avoid dangers, and beat high scores\>** |
+| **Virtual-kitchen** | **< An interactive cooking simulator\>** |
+| **Vote_on_topics** | **< A fun, interactive voting app with 5 categories\>** |
+| **Whos_the_pokemon** | **< Interactive Pokémon guessing game.\>** |
+| **army-base-builder** | **< Interactive army base builder game\>** |
+| **casino-game-suite** | **< Interactive mini casino games with points and animations\>** |
+| **celebrity-news-feed** | **< Celebrity news app\>** |
+| **fantasy-team-builder** | **< Managing one-time and repeatable tasks efficiently.\>** |
+| **photo-filter-adder** | **< Upload photos, apply filters & stickers, and download\>** |
+| **piano-type-app** | **< Interactive web piano with songs\>** |
+| **rocket-launch** | **< Interactive rocket countdown with launch animations\>** |
+
+
 
 *NOTE: Please replace the bold placeholder text above with your final, official  summaries.*
 
@@ -171,3 +204,43 @@ Thank you to all the wonderful people who have contributed to Anti-Boredom!
   * @sneha-chourey
   * @nishant2bruteforce
   * @deepika2k24
+  * @aryanraj45
+  * @SravanthDev
+  * @Pranav00076
+  * @Parth10P
+  * @Dhairya211206
+  * @AryanParihar0716
+  * @SnigdhaSarkar16
+  * @IneshAg
+  * @Durgeshwar-AI
+  * @jeetsingh008
+  * @Ayush-kr-giga
+  * @annuuxoxo
+  * @Indraneel-Hajarnis
+  * @AbnormalPilot
+  * @AnthonyFinney
+  * @ashvin2005
+  * @ayushprog1
+  * @bored-brain
+  * @prapulkrishna-shaik
+  * @amritamishra01
+  * @ManaswiniN234
+  * @Pranay22077
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
