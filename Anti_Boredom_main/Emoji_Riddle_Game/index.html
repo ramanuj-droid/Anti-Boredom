@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Emoji Riddle Game</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="game-container">
+    <div id="game">
+      <div class="header">
+        <div id="progress">1/40</div>
+        <div id="stats">
+          <span>tries: <span id="tries">3</span></span>
+          <span>score: <span id="score">0</span></span>
+        </div>
+      </div>
+
+      <div class="riddle-box">
+        <div id="emojis" class="emoji">🐝🍃</div>
+        <p class="text">guess what this is!</p>
+      </div>
+
+      <div id="hint" class="hint hidden"></div>
+      <div id="feedback" class="feedback hidden"></div>
+
+      <input
+        type="text"
+        id="guessInput"
+        placeholder="type your answer here..."
+      />
+      <div class="buttons">
+        <button id="submitBtn">submit</button>
+        <button id="hintBtn">hint</button>
+      </div>
+
+      <p class="note">press Enter to submit</p>
+    </div>
+
+    <div id="gameOver" class="hidden end-screen">
+      <h2>nice work!</h2>
+      <p id="finalScore"></p>
+      <p id="finalMsg"></p>
+      <button id="restartBtn">play again</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

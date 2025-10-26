@@ -51,3 +51,5 @@ Recipe_Finder: Search, discover, and try new recipes with a smart suggestion sys
 Who_the_pokemon: A nostalgic guessing game — identify Pokémon silhouettes and test your fan knowledge.
 
 Drum-Pad: Create beats and rhythms using an interactive virtual drum pad — feel the groove!
+
+Emoji_Riddle_Game: Guess the hidden words or phrases from fun emoji clues and test how sharp your imagination is!
