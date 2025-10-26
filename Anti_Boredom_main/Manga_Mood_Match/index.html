@@ -3,165 +3,250 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manga Mood Recommender</title>
+    <title>Manga Mood Recommender 📚</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
         }
-        .manga-card {
-            transform: scale(0.95);
-            opacity: 0;
-            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+        .bg-gradient-custom {
+            background-color: #1a202c; 
+            background-image: linear-gradient(135deg, #1f2937 0%, #0f172a 100%);
         }
-        .manga-card.visible {
-            transform: scale(1);
+        /* Card animation for recommendations */
+        .manga-grid-container {
+            transform: translateY(10px);
+            opacity: 0;
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.4s ease-out;
+        }
+        .manga-grid-container.visible {
+            transform: translateY(0);
             opacity: 1;
         }
+        /* Style for individual manga cards in the grid */
+        .manga-item {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .manga-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        /* Focus state for mood buttons for accessibility and feedback */
+        .mood-btn:focus {
+            outline: 2px solid;
+            outline-offset: 2px;
+            outline-color: var(--tw-outline-color, currentColor); 
+        }
+        .mood-btn.active {
+            box-shadow: 0 0 0 3px var(--tw-outline-color, currentColor), 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+            transform: scale(1.05);
+        }
+        /* Ensure the cover image fills its container correctly */
+        .manga-cover {
+            width: 100%;
+            max-width: 160px; /* Max width for consistency */
+            height: 240px; /* Fixed height for consistent grid rows */
+            object-fit: cover; /* Ensures image covers the area without distortion */
+        }
     </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'teal-focus': '#2dd4bf',
+                        'indigo-focus': '#818cf8',
+                        'pink-focus': '#f472b6',
+                        'amber-focus': '#fbbf24',
+                        'gray-focus': '#9ca3af',
+                        'green-focus': '#34d399',
+                        'purple-focus': '#a78bfa'
+                    }
+                }
+            }
+        }
+    </script>
 </head>
-<body class="bg-gray-900 text-white flex items-center justify-center min-h-screen p-4">
+<body class="bg-gradient-custom text-white flex flex-col items-center min-h-screen p-4">
 
-    <div class="w-full max-w-md mx-auto">
-        <header class="text-center mb-8">
-            <h1 class="text-4xl font-bold text-white mb-2">Manga Mood Recommender</h1>
-            <p class="text-gray-400">Select a mood to get a manga recommendation.</p>
+    <div class="w-full max-w-4xl mx-auto">
+        <header class="text-center mb-10 pt-4">
+            <h1 class="text-4xl sm:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-indigo-500 mb-3">
+                Manga Mood Recommender 🔮
+            </h1>
+            <p class="text-gray-300 text-lg">Uncover your next favorite based on your current vibe.</p>
         </header>
 
-        <!-- Mood Buttons -->
-        <div class="flex flex-wrap justify-center gap-3 mb-8">
-            <button data-mood="cozy" class="mood-btn bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-5 rounded-full transition-transform transform hover:scale-105 shadow-lg">
-                Cozy
+        <div class="flex flex-wrap justify-center gap-3 sm:gap-4 mb-10">
+            <button data-mood="cozy" data-color="teal" class="mood-btn bg-teal-600 hover:bg-teal-700 text-white font-semibold py-3 px-6 rounded-full transition-all duration-200 transform hover:scale-105 shadow-xl shadow-teal-600/30 focus:outline-teal-focus">
+                😌 Cozy
             </button>
-            <button data-mood="dark" class="mood-btn bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-5 rounded-full transition-transform transform hover:scale-105 shadow-lg">
-                Dark
+            <button data-mood="dark" data-color="indigo" class="mood-btn bg-indigo-700 hover:bg-indigo-800 text-white font-semibold py-3 px-6 rounded-full transition-all duration-200 transform hover:scale-105 shadow-xl shadow-indigo-700/30 focus:outline-indigo-focus">
+                😈 Dark
             </button>
-            <button data-mood="romantic" class="mood-btn bg-pink-500 hover:bg-pink-600 text-white font-semibold py-2 px-5 rounded-full transition-transform transform hover:scale-105 shadow-lg">
-                Romantic
+            <button data-mood="romantic" data-color="pink" class="mood-btn bg-pink-600 hover:bg-pink-700 text-white font-semibold py-3 px-6 rounded-full transition-all duration-200 transform hover:scale-105 shadow-xl shadow-pink-600/30 focus:outline-pink-focus">
+                💖 Romantic
             </button>
-            <button data-mood="hype" class="mood-btn bg-amber-500 hover:bg-amber-600 text-white font-semibold py-2 px-5 rounded-full transition-transform transform hover:scale-105 shadow-lg">
-                Hype
+            <button data-mood="hype" data-color="amber" class="mood-btn bg-amber-600 hover:bg-amber-700 text-white font-semibold py-3 px-6 rounded-full transition-all duration-200 transform hover:scale-105 shadow-xl shadow-amber-600/30 focus:outline-amber-focus">
+                🔥 Hype
             </button>
-            <button data-mood="surprise" class="mood-btn bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-5 rounded-full transition-transform transform hover:scale-105 shadow-lg col-span-2 sm:col-span-1">
+            <button data-mood="funny" data-color="green" class="mood-btn bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-full transition-all duration-200 transform hover:scale-105 shadow-xl shadow-green-600/30 focus:outline-green-focus">
+                🤣 Funny
+            </button>
+            <button data-mood="mystery" data-color="purple" class="mood-btn bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-full transition-all duration-200 transform hover:scale-105 shadow-xl shadow-purple-600/30 focus:outline-purple-focus">
+                🤔 Mystery
+            </button>
+            <button data-mood="surprise" data-color="gray" class="mood-btn bg-gray-600 hover:bg-gray-700 text-white font-semibold py-3 px-6 rounded-full transition-all duration-200 transform hover:scale-105 shadow-xl shadow-gray-600/30 focus:outline-gray-focus">
                 ✨ Surprise Me
             </button>
         </div>
 
-        <!-- Manga Recommendation Card -->
-        <div id="recommendation" class="manga-card bg-gray-800 p-6 rounded-2xl shadow-2xl border border-gray-700/50">
-            <div id="placeholder" class="text-center text-gray-500">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-16 h-16 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
+        <div id="recommendation-area" class="w-full">
+            <div id="placeholder" class="text-center text-gray-500 py-20 bg-gray-800/70 rounded-3xl shadow-2xl border border-gray-700/50">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-20 h-20 mx-auto mb-4 text-teal-400/80" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
-                <p>Your recommendation will appear here.</p>
+                <p class="text-lg font-medium">Select a mood button above to find your next read!</p>
             </div>
-            <div id="manga-content" class="hidden flex flex-col sm:flex-row items-center sm:items-start gap-6">
-                <img id="manga-cover" src="" alt="Manga Cover" class="w-36 h-52 object-cover rounded-lg shadow-md flex-shrink-0">
-                <div class="text-center sm:text-left">
-                    <h2 id="manga-title" class="text-2xl font-bold mb-2"></h2>
-                    <p id="manga-description" class="text-gray-300 text-sm"></p>
-                </div>
+            
+            <div id="manga-grid-container" class="manga-grid-container hidden">
+                <h2 id="grid-title" class="text-3xl font-bold mb-6 text-center"></h2>
+                <div id="manga-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    </div>
             </div>
         </div>
     </div>
 
+    <footer class="text-center text-gray-500 text-sm mt-8 pb-4">
+        <p>Made with 💖 for manga lovers.</p>
+    </footer>
+
     <script>
         const mangaData = {
             cozy: [
-                {
-                    title: "Yuru Camp (Laid-Back Camp)",
-                    cover_url: "https://placehold.co/144x208/2d3748/e2e8f0?text=Yuru+Camp",
-                    description: "A relaxing series about a group of high school girls who enjoy camping. It's filled with beautiful scenery, tasty food, and heartwarming friendships."
-                },
-                {
-                    title: "Natsume's Book of Friends",
-                    cover_url: "https://placehold.co/144x208/2d3748/e2e8f0?text=Natsume",
-                    description: "A kind, lonely boy who can see spirits (yokai) inherits a book from his grandmother that allows him to command them. A gentle, touching, and sometimes bittersweet story."
-                },
+                { title: "Yuru Camp (Laid-Back Camp)", cover_url: "https://imgs.search.brave.com/S2kSyGp06PGKu4QrqxxrJ72JCnObl1OlyB0VQHUuNAE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL0kv/NjFXV3RiRlMrcEwu/anBn", description: "A relaxing series about high school girls who enjoy camping. Filled with beautiful scenery and tasty food." },
+                { title: "Natsume's Book of Friends", cover_url: "https://imgs.search.brave.com/uqwu526bVtrpRVBCNaSYTjh0j9PpFNNPgb-6CqErDus/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL0kv/ODExTU4zWjJleEwu/anBn", description: "A kind, lonely boy who can see spirits inherits a book. A gentle, touching, and sometimes bittersweet story." },
+                { title: "Nichijou (My Ordinary Life)", cover_url: "https://imgs.search.brave.com/LQU7WLx2GE6kVI6JxZUxPfqiBKr0TcKnCfTzpH46ReI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9hbmlt/ZXNvcmlvbnZpcC5u/ZXQvd3AtY29udGVu/dC91cGxvYWRzLzIw/MjIvMDkvYXNzaXN0/aXItbmljaGlqb3Ut/dG9kb3Mtb3MtZXBp/c29kaW9zLW9ubGlu/ZS1hbmltZXMtb3Jp/b24uanBn", description: "An absurdist comedy that portrays the 'ordinary' lives of high school students and a robot girl. Surprisingly comforting." },
+                { title: "Aria", cover_url: "https://imgs.search.brave.com/yBWhZiM1TklaOdrnx2A1MPgin1f8NhVFXGjEfU_X9oA/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YXByb3h5LnR2dHJv/cGVzLm9yZy93aWR0/aC8xMjAwL2h0dHBz/Oi8vc3RhdGljLnR2/dHJvcGVzLm9yZy9w/bXdpa2kvcHViL2lt/YWdlcy9hcmlhYW5p/bWUucG5n", description: "Set on a terraformed Mars, follows apprentice gondoliers. The definition of 'iyashikei' (healing) manga." },
+                { title: "Insomniacs After School", cover_url: "https://imgs.search.brave.com/CsXiHBsBEs_81cSiYXlP1YoIrd7xKliCfWr9OWb9U6s/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWFn/ZXMtbmEuc3NsLWlt/YWdlcy1hbWF6b24u/Y29tL2ltYWdlcy9J/LzcxUW5pM2NtSXlM/LmpwZw", description: "A wholesome story about two insomniac students who find solace and friendship in their school's observatory." },
+                { title: "Mushishi", cover_url: "https://imgs.search.brave.com/0zycMyWyx4gEpHBBtdZJFVQnBwShjY6aC9oSAdvWUKs/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL0kv/ODExbWNObXVONEwu/anBn", description: "Ginko travels to study and contain 'Mushi'—ethereal creatures. An episodic, meditative, and beautiful experience." },
             ],
             dark: [
-                {
-                    title: "Berserk",
-                    cover_url: "https://placehold.co/144x208/1a202c/e2e8f0?text=Berserk",
-                    description: "A grimdark fantasy epic following the lone mercenary Guts. It explores themes of free will, causality, and human nature in a brutal, unforgiving world."
-                },
-                {
-                    title: "Chainsaw Man",
-                    cover_url: "https://placehold.co/144x208/1a202c/e2e8f0?text=Chainsaw+Man",
-                    description: "A poor young man makes a deal with a devil to become Chainsaw Man. It's a wild, violent, and surprisingly emotional ride with dark humor and unforgettable characters."
-                },
+                { title: "Berserk", cover_url: "https://imgs.search.brave.com/_XyPkw31BkY4sO9a5AmkJLDc-SK-1GjmiXl-_r4gAO0/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9odWRz/b25ib29rc2VsbGVy/cy5jb20vc2l0ZXMv/ZGVmYXVsdC9maWxl/cy9zdHlsZXMvbGFy/Z2UvaHR0cHMvaW1h/Z2VzLmJvb2tzZW5z/ZS5jb20vaW1hZ2Vz/LzIxNS8wNzkvOTc4/MTU5MzA3OTIxNS5q/cGc_aXRvaz1XN1hr/UXdtbQ", description: "A grimdark fantasy epic following the lone mercenary Guts. Explores themes of free will in a brutal world." },
+                { title: "Chainsaw Man", cover_url: "https://imgs.search.brave.com/_LzJcHcmRCXVye24HsUPkGdXEnz2B0oO0W9Cw_kDSu8/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YXByb3h5LnR2dHJv/cGVzLm9yZy93aWR0/aC8xMjAwL2h0dHBz/Oi8vc3RhdGljLnR2/dHJvcGVzLm9yZy9w/bXdpa2kvcHViL2lt/YWdlcy8wNjAwZGNk/MV81NjExXzQyMDlf/ODAzNV82MDc4YmRh/ZjlmOTEucG5n", description: "A wild, violent, and surprisingly emotional ride following a young man who becomes Chainsaw Man." },
+                { title: "Tokyo Ghoul", cover_url: "https://imgs.search.brave.com/o6D3WMkCziaGAgfgrcvDM6LqgEAo1txyO-SGkbnLp_o/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMwLmNicmltYWdl/cy5jb20vd29yZHBy/ZXNzL3dwLWNvbnRl/bnQvdXBsb2Fkcy9z/aGFyZWRpbWFnZXMv/MjAyNC8xMC8wMzEz/MzU3NF9wb3N0ZXJf/dzc4MC5qcGc_cT03/MCZmaXQ9Y29udGFp/biZ3PTQ4MCZkcHI9/MQ", description: "A college student is turned into a half-ghoul. A story of existential horror, identity crisis, and survival." },
+                { title: "Death Note", cover_url: "https://imgs.search.brave.com/126Wugc8lZUTwJQMjxurvF0r9DZ35F4qsgf4F_K7nXA/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLmNvbS9p/bWFnZXMvaGQvcmVk/LWxpZ2h0LWRlYXRo/LW5vdGUtcGhvbmUt/eTByYnl1cGVheXM1/cTN5bS5qcGc", description: "A genius finds a notebook that allows him to kill anyone. A psychological thriller about morality and power." },
+                { title: "Monster", cover_url: "https://imgs.search.brave.com/0YiAlWsheFsgfJpPS5j5KdXsM83q91b-fF2Pf6spxWs/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/bWFuZ2EtbmV3cy5j/b20vcHVibGljL2lt/YWdlcy92b2xzLy5t/b25zdGVyXzEwX21l/ZGl1bS5qcGc", description: "A surgeon's life spirals after he saves a boy who grows up to be a charismatic serial killer. A masterful thriller." },
+                { title: "Devilman Crybaby (Devilman)", cover_url: "https://imgs.search.brave.com/VVZi5CuJQjx5k5CXK-sOPMnO1UFZqv1MSS2Zz9_C-DM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9hc3Nl/dHMxLmlnbmltZ3Mu/Y29tLzIwMTcvMDgv/MDMvZGV2aWxtYW4t/Y3J5YmFieS10di0y/LTE1MDE3OTk0MTQy/MDUuanBn", description: "Akira Fudo merges with a demon to save humanity. A seminal work known for its raw exploration of evil and loss." },
             ],
             romantic: [
-                {
-                    title: "Wotakoi: Love Is Hard for Otaku",
-                    cover_url: "https://placehold.co/144x208/2d3748/e2e8f0?text=Wotakoi",
-                    description: "A hilarious and relatable romantic comedy about the relationship between two office workers who are secretly huge nerds (otaku). It's a refreshing take on adult romance."
-                },
-                {
-                    title: "Horimiya",
-                    cover_url: "https://placehold.co/144x208/2d3748/e2e8f0?text=Horimiya",
-                    description: "A sweet story about two high schoolers who reveal their hidden, true selves to each other. It's a fast-paced, wholesome romance that skips unnecessary drama."
-                },
+                // ********* VERIFIED WORKING LINKS *********
+                { title: "Wotakoi: Love Is Hard for Otaku", cover_url: "https://imgs.search.brave.com/Cqtv7Ju64lFVqDsUlLcQgKj91qu-hih4wGnG5HDbd74/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL0kv/NTF4UG1xUWs2ZEwu/anBn", description: "A hilarious and relatable romantic comedy about two office workers who are secretly huge nerds (otaku)." },
+                { title: "Horimiya", cover_url: "https://imgs.search.brave.com/eFG6rw04z3_FWfM--702dQfVn0SpBpBQ7JvkOZRRozU/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/bWFuZ2EtbmV3cy5j/b20vcHVibGljL2lt/YWdlcy92b2xzLy5I/b3JpbWl5YV82X25v/YmlfbWVkaXVtLmpw/Zw", description: "A sweet story about two high schoolers who reveal their hidden, true selves to each other. Wholesome romance." },
+                { title: "Kaguya-sama: Love Is War", cover_url: "https://imgs.search.brave.com/cVjOp0mwk4UMOf31pIwjay0j9EPeZeVOlBKUorz88NM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/bWFuZ2EtbmV3cy5j/b20vcHVibGljL2lt/YWdlcy92b2xzLy5L/YWd1eWEtc2FtYV9M/b3ZlX2lzX1dhcl9U/MTZfLV9QaWthX21l/ZGl1bS5qcGc", description: "Two student council geniuses are in love, but every interaction is a high-stakes psychological battle to make the other confess." },
+                { title: "Fruits Basket", cover_url: "https://imgs.search.brave.com/WxOZmFspukiXHKnXSffQjFqD_ae83GTC73NkK3gtj-o/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YXByb3h5LnR2dHJv/cGVzLm9yZy93aWR0/aC8xMjAwL2h0dHBz/Oi8vc3RhdGljLnR2/dHJvcGVzLm9yZy9w/bXdpa2kvcHViL2lt/YWdlcy9mcnVpdHNi/YXNrZXQyMDE5LnBu/Zw", description: "Tohru lives with the cursed Sohma family. An emotional story about healing, acceptance, and a powerful central romance." },
+                { title: "My Dress-Up Darling", cover_url: "https://imgs.search.brave.com/_rmHI-3x4ykWis2ovkykopBL5pdZsMqCdR_b8BK83MM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL0kv/NDFiaWVaMHdlc0wu/anBn", description: "A serious doll-maker and a popular girl who loves cosplay come together. A wholesome and passionate story." },
+                { title: "Skip and Loafer", cover_url: "https://imgs.search.brave.com/RGFWejn9JlNs3Avr5kNS2oSrb80n1FGff0QBtdj6lQ8/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zZXZl/bnNlYXNlbnRlcnRh/aW5tZW50LmNvbS93/cC1jb250ZW50L3Vw/bG9hZHMvMjAyMS8x/MS9Ta2lwLWFuZC1M/b2FmZXItMl9TaXRl/UmVjcm9wLmpwZw", description: "A slice-of-life about a country girl who moves to Tokyo. A sweet, realistic, and charming story with budding romance." },
             ],
             hype: [
-                {
-                    title: "Jujutsu Kaisen",
-                    cover_url: "https://placehold.co/144x208/1a202c/e2e8f0?text=Jujutsu+Kaisen",
-                    description: "A modern shonen with a high-energy plot, incredible action sequences, and a compelling power system based on Cursed Energy. Pure, unadulterated hype."
-                },
-                {
-                    title: "Haikyuu!!",
-                    cover_url: "https://placehold.co/144x208/1a202c/e2e8f0?text=Haikyuu!!",
-                    description: "An incredibly inspiring and hype-inducing sports manga about a high school volleyball team. The character development and thrilling matches will have you on the edge of your seat."
-                },
-            ]
+                { title: "Jujutsu Kaisen", cover_url: "https://imgs.search.brave.com/dLE6UUANXFLDXySR86OphrXKepz64pyxqhA5qiOCpK0/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pLnBp/bmltZy5jb20vb3Jp/Z2luYWxzL2FkL2Fl/LzJmL2FkYWUyZmJl/Y2ZiN2UyZjY0M2Q0/ODczMzY5OTQ1Y2Mz/LmpwZw", description: "A modern shonen with a high-energy plot, incredible action sequences, and a compelling power system. Pure hype." },
+                { title: "Haikyuu!!", cover_url: "https://imgs.search.brave.com/1aa7ljs0k-QvYvu3cdVYhnNLvEXVhyLmBDHaW6WgWjs/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJhY2Nlc3Mu/Y29tL2Z1bGwvNDk2/MzgzNS5qcGc", description: "An incredibly inspiring sports manga about high school volleyball. Thrilling matches will have you on the edge of your seat." },
+                { title: "One Piece", cover_url: "https://imgs.search.brave.com/5_SgyaRodCjLJ1Gxy_NUzvdu0BEt2e-lPVXm5Hc3TfQ/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly91cGxv/YWQud2lraW1lZGlh/Lm9yZy93aWtpcGVk/aWEvZW4vOS85MC9P/bmVfUGllY2UsX1Zv/bHVtZV82MV9Db3Zl/cl8oSmFwYW5lc2Up/LmpwZw", description: "Luffy travels the Grand Line to find the One Piece. An unparalleled adventure with massive world-building and epic fights." },
+                { title: "My Hero Academia", cover_url: "https://imgs.search.brave.com/AbZloz9qRc2KQK1tJFMMbYYeLUWxQ4xFhrnslrfPk4E/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YXByb3h5LnR2dHJv/cGVzLm9yZy93aWR0/aC8xMjAwL2h0dHBz/Oi8vc3RhdGljLnR2/dHJvcGVzLm9yZy9w/bXdpa2kvcHViL2lt/YWdlcy9teV9oZXJv/X2FjYWRlbWlhX3Bv/c3Rlci5wbmc", description: "A quirkless boy inherits the power of the world's greatest hero. A classic tale of becoming the greatest hero." },
+                { title: "Attack on Titan", cover_url: "https://imgs.search.brave.com/rS2mxSW6k1tAOUA9BHuoBXZXK1yYtg0AmNBLFDu6Z9Q/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9odHRw/Mi5tbHN0YXRpYy5j/b20vRF9RX05QXzJY/Xzc3MTY3NS1NTEI4/MDA3OTQyMzI5OF8x/MDIwMjQtRS53ZWJw", description: "Humanity lives behind walls to protect themselves from colossal Titans. A dark, action-packed mystery that constantly evolves." },
+                { title: "Blue Lock", cover_url: "https://imgs.search.brave.com/Q_GxnH553ORd3ws6HTiADmFqbf9uxUGjotWPBlPXP2A/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly91cGxv/YWQud2lraW1lZGlh/Lm9yZy93aWtpcGVk/aWEvZW4vYy9jNi9C/bHVlX0xvY2tfbWFu/Z2Ffdm9sdW1lXzEu/cG5n", description: "A radical, ego-driven approach to creating the world's best football striker. High-stakes, competitive, and packed with rivalries." },
+            ],
+            funny: [
+                { title: "One-Punch Man", cover_url: "https://imgs.search.brave.com/nT766npCqPyQWzBQZ91Jivo8qqEqyMTSxdkr1YRh014/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9leHRl/cm5hbC1wcmV2aWV3/LnJlZGQuaXQvZGlz/Yy1vbmUtcHVuY2gt/bWFuLWNoLTIwMS1z/ZWNvbmQtcmV2aXNp/b24tdjAtal9pOGZU/czdCaHpOdHo3NFNi/LVpnREJlUWFzeHI3/ZnhLWVVmaV84VHhF/dy5qcGc_d2lkdGg9/NjQwJmNyb3A9c21h/cnQmYXV0bz13ZWJw/JnM9MDFiZTNjMjY2/MjY4M2Y3Y2FmNWFk/NGRlODgyMGNjMmVj/NmY1MzBiMQ", description: "Saitama defeats any opponent with a single punch. Comedy comes from his boredom, ennui, and the ridiculous cast around him." },
+                { title: "Gintama", cover_url: "https://imgs.search.brave.com/H-PryhnhLNFR3vPIURPnMJICZh2SoBWrn_Bs5i2mE3I/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLmNvbS9p/bWFnZXMvaGQvZ2lu/dGFtYS1waWN0dXJl/cy16MTBjMjI0Mjl3/OG03aWlwLmpwZw", description: "Set in an Edo-period Japan conquered by aliens. A master of absurd comedy, parodies, and surprising emotional depth." },
+                { title: "Spy x Family", cover_url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJgRm0Acov6ooeAoQF7jOJaSOIyhCdE_-vLg&s", description: "A spy, an assassin, and a telepath child form a fake family. A wholesome, high-stakes comedy with hilarious misunderstandings." },
+            ],
+            mystery: [
+                { title: "Pluto", cover_url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZZKnpSqU4Dl2dapKaBHbGwoinC4vUwmt_SA&s", description: "A sci-fi noir thriller re-imagining a classic Astro Boy story. Detective Gesicht hunts a killer targeting the world's greatest robots." },
+                { title: "The Promised Neverland", cover_url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwkbsTI1W9e_vnYWwRRGroL2VFH7yhRYxC7A&s", description: "Orphans discover the terrifying truth about their home and must plan a dangerous escape. A tense, smart, and chilling psychological thriller." },
+                { title: "20th Century Boys", cover_url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWVBfcJPtrjeENdRUz31pqan9dQcRgrbq2sg&s", description: "Childhood friends must save the world from a cult led by 'Friend,' whose plans match their childhood fantasies." },
+            ],
         };
 
         const moodButtons = document.querySelectorAll('.mood-btn');
-        const recommendationCard = document.getElementById('recommendation');
         const placeholder = document.getElementById('placeholder');
-        const mangaContent = document.getElementById('manga-content');
-        const mangaCover = document.getElementById('manga-cover');
-        const mangaTitle = document.getElementById('manga-title');
-        const mangaDescription = document.getElementById('manga-description');
+        const mangaGridContainer = document.getElementById('manga-grid-container');
+        const mangaGrid = document.getElementById('manga-grid');
+        const gridTitle = document.getElementById('grid-title');
+        const recommendationArea = document.getElementById('recommendation-area');
 
-        const showRecommendation = (mood) => {
-            // Hide current content to reset animation
-            recommendationCard.classList.remove('visible');
-            
-            setTimeout(() => {
-                const mangaList = mangaData[mood];
-                const randomIndex = Math.floor(Math.random() * mangaList.length);
-                const randomManga = mangaList[randomIndex];
+        const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 
-                mangaCover.src = randomManga.cover_url;
-                mangaCover.alt = `${randomManga.title} Cover`;
-                mangaTitle.textContent = randomManga.title;
-                mangaDescription.textContent = randomManga.description;
-
-                placeholder.classList.add('hidden');
-                mangaContent.classList.remove('hidden');
-
-                // Show new content with animation
-                recommendationCard.classList.add('visible');
-            }, 150); // A small delay to allow the card to hide before showing new content
+        const createMangaCard = (manga, moodColor) => {
+            return `
+                <div class="manga-item bg-gray-900/50 p-4 rounded-xl shadow-lg border border-gray-700/50 flex flex-col items-center text-center">
+                    <img src="${manga.cover_url}" alt="${manga.title} Cover" class="manga-cover object-cover rounded-lg shadow-xl border border-${moodColor}-600/50 mb-4">
+                    <h3 class="text-xl font-bold text-${moodColor}-400 mb-2">${manga.title}</h3>
+                    <p class="text-gray-400 text-sm flex-grow">${manga.description}</p>
+                </div>
+            `;
         };
+        
+        const showRecommendations = (mood) => {
+            const mangaList = mangaData[mood];
+            const moodColor = document.querySelector(`.mood-btn[data-mood="${mood}"]`).dataset.color || 'teal';
+            const displayMood = capitalize(mood);
+            
+            mangaGrid.innerHTML = '';
+            mangaGridContainer.classList.remove('visible');
+            placeholder.classList.add('hidden');
+            
+            gridTitle.textContent = `${displayMood} Recommendations`;
+            gridTitle.classList.remove('text-teal-400', 'text-indigo-400', 'text-pink-400', 'text-amber-400', 'text-green-400', 'text-purple-400');
+            gridTitle.classList.add(`text-${moodColor}-400`); 
+
+            mangaList.forEach(manga => {
+                mangaGrid.insertAdjacentHTML('beforeend', createMangaCard(manga, moodColor));
+            });
+
+            mangaGridContainer.classList.remove('hidden');
+            setTimeout(() => {
+                mangaGridContainer.classList.add('visible');
+            }, 50); 
+        };
+
+        const handleSurpriseMe = () => {
+            const moods = Object.keys(mangaData).filter(m => m !== 'surprise');
+            const randomMoodIndex = Math.floor(Math.random() * moods.length);
+            const randomMood = moods[randomMoodIndex];
+            
+            showRecommendations(randomMood);
+            return randomMood;
+        }
 
         moodButtons.forEach(button => {
             button.addEventListener('click', () => {
                 let mood = button.dataset.mood;
+                let finalMood = mood;
                 
+                moodButtons.forEach(btn => {
+                    btn.classList.remove('active');
+                    btn.style.setProperty('--tw-outline-color', 'transparent');
+                });
+
                 if (mood === 'surprise') {
-                    const moods = Object.keys(mangaData);
-                    const randomMoodIndex = Math.floor(Math.random() * moods.length);
-                    mood = moods[randomMoodIndex];
+                    finalMood = handleSurpriseMe();
+                    document.querySelector(`.mood-btn[data-mood="surprise"]`).classList.add('active'); 
+                    const chosenMoodButton = document.querySelector(`.mood-btn[data-mood="${finalMood}"]`);
+                    if (chosenMoodButton) {
+                        const moodColor = chosenMoodButton.dataset.color;
+                        document.querySelector(`.mood-btn[data-mood="surprise"]`).style.setProperty('--tw-outline-color', `var(--tw-colors-${moodColor}-focus)`);
+                    }
+                } else {
+                    showRecommendations(mood);
+                    button.classList.add('active');
+                    const moodColor = button.dataset.color;
+                    button.style.setProperty('--tw-outline-color', `var(--tw-colors-${moodColor}-focus)`);
                 }
-                
-                showRecommendation(mood);
             });
         });
-
     </script>
 </body>
 </html>
+
