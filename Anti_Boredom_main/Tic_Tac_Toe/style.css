@@ -1,0 +1,107 @@
+* {
+    padding: 0;
+    margin: 0;
+    font-family: 'Itim', cursive;
+}
+/* Background style */
+.background {
+    background: linear-gradient(100deg, #2d4551, #383838);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Title style */
+.title {
+    color: white;
+    text-align: center;
+    font-size: 30px;
+    margin-top: 0em;
+}
+
+.display {
+    color: white;
+    font-size: 20px;
+    text-align: center;
+    margin-top: 0.5em;
+    margin-bottom: 1em;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.hide {
+    display: none;
+}
+
+/* Game board style */
+.container {
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    grid-template-rows: repeat(3, 100px);
+    gap: 7px;
+}
+
+.tile {
+    border: 1px solid white;
+    border-radius: 7px;
+    background-color: #3e494ea9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 50px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.tile:hover {
+    background-color: #2E383C;
+    transform: scale(1.05);
+}
+
+.playerX {
+    color: #09C372;
+}
+
+.playerO {
+    color: #498AFB;
+}
+
+/* Winner announcement section style */
+.announcer {
+    color: white;
+    font-size: 23px;
+    text-align: center;
+    margin-top: 1em;
+    margin-bottom: 0em;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+/* Reset button style */
+.controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1em;
+}
+
+.controls button {
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.controls button:hover {
+    transform: scale(1.1);
+}
+
+#reset {
+    background-color: #FF3860;
+    margin-top: 0%;
+    font-size: 20px;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+}

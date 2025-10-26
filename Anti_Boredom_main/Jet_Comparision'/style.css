@@ -1,0 +1,71 @@
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background: #f0f8ff;
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  margin: 20px 0;
+}
+
+.jet-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.jet-card {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  padding: 10px;
+  width: 200px;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.jet-card img {
+  width: 100%;
+  border-radius: 10px;
+}
+
+.jet-card.selected {
+  border: 3px solid gold;
+}
+
+.jet-card.takeoff {
+  transform: translateY(-50px) rotate(10deg);
+  transition: transform 1s ease-in-out;
+}
+
+#scoreboard {
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+#question-container {
+  margin-top: 20px;
+}
+
+#question-container button {
+  margin: 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  transition: background-color 0.3s;
+}
+
+#question-container button:hover {
+  background-color: #0056b3;
+}
+
+#end-game {
+  margin-top: 30px;
+}

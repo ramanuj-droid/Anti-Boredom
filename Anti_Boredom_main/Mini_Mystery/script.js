@@ -1,6 +1,5 @@
 const MYSTERY_SOURCE = "mysteries.json";
 
-/** @type {Array<{ id:number, text:string, options:string[], answer:number, explanation:string }>} */
 let mysteries = [];
 let currentIndex = -1;
 
@@ -51,7 +50,6 @@ function renderMystery(index) {
     btn.className = "option-btn";
     btn.type = "button";
     btn.textContent = opt;
-    btn.setAttribute("aria-label", `Option ${i + 1}: ${opt}`);
     btn.addEventListener("click", () => handleAnswer(i));
     optionsEl.appendChild(btn);
   });
@@ -66,14 +64,22 @@ function handleAnswer(choiceIndex) {
   if (!m) return;
 
   const isCorrect = choiceIndex === m.answer;
-  feedbackEl.textContent = (isCorrect ? "Correct! " : "Not quite. ") + m.explanation;
-  feedbackEl.className = "feedback " + (isCorrect ? "correct" : "wrong");
+  
+  const title = isCorrect ? "Correct!" : "Not quite!";
+  feedbackEl.innerHTML = `
+    <div class="feedback-title">${title}</div>
+    <p class="feedback-explanation">${m.explanation}</p>
+  `;
+  feedbackEl.className = "feedback " + (isCorrect ? "correct" : "wrong") + " show";
 
- 
-  optionsEl.querySelectorAll("button").forEach((b, idx) => {
-    b.disabled = true;
-    if (idx === m.answer) b.style.borderColor = "#86efac";
-    if (idx === choiceIndex && !isCorrect) b.style.borderColor = "#fca5a5";
+  optionsEl.querySelectorAll("button").forEach((btn, idx) => {
+    btn.disabled = true;
+    if (idx === m.answer) {
+      btn.classList.add("correct-answer");
+    }
+    if (idx === choiceIndex && !isCorrect) {
+      btn.classList.add("wrong-answer");
+    }
   });
 }
 
@@ -88,7 +94,9 @@ async function showNextMystery() {
 
 document.addEventListener("DOMContentLoaded", () => {
   const nextBtn = document.getElementById("nextBtn");
-  if (nextBtn) nextBtn.addEventListener("click", showNextMystery);
+  if (nextBtn) {
+    nextBtn.addEventListener("click", showNextMystery);
+  }
   showNextMystery();
 });
 

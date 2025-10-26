@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Quiz</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="quiz-card">
+        <div id="quiz-container">
+            <div class="header">
+                <h2 id="quiz-title">Fun Fact Quiz!</h2>
+                <div id="progress-text"></div>
+            </div>
+            <p id="question-text"></p>
+            <div id="answer-buttons">
+            </div>
+            <div class="footer">
+                <button id="next-btn" class="btn hidden">
+                    Next
+                </button>
+            </div>
+        </div>
+        <div id="results-container" class="hidden">
+            <h2>Quiz Complete!</h2>
+            <p id="score-text"></p>
+            <button id="restart-btn" class="btn">
+                Restart Quiz
+            </button>
+        </div>
+    </div>
+    <script src="script.js" defer></script>
+</body>
+</html>
+

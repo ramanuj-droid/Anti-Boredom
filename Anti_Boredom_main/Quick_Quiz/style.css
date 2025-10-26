@@ -1,0 +1,141 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f3f4f6;
+    color: #1f2937; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 1rem;
+    box-sizing: border-box;
+}
+
+.hidden {
+    display: none;
+}
+
+.quiz-card {
+    background-color: white;
+    width: 100%;
+    max-width: 672px; 
+    border-radius: 1rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); 
+    padding: 1.5rem; 
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #2563eb; 
+}
+
+#progress-text {
+    font-size: 1.125rem; 
+    font-weight: 600; 
+    color: #4b5563; 
+}
+
+#question-text {
+    font-size: 1.25rem; 
+    font-weight: 600; 
+    margin: 1.5rem 0; 
+    min-height: 60px;
+}
+
+#answer-buttons {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem; 
+}
+
+.answer-btn {
+    width: 100%;
+    padding: 1rem; 
+    border: 1px solid #d1d5db; 
+    border-radius: 0.5rem; 
+    text-align: left;
+    background-color: white;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+}
+
+.answer-btn:hover {
+    background-color: #f9fafb;
+}
+
+.answer-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.8;
+}
+
+.answer-btn.correct {
+    background-color: #22c55e; 
+    border-color: #22c55e;
+    color: white;
+}
+
+.answer-btn.incorrect {
+    background-color: #ef4444; 
+    border-color: #ef4444;
+    color: white;
+}
+
+.footer {
+    margin-top: 2rem; 
+    text-align: right;
+}
+
+.btn {
+    background-color: #2563eb; 
+    color: white;
+    font-weight: 700; 
+    padding: 0.75rem 2rem;
+    border: none;
+    border-radius: 0.5rem; 
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); 
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn:hover {
+    background-color: #1d4ed8; 
+}
+
+#results-container {
+    text-align: center;
+}
+
+#score-text {
+    font-size: 1.5rem; 
+    font-weight: 600; 
+    color: #374151;
+    margin-bottom: 2rem; 
+}
+
+@media (min-width: 768px) { 
+    .quiz-card {
+        padding: 2rem; 
+    }
+
+    h2 {
+        font-size: 1.875rem; 
+    }
+
+    #question-text {
+        font-size: 1.5rem;
+    }
+
+    #answer-buttons {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+

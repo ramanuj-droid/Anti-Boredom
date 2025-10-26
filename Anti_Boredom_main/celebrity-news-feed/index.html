@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Celebrity News - Premium Edition</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .background-gradient {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(168, 85, 247, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(59, 130, 246, 0.08) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .nav-bar {
+            position: sticky;
+            top: 0;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 20px 0;
+            z-index: 100;
+            animation: slideDown 0.6s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2em;
+            font-weight: 700;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #d4af37 0%, #f4e4c1 50%, #d4af37 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .nav-btn {
+            padding: 12px 28px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 6px;
+            background: transparent;
+            color: #d4af37;
+            font-size: 0.95em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-btn:hover {
+            background: rgba(212, 175, 55, 0.1);
+            border-color: #d4af37;
+            transform: translateY(-2px);
+        }
+
+        .nav-btn.primary {
+            background: linear-gradient(135deg, #d4af37 0%, #c99a2e 100%);
+            color: #0a0a0a;
+            border: none;
+            font-weight: 600;
+        }
+
+        .nav-btn.primary:hover {
+            background: linear-gradient(135deg, #e0c14f 0%, #d4af37 100%);
+            box-shadow: 0 8px 24px rgba(212, 175, 55, 0.3);
+        }
+
+        .auto-refresh-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 20px;
+            font-size: 0.85em;
+            color: #10b981;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10b981;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+
+        .hero-section {
+            max-width: 1400px;
+            margin: 60px auto 80px;
+            padding: 0 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 5em;
+            font-weight: 700;
+            letter-spacing: -2px;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #ffffff 0%, #a0a0a0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2em;
+            color: #a0a0a0;
+            font-weight: 300;
+            letter-spacing: 1px;
+            margin-bottom: 40px;
+            animation: fadeInUp 0.8s ease 0.2s both;
+        }
+
+        .controls-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            margin-bottom: 50px;
+            animation: fadeInUp 0.8s ease 0.4s both;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .filter-label {
+            font-size: 0.9em;
+            color: #808080;
+            margin-right: 10px;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            background: transparent;
+            color: #a0a0a0;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: rgba(212, 175, 55, 0.1);
+            color: #d4af37;
+            border-color: rgba(212, 175, 55, 0.3);
+        }
+
+        .news-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px 100px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .news-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            animation: fadeInUp 0.6s ease forwards;
+            opacity: 0;
+        }
+
+        .news-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(212, 175, 55, 0.2);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .news-card:hover .card-image img {
+            transform: scale(1.05);
+        }
+
+        .card-image {
+            position: relative;
+            width: 100%;
+            height: 280px;
+            overflow: hidden;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+        }
+
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 20px;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, transparent 100%);
+        }
+
+        .card-source {
+            display: inline-block;
+            padding: 6px 14px;
+            background: rgba(212, 175, 55, 0.2);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 4px;
+            font-size: 0.75em;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #d4af37;
+        }
+
+        .card-content {
+            padding: 28px;
+        }
+
+        .card-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.6em;
+            font-weight: 600;
+            line-height: 1.4;
+            margin-bottom: 15px;
+            color: #ffffff;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-description {
+            font-size: 0.95em;
+            line-height: 1.7;
+            color: #909090;
+            margin-bottom: 20px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .card-date {
+            font-size: 0.85em;
+            color: #606060;
+            font-weight: 500;
+        }
+
+        .card-link {
+            color: #d4af37;
+            font-size: 0.9em;
+            font-weight: 600;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .card-link:hover {
+            gap: 12px;
+            color: #e0c14f;
+        }
+
+        .loading-state {
+            text-align: center;
+            padding: 80px 20px;
+            color: #808080;
+            font-size: 1.1em;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(212, 175, 55, 0.1);
+            border-top-color: #d4af37;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .error-state {
+            text-align: center;
+            padding: 80px 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .error-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+
+        .error-title {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+
+        .error-message {
+            color: #808080;
+            line-height: 1.8;
+        }
+
+        .load-more-section {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .load-more-btn {
+            padding: 18px 50px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 8px;
+            background: transparent;
+            color: #d4af37;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            letter-spacing: 1px;
+        }
+
+        .load-more-btn:hover {
+            background: rgba(212, 175, 55, 0.1);
+            border-color: #d4af37;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.2);
+        }
+
+        .notification {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            padding: 20px 30px;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 12px;
+            color: #ffffff;
+            font-weight: 500;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            animation: slideInRight 0.4s ease;
+            z-index: 1000;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .featured-card {
+            grid-column: span 2;
+        }
+
+        .featured-card .card-image {
+            height: 400px;
+        }
+
+        .featured-card .card-title {
+            font-size: 2.2em;
+        }
+
+        @media (max-width: 1200px) {
+            .news-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 30px;
+            }
+
+            .featured-card {
+                grid-column: span 2;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-content {
+                padding: 0 20px;
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .hero-section {
+                padding: 0 20px;
+                margin: 40px auto 60px;
+            }
+
+            .hero-title {
+                font-size: 3em;
+            }
+
+            .news-grid {
+                grid-template-columns: 1fr;
+                padding: 0 20px 60px;
+                gap: 25px;
+            }
+
+            .featured-card {
+                grid-column: span 1;
+            }
+
+            .featured-card .card-image {
+                height: 280px;
+            }
+
+            .controls-bar {
+                flex-direction: column;
+                gap: 15px;
+                padding: 20px;
+            }
+
+            .filter-group {
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+        }
+
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 80px 20px;
+            color: #808080;
+        }
+
+        .no-results-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="background-gradient"></div>
+
+    <nav class="nav-bar">
+        <div class="nav-content">
+            <div class="logo">CELEBRITY INSIDER</div>
+            <div class="nav-actions">
+                <div class="auto-refresh-badge" id="refreshBadge" style="display: none;">
+                    <span class="status-dot"></span>
+                    <span>Auto-Refresh Active</span>
+                </div>
+                <button class="nav-btn" onclick="fetchNews()">Refresh</button>
+                <button class="nav-btn" onclick="toggleAutoRefresh()" id="autoRefreshBtn">Auto-Refresh</button>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero-section">
+        <h1 class="hero-title">Where Stars Come to Life</h1>
+        <p class="hero-subtitle">Your premium source for exclusive celebrity news and entertainment updates</p>
+        
+        <div class="controls-bar">
+            <div class="filter-group">
+                <span class="filter-label">Categories:</span>
+                <button class="filter-btn active" data-filter="all">All Stories</button>
+                <button class="filter-btn" data-filter="entertainment">Entertainment</button>
+                <button class="filter-btn" data-filter="lifestyle">Lifestyle</button>
+                <button class="filter-btn" data-filter="trending">Trending</button>
+            </div>
+            <div class="filter-group">
+                <span class="filter-label" id="newsCount">Loading...</span>
+            </div>
+        </div>
+    </section>
+
+    <div class="news-grid" id="newsGrid"></div>
+
+    <div class="load-more-section" id="loadMoreSection" style="display: none;">
+        <button class="load-more-btn" onclick="loadMore()">Load More Stories</button>
+    </div>
+
+    <script>
+        let currentPage = 1;
+        let autoRefreshInterval = null;
+        let isAutoRefresh = false;
+        const API_KEY = 'pub_54c2810396724d3ab7bb6296c878b633';
+        let nextPage = null;
+        let allArticles = [];
+
+        async function fetchNews(append = false) {
+            const grid = document.getElementById('newsGrid');
+            const loadMoreSection = document.getElementById('loadMoreSection');
+            
+            if (!append) {
+                grid.innerHTML = `
+                    <div class="loading-state" style="grid-column: 1 / -1;">
+                        <div class="loading-spinner"></div>
+                        <p>Curating the finest celebrity stories...</p>
+                    </div>
+                `;
+                allArticles = [];
+            }
+
+            try {
+                const url = nextPage && append 
+                    ? `https://newsdata.io/api/1/latest?apikey=${API_KEY}&q=celebrity&page=${nextPage}`
+                    : `https://newsdata.io/api/1/latest?apikey=${API_KEY}&q=celebrity`;
+                
+                console.log('Fetching from:', url);
+                const response = await fetch(url);
+                
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    console.error('API Error:', errorData);
+                    throw new Error(`API Error: ${errorData.message || response.status}`);
+                }
+                
+                const data = await response.json();
+                console.log('API Response:', data);
+                
+                if (data.status === 'success' && data.results && data.results.length > 0) {
+                    if (append) {
+                        allArticles = [...allArticles, ...data.results];
+                    } else {
+                        allArticles = data.results;
+                    }
+                    nextPage = data.nextPage || null;
+                    displayNews(allArticles);
+                    document.getElementById('newsCount').textContent = `${allArticles.length} Stories`;
+                    loadMoreSection.style.display = nextPage ? 'block' : 'none';
+                    showNotification('✨ News updated successfully');
+                } else if (data.status === 'error') {
+                    throw new Error(data.results?.message || 'API returned an error');
+                } else {
+                    // Show demo data if no results
+                    displayDemoData();
+                    document.getElementById('newsCount').textContent = 'Demo Stories';
+                    showNotification('⚠️ Showing demo content');
+                }
+            } catch (error) {
+                console.error('Error fetching news:', error);
+                // Show demo data on error
+                displayDemoData();
+                document.getElementById('newsCount').textContent = 'Demo Stories';
+                showNotification('⚠️ API unavailable - showing demo content');
+            }
+        }
+
+        function displayDemoData() {
+            const demoArticles = [
+                {
+                    title: 'Hollywood Stars Dazzle at Annual Film Awards',
+                    description: 'The entertainment industry\'s biggest night saw stunning fashion, emotional speeches, and groundbreaking wins across all major categories.',
+                    link: '#',
+                    image_url: 'https://images.unsplash.com/photo-1566438480900-0609be27a4be?w=1200&q=80',
+                    source_id: 'Entertainment Weekly',
+                    pubDate: new Date().toISOString()
+                },
+                {
+                    title: 'Music Icon Announces Surprise Album Release',
+                    description: 'Fans worldwide celebrate as the legendary artist drops an unexpected new album featuring collaborations with today\'s hottest stars.',
+                    link: '#',
+                    image_url: 'https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=1200&q=80',
+                    source_id: 'Billboard',
+                    pubDate: new Date(Date.now() - 3600000).toISOString()
+                },
+                {
+                    title: 'Blockbuster Film Shatters Box Office Records',
+                    description: 'The highly anticipated sequel exceeded all expectations with record-breaking opening weekend numbers worldwide.',
+                    link: '#',
+                    image_url: 'https://images.unsplash.com/photo-1594909122845-11baa439b7bf?w=1200&q=80',
+                    source_id: 'Variety',
+                    pubDate: new Date(Date.now() - 7200000).toISOString()
+                },
+                {
+                    title: 'A-List Couple Announces Engagement',
+                    description: 'Hollywood\'s favorite duo shared their joyful news, sending fans into celebration across social media platforms.',
+                    link: '#',
+                    image_url: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=1200&q=80',
+                    source_id: 'People Magazine',
+                    pubDate: new Date(Date.now() - 10800000).toISOString()
+                },
+                {
+                    title: 'Streaming Giant Greenlights Ambitious New Series',
+                    description: 'Star-studded cast confirmed for the most anticipated television project of the year, set to premiere next season.',
+                    link: '#',
+                    image_url: 'https://images.unsplash.com/photo-1522869635100-9f4c5e86aa37?w=1200&q=80',
+                    source_id: 'The Hollywood Reporter',
+                    pubDate: new Date(Date.now() - 14400000).toISOString()
+                },
+                {
+                    title: 'Fashion Week Highlights Celebrity Style',
+                    description: 'The biggest names in entertainment turned heads with stunning looks at this year\'s most prestigious fashion events.',
+                    link: '#',
+                    image_url: 'https://images.unsplash.com/photo-1558769132-cb1aea0c4e59?w=1200&q=80',
+                    source_id: 'Vogue',
+                    pubDate: new Date(Date.now() - 18000000).toISOString()
+                }
+            ];
+            
+            allArticles = demoArticles;
+            displayNews(demoArticles);
+            document.getElementById('loadMoreSection').style.display = 'none';
+        }
+
+        function displayNews(articles) {
+            const grid = document.getElementById('newsGrid');
+            grid.innerHTML = '';
+
+            articles.forEach((article, index) => {
+                const card = document.createElement('div');
+                card.className = index === 0 ? 'news-card featured-card' : 'news-card';
+                card.style.animationDelay = `${index * 0.1}s`;
+                
+                const imageUrl = article.image_url || 'https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=1200&q=80';
+                const sourceName = article.source_id || 'Celebrity News';
+                const publishedDate = article.pubDate ? new Date(article.pubDate).toLocaleDateString('en-US', {
+                    month: 'long',
+                    day: 'numeric',
+                    year: 'numeric'
+                }) : 'Recent';
+                
+                card.innerHTML = `
+                    <div class="card-image">
+                        <img src="${imageUrl}" alt="${article.title}" 
+                             onerror="this.src='https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=1200&q=80'">
+                        <div class="card-overlay">
+                            <span class="card-source">${sourceName}</span>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <h2 class="card-title">${article.title}</h2>
+                        <p class="card-description">${article.description || 'Discover the latest updates in celebrity news and entertainment.'}</p>
+                        <div class="card-meta">
+                            <span class="card-date">${publishedDate}</span>
+                            <a href="${article.link}" target="_blank" class="card-link">
+                                Read Article →
+                            </a>
+                        </div>
+                    </div>
+                `;
+                
+                card.addEventListener('click', (e) => {
+                    if (!e.target.classList.contains('card-link')) {
+                        window.open(article.link, '_blank');
+                    }
+                });
+                
+                grid.appendChild(card);
+            });
+        }
+
+        function loadMore() {
+            if (nextPage) {
+                fetchNews(true);
+            }
+        }
+
+        function toggleAutoRefresh() {
+            isAutoRefresh = !isAutoRefresh;
+            const btn = document.getElementById('autoRefreshBtn');
+            const badge = document.getElementById('refreshBadge');
+            
+            if (isAutoRefresh) {
+                btn.classList.add('primary');
+                badge.style.display = 'flex';
+                autoRefreshInterval = setInterval(() => {
+                    fetchNews(false);
+                }, 120000); // Refresh every 2 minutes
+                showNotification('✅ Auto-refresh enabled');
+            } else {
+                btn.classList.remove('primary');
+                badge.style.display = 'none';
+                if (autoRefreshInterval) {
+                    clearInterval(autoRefreshInterval);
+                }
+                showNotification('⏸️ Auto-refresh disabled');
+            }
+        }
+
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideInRight 0.4s ease reverse';
+                setTimeout(() => notification.remove(), 400);
+            }, 3000);
+        }
+
+        // Filter buttons functionality
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                // Filter logic can be implemented here
+            });
+        });
+
+        // Initial load
+        fetchNews();
+    </script>
+</body>
+</html>
