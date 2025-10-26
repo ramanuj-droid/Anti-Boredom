@@ -1,7 +1,7 @@
 [
   {
     "id": 1,
-    "text": "A man pushes his car to a hotel and tells the owner he’s bankrupt. Why?",
+    "text": "A man pushes his car to a hotel and tells the owner he's bankrupt. Why?",
     "options": [
       "He ran out of gas and can't pay",
       "He is playing Monopoly and landed on the hotel",
@@ -20,7 +20,7 @@
   },
   {
     "id": 3,
-    "text": "You see a boat filled with people. It hasn’t sunk, yet you don’t see a single person on board. Why?",
+    "text": "You see a boat filled with people. It hasn't sunk, yet you don't see a single person on board. Why?",
     "options": [
       "They are below deck",
       "It's a ghost ship",
@@ -41,6 +41,301 @@
     ],
     "answer": 2,
     "explanation": "A playful pun: 'An apple a day keeps the doctor away.'"
+  },
+  {
+    "id": 5,
+    "text": "A woman shoots her husband, then holds him underwater for five minutes. Next, she hangs him. But five minutes later they both go out and enjoy a wonderful dinner together. How?",
+    "options": [
+      "It was all a dream",
+      "She's a photographer developing a photo",
+      "He's a zombie and can't die",
+      "They made up after the fight"
+    ],
+    "answer": 1,
+    "explanation": "She's a photographer! She shot a picture, developed it in water, and hung it to dry."
+  },
+  {
+    "id": 6,
+    "text": "What disappears as soon as you say its name?",
+    "options": ["Silence", "Echo", "Shadow", "Secret"],
+    "answer": 0,
+    "explanation": "Silence disappears the moment you speak it."
+  },
+  {
+    "id": 7,
+    "text": "A man is found dead in a circular mansion. The detective interviews the chef, maid, and gardener. The chef was cooking breakfast, the maid was dusting corners, and the gardener was planting roses. Who is lying?",
+    "options": [
+      "The chef",
+      "The maid",
+      "The gardener",
+      "All of them"
+    ],
+    "answer": 1,
+    "explanation": "The maid is lying! A circular mansion has no corners to dust."
+  },
+  {
+    "id": 8,
+    "text": "A man is looking at a photograph of someone. His friend asks who it is. The man replies, 'Brothers and sisters, I have none. But that man's father is my father's son.' Who is in the photograph?",
+    "options": [
+      "His son",
+      "His father",
+      "Himself",
+      "His cousin"
+    ],
+    "answer": 0,
+    "explanation": "'My father's son' is himself (he has no siblings). So 'that man's father' is him, meaning the photo is of his son."
+  },
+  {
+    "id": 9,
+    "text": "You walk into a room with a match. Inside the room are a kerosene lamp, a candle, and a fireplace. What do you light first?",
+    "options": [
+      "The kerosene lamp",
+      "The candle",
+      "The fireplace",
+      "The match"
+    ],
+    "answer": 3,
+    "explanation": "You must light the match first before you can light anything else!"
+  },
+  {
+    "id": 10,
+    "text": "A man dies of old age on his 25th birthday. How is this possible?",
+    "options": [
+      "He was born on a leap year (Feb 29)",
+      "He aged twice as fast",
+      "He's a time traveler",
+      "The calendar changed"
+    ],
+    "answer": 0,
+    "explanation": "He was born on February 29th (leap year), so he only had a birthday every 4 years!"
+  },
+  {
+    "id": 11,
+    "text": "A girl falls off a 20-foot ladder but doesn't get hurt. How?",
+    "options": [
+      "She landed on a trampoline",
+      "She fell off the bottom rung",
+      "She's wearing protective gear",
+      "Someone caught her"
+    ],
+    "answer": 1,
+    "explanation": "She fell off the bottom rung of the ladder, so she barely fell at all!"
+  },
+  {
+    "id": 12,
+    "text": "A windowless room contains three identical lamps with pull-chain switches. Outside the room are three switches, each controlling one lamp. You can flip the switches however you want, but once you open the door, you can't touch the switches again. How do you figure out which switch controls which lamp?",
+    "options": [
+      "Turn on switch 1, wait 10 minutes, turn it off. Turn on switch 2, then enter. The hot bulb is switch 1, the lit bulb is switch 2, the cold/off bulb is switch 3.",
+      "Turn all switches on at different times",
+      "You can't solve it",
+      "Use a mirror to see inside"
+    ],
+    "answer": 0,
+    "explanation": "Heat is the key! Turn on one switch and wait for the bulb to heat up, then turn it off. Turn on another switch and enter. Now you can identify each by temperature and state."
+  },
+  {
+    "id": 13,
+    "text": "Three people check into a hotel room that costs $30. They each contribute $10. Later, the manager realizes the room only costs $25 and gives $5 to the bellboy to return. The bellboy, unable to split $5 evenly three ways, gives each person $1 and keeps $2. Now each person paid $9 (totaling $27) and the bellboy kept $2 (totaling $29). Where did the missing dollar go?",
+    "options": [
+      "The bellboy stole an extra dollar",
+      "There is no missing dollar - the $27 already includes the bellboy's $2",
+      "The hotel kept the extra dollar",
+      "Math error in the original calculation"
+    ],
+    "answer": 1,
+    "explanation": "This is a trick question! The guests paid $27 total: $25 to the hotel + $2 to the bellboy. You don't add the bellboy's $2 again. The $3 returned makes it $27 + $3 = $30."
+  },
+  {
+    "id": 14,
+    "text": "A prisoner is given a choice between two doors. One leads to freedom, the other to certain death. Each door is guarded by a guard: one always tells the truth, the other always lies. The prisoner doesn't know which is which. He can ask ONE guard ONE question to determine which door leads to freedom. What should he ask?",
+    "options": [
+      "Which door leads to freedom?",
+      "Are you the truthful guard?",
+      "If I asked the other guard which door leads to freedom, what would he say? (then choose the opposite door)",
+      "Is this the door to freedom? (pointing at one)"
+    ],
+    "answer": 2,
+    "explanation": "Ask either guard: 'If I asked the other guard which door leads to freedom, what would he say?' The truthful guard will report the liar's false answer, and the liar will lie about the truthful guard's answer. Both will point to the death door, so choose the opposite!"
+  },
+  {
+    "id": 15,
+    "text": "A father and son are in a terrible car accident. The father dies instantly. The son is rushed to the hospital and needs immediate surgery. The surgeon enters the operating room, looks at the boy, and says, 'I cannot operate on this boy - he is my son!' How is this possible?",
+    "options": [
+      "The surgeon is his stepfather",
+      "The surgeon is his mother",
+      "Time travel paradox",
+      "The boy was adopted"
+    ],
+    "answer": 1,
+    "explanation": "The surgeon is the boy's mother! This riddle challenges the assumption that surgeons must be male."
+  },
+  {
+    "id": 16,
+    "text": "You have 12 identical-looking coins, but one is counterfeit and weighs slightly different (you don't know if it's heavier or lighter). You have a balance scale and can use it only 3 times. How do you identify the counterfeit coin AND determine if it's heavier or lighter?",
+    "options": [
+      "Divide into groups of 4, weigh twice, then narrow down",
+      "Weigh 6 vs 6, then 3 vs 3, then 1 vs 1",
+      "It's impossible with only 3 weighings",
+      "Divide into 4-4-4, compare two groups. If equal, fake is in third group. Then divide suspect group strategically using known good coins"
+    ],
+    "answer": 3,
+    "explanation": "Divide into three groups of 4. Weigh two groups. If balanced, the fake is in the third group. If unbalanced, you know which group and direction. Then use strategic weighings with known good coins to pinpoint the exact counterfeit and its weight difference."
+  },
+  {
+    "id": 17,
+    "text": "A man lives on the 15th floor of an apartment building. Every day he takes the elevator down to the ground floor. When returning, he takes the elevator to the 7th floor and walks the rest of the way up - except on rainy days when he takes the elevator all the way to the 15th floor. Why?",
+    "options": [
+      "He wants the exercise",
+      "The elevator is broken above the 7th floor",
+      "He's short and can only reach the 7th floor button, but uses his umbrella to reach higher on rainy days",
+      "He likes to visit his friend on the 7th floor"
+    ],
+    "answer": 2,
+    "explanation": "He's short! He can only reach the button for the 7th floor, but on rainy days he uses his umbrella to press the 15th floor button."
+  },
+  {
+    "id": 18,
+    "text": "A magician promises to stay underwater for 5 minutes without any equipment or air pockets. He succeeds. How?",
+    "options": [
+      "He held his breath the entire time",
+      "He had hidden oxygen",
+      "He filled a glass with water and held his head under the glass",
+      "He used special training techniques"
+    ],
+    "answer": 2,
+    "explanation": "He filled a glass with water and held his head underwater in the glass - he stayed 'underwater' for 5 minutes while breathing normally!"
+  },
+  {
+    "id": 19,
+    "text": "A woman has 7 children. Half of them are boys. How is this possible?",
+    "options": [
+      "It's impossible - you can't split 7 in half evenly",
+      "All of them are boys",
+      "4 are boys, 3 are girls (rounding up)",
+      "She's pregnant with the 8th"
+    ],
+    "answer": 1,
+    "explanation": "ALL of them are boys! Half of them are boys (all 7), and the other half are also boys (all 7). Every child is in both halves."
+  },
+  {
+    "id": 20,
+    "text": "A man walks into a bar and asks for a glass of water. The bartender pulls out a gun and points it at him. The man says 'Thank you' and walks out satisfied. Why?",
+    "options": [
+      "The man was thirsty and changed his mind",
+      "The man had hiccups, and the bartender scared them away",
+      "It was a water gun",
+      "The bartender was his friend playing a prank"
+    ],
+    "answer": 1,
+    "explanation": "The man had hiccups! He asked for water to cure them, but the bartender scared him with the gun instead, which cured his hiccups."
+  },
+  {
+    "id": 21,
+    "text": "You're in a race and overtake the person in 2nd place. What position are you in now?",
+    "options": [
+      "1st place",
+      "2nd place",
+      "3rd place",
+      "It depends on how many people you overtake"
+    ],
+    "answer": 1,
+    "explanation": "You're in 2nd place! If you overtake the person in 2nd place, you take their position. You don't become 1st unless you overtake the person in 1st place."
+  },
+  {
+    "id": 22,
+    "text": "A murderer is condemned to death and must choose between three rooms: one full of raging fires, one full of assassins with loaded guns, and one full of lions that haven't eaten in 3 years. Which room should he choose to survive?",
+    "options": [
+      "The room with fires",
+      "The room with assassins",
+      "The room with lions",
+      "None - he'll die anyway"
+    ],
+    "answer": 2,
+    "explanation": "Choose the room with lions! If they haven't eaten in 3 years, they're already dead. Lions can't survive that long without food."
+  },
+  {
+    "id": 23,
+    "text": "A farmer has 15 sheep. All but 8 die. How many sheep are left?",
+    "options": [
+      "7 sheep",
+      "8 sheep",
+      "0 sheep",
+      "15 sheep"
+    ],
+    "answer": 1,
+    "explanation": "8 sheep remain! 'All BUT 8 die' means 8 survived. It's easy to misread as subtraction (15-8=7), but the phrase means only 8 are left alive."
+  },
+  {
+    "id": 24,
+    "text": "A man describes his daughters: 'They're all blonde, but two; all brunette but two; and all redheaded but two.' How many daughters does he have, and what are their hair colors?",
+    "options": [
+      "6 daughters: 2 blonde, 2 brunette, 2 redhead",
+      "3 daughters: 1 blonde, 1 brunette, 1 redhead",
+      "4 daughters with mixed descriptions",
+      "It's impossible to determine"
+    ],
+    "answer": 1,
+    "explanation": "He has 3 daughters! One blonde, one brunette, one redhead. 'All but two are blonde' means only one is blonde (the other two aren't). Same logic applies to each color."
+  },
+  {
+    "id": 25,
+    "text": "There are three switches downstairs. Each corresponds to one of three light bulbs upstairs. You can turn the switches on and off and leave them in any position. How can you identify which switch goes to which bulb if you can only go upstairs once?",
+    "options": [
+      "Turn on switch 1 and immediately go upstairs",
+      "Turn all switches on at once",
+      "Turn on switch 1 for 10 minutes, turn it off, turn on switch 2, then go upstairs. The warm off bulb is switch 1, the lit bulb is switch 2, the cold off bulb is switch 3",
+      "It's impossible with only one trip"
+    ],
+    "answer": 2,
+    "explanation": "Use heat! Turn on switch 1 and wait 10 minutes so the bulb heats up, then turn it off. Turn on switch 2 and go upstairs. Now you can identify: lit bulb = switch 2, warm but off = switch 1, cold and off = switch 3."
+  },
+  {
+    "id": 26,
+    "text": "A man is pushing his car along a road when he comes to a hotel. He shouts, 'I'm bankrupt!' Why does arriving at the hotel make him realize he's bankrupt?",
+    "options": [
+      "He can't afford to stay there",
+      "He's playing Monopoly and landed on a hotel property",
+      "The hotel reminds him of his failed business",
+      "He owes the hotel money"
+    ],
+    "answer": 1,
+    "explanation": "He's playing Monopoly! In the game, landing on a hotel property can bankrupt you. The 'car' is the game piece he's moving around the board."
+  },
+  {
+    "id": 27,
+    "text": "A woman is sitting in her hotel room at night when someone knocks. She opens the door to find a man she's never seen. He says, 'Sorry, I thought this was my room.' She immediately calls security. Why did she suspect him?",
+    "options": [
+      "He looked suspicious",
+      "He didn't have a key - if it was his room, he wouldn't have knocked",
+      "She recognized him as a criminal",
+      "He was wearing a mask"
+    ],
+    "answer": 1,
+    "explanation": "If it was really his room, he would have used his key card to enter, not knocked! He was clearly lying and checking if anyone was inside - likely a thief."
+  },
+  {
+    "id": 28,
+    "text": "A man goes out in heavy rain with nothing to protect him from the water. His clothes get soaked, yet not a single hair on his head gets wet. How is this possible?",
+    "options": [
+      "He's standing under a tree",
+      "He's bald",
+      "He's wearing a special waterproof spray",
+      "He's running really fast"
+    ],
+    "answer": 1,
+    "explanation": "He's bald! He has no hair on his head to get wet. This riddle makes you assume he has hair."
+  },
+  {
+    "id": 29,
+    "text": "In a one-story pink house, everything is pink: pink walls, pink doors, pink furniture. What color are the stairs?",
+    "options": [
+      "Pink",
+      "White",
+      "There are no stairs - it's a one-story house",
+      "Brown"
+    ],
+    "answer": 2,
+    "explanation": "There are no stairs! It's a ONE-STORY house. The 'pink' detail is a distraction to make you think about color instead of the house structure."
   }
 ]
 
