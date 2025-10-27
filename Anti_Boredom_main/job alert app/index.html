@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Remote Job Alerts</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        
+        body::-webkit-scrollbar {
+            width: 8px;
+        }
+        body::-webkit-scrollbar-thumb {
+            background-color: #6366f1; 
+            border-radius: 4px;
+        }
+        body::-webkit-scrollbar-track {
+            background: #f1f5f9; 
+        }
+
+        
+        .company-logo {
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
+        }
+
+        
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.9); 
+            z-index: 50;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.3s ease-in-out;
+        }
+        
+        .truncate-text-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'primary': '#4f46e5', 
+                        'secondary': '#6366f1', 
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 min-h-screen text-gray-800 font-sans">
+
+    
+    <div id="loading-overlay" class="loading-overlay hidden">
+        <div class="flex justify-center items-center space-x-3 text-primary p-6 rounded-xl bg-white shadow-2xl">
+            <svg class="animate-spin h-10 w-10 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span class="text-2xl font-semibold">Fetching awesome remote jobs...</span>
+        </div>
+    </div>
+
+
+    <div class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+        
+        <header class="text-center py-8 mb-6 bg-white rounded-xl shadow-md border-b-4 border-primary">
+            <h1 class="text-4xl sm:text-5xl font-extrabold text-primary flex items-center justify-center space-x-3">
+                <i data-lucide="bell-ring" class="w-10 h-10"></i>
+                <span>Remote Job Tracker</span>
+            </h1>
+            <p class="mt-3 text-xl text-gray-600">Find the latest remote job opportunities across the globe.</p>
+        </header>
+
+        
+        <div class="sticky top-0 bg-gray-50 pt-4 pb-8 z-10">
+            <div class="relative flex items-center bg-white shadow-2xl rounded-xl p-4 border border-gray-200">
+                <input
+                    type="search"
+                    id="search-input"
+                    placeholder="Search for roles (e.g., 'Software Engineer', 'UX Designer')..."
+                    class="w-full pl-12 pr-4 py-3 border-0 focus:ring-0 text-lg transition duration-150 ease-in-out"
+                    value="designer"
+                >
+                <i data-lucide="search" class="absolute left-4 text-gray-400 w-5 h-5"></i>
+                <button
+                    id="search-button"
+                    class="hidden md:inline-flex ml-3 px-6 py-3 bg-primary text-white font-semibold rounded-lg shadow-lg hover:bg-indigo-700 transition duration-150 ease-in-out items-center space-x-2 flex-shrink-0"
+                    onclick="handleSearch(event)"
+                >
+                    <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                    <span>Search</span>
+                </button>
+            </div>
+        </div>
+
+        
+        <div id="results-container">
+            
+            <p id="initial-message" class="text-center text-gray-500 mt-10 text-2xl p-8 bg-white rounded-xl shadow-inner">Type a keyword and press Enter or click Search to find remote jobs.</p>
+        </div>
+
+    </div>
+
+    <script>
+        
+        lucide.createIcons();
+
+       
+        
+        
+        const mockJobs = [
+            
+            { id: 1, title: 'Senior Full-Stack Developer (React/Node)', company_name: 'Innovatech Global', candidate_required_location: 'Worldwide / EU Preferred', category: 'Software Engineering', job_type: 'full_time', url: 'https://mocklink.dev/1' },
+            { id: 6, title: 'Junior Frontend Software Engineer (React)', company_name: 'WebLaunch', candidate_required_location: 'Worldwide', category: 'Software Engineering', job_type: 'full_time', url: 'https://mocklink.dev/6' },
+            { id: 8, title: 'Mobile App Developer (Flutter)', company_name: 'AppWorks', candidate_required_location: 'Worldwide', category: 'Software Engineering', job_type: 'full_time', url: 'https://mocklink.dev/8' },
+            { id: 10, title: 'Backend Software Engineer (Go/AWS)', company_name: 'CloudCore', candidate_required_location: 'Worldwide', category: 'Software Engineering', job_type: 'full_time', url: 'https://mocklink.dev/10' },
+            { id: 11, title: 'Senior Developer Advocate', company_name: 'DevRel Inc.', candidate_required_location: 'Worldwide', category: 'Software Engineering', job_type: 'full_time', url: 'https://mocklink.dev/11' },
+            
+            
+            { id: 2, title: 'Lead UX/UI Designer', company_name: 'Creative Minds', candidate_required_location: 'North America Only', category: 'Design', job_type: 'full_time', url: 'https://mocklink.dev/2' },
+            { id: 13, title: 'Senior Product Designer', company_name: 'PixelPerfect', candidate_required_location: 'Europe/UK', category: 'Design', job_type: 'full_time', url: 'https://mocklink.dev/13' },
+            { id: 14, title: 'Motion Graphic Designer', company_name: 'VisualWorks', candidate_required_location: 'Anywhere', category: 'Design', job_type: 'contract', url: 'https://mocklink.dev/14' },
+            { id: 20, title: 'UX Researcher (Qualitative/Quantitative)', company_name: 'Insight Lab', candidate_required_location: 'Worldwide', category: 'Design', job_type: 'full_time', url: 'https://mocklink.dev/20' }, 
+            { id: 21, title: 'Mid-Level UX/UI Designer', company_name: 'Modern Apps', candidate_required_location: 'North America', category: 'Design', job_type: 'full_time', url: 'https://mocklink.dev/21' }, 
+            { id: 22, title: 'UX Content Strategist', company_name: 'WordFlow Tech', candidate_required_location: 'EMEA', category: 'Design', job_type: 'full_time', url: 'https://mocklink.dev/22' },
+            { id: 23, title: 'Junior UI Designer', company_name: 'ColorPalette Co.', candidate_required_location: 'Worldwide', category: 'Design', job_type: 'part_time', url: 'https://mocklink.dev/23' }, 
+            { id: 24, title: 'Staff Product Designer (FinTech)', company_name: 'WealthTools', candidate_required_location: 'US/Canada', category: 'Design', job_type: 'full_time', url: 'https://mocklink.dev/24' }, 
+
+           
+            { id: 3, title: 'Digital Marketing Specialist', company_name: 'Growth Engine', candidate_required_location: 'Anywhere', category: 'Marketing', job_type: 'contract', url: 'https://mocklink.dev/3' },
+            { id: 15, title: 'Global Sales Development Rep (SDR)', company_name: 'RevenueStream', candidate_required_location: 'US/LATAM', category: 'Sales', job_type: 'full_time', url: 'https://mocklink.dev/15' },
+            { id: 16, title: 'Content Marketing Manager', company_name: 'BrandBoost', candidate_required_location: 'Worldwide', category: 'Marketing', job_type: 'full_time', url: 'https://mocklink.dev/16' },
+
+            
+            { id: 4, title: 'Senior Data Scientist - Python/ML', company_name: 'Analytics Hub', candidate_required_location: 'EMEA Time Zones', category: 'Data', job_type: 'full_time', url: 'https://mocklink.dev/4' },
+            { id: 17, title: 'Junior Data Analyst', company_name: 'DataFlow', candidate_required_location: 'North America', category: 'Data', job_type: 'full_time', url: 'https://mocklink.dev/17' },
+            
+            
+            { id: 5, title: 'Technical Writer', company_name: 'DocuStream', candidate_required_location: 'Asia/Pacific', category: 'Writing', job_type: 'part_time', url: 'https://mocklink.dev/5' },
+            { id: 18, title: 'SEO Copywriter (Blog & Web)', company_name: 'WordCraft', candidate_required_location: 'Anywhere', category: 'Writing', job_type: 'contract', url: 'https://mocklink.dev/18' },
+            
+            
+            { id: 7, title: 'Customer Support Lead', company_name: 'SupportPro', candidate_required_location: 'US/Canada', category: 'Customer Service', job_type: 'full_time', url: 'https://mocklink.dev/7' },
+            { id: 12, title: 'Executive Assistant to CEO', company_name: 'CEO Office', candidate_required_location: 'Any Time Zone', category: 'Admin', job_type: 'part_time', url: 'https://mocklink.dev/12' },
+            { id: 19, title: 'Technical Support Specialist Tier 2', company_name: 'HelpDesk Pro', candidate_required_location: 'EU/Asia', category: 'Customer Service', job_type: 'full_time', url: 'https://mocklink.dev/19' },
+
+          
+            { id: 9, title: 'Senior Product Manager', company_name: 'IdeaFlow', candidate_required_location: 'EU/UK', category: 'Management', job_type: 'full_time', url: 'https://mocklink.dev/9' },
+        ];
+
+
+        
+        const searchInput = document.getElementById('search-input');
+        const resultsContainer = document.getElementById('results-container');
+        const initialMessage = document.getElementById('initial-message');
+        const loadingOverlay = document.getElementById('loading-overlay');
+        
+        
+        function getCategoryTag(category) {
+            const categoryClass = 'bg-indigo-100 text-indigo-700'; // Primary color for category
+            return `<span class="px-3 py-1 text-xs font-semibold rounded-full ${categoryClass}">${category || 'Uncategorized'}</span>`;
+        }
+
+        
+        function getTypeTag(type) {
+            const typeText = (type || 'N/A').replace(/_/g, ' ');
+            let typeClass = 'bg-gray-200 text-gray-700';
+            if (type === 'full_time') {
+                typeClass = 'bg-green-100 text-green-700';
+            } else if (type === 'contract') {
+                typeClass = 'bg-amber-100 text-amber-700';
+            }
+            return `<span class="px-3 py-1 text-xs font-semibold rounded-full capitalize ${typeClass}">${typeText}</span>`;
+        }
+
+        
+        function resetUI() {
+            resultsContainer.innerHTML = '';
+            initialMessage.classList.add('hidden');
+            loadingOverlay.classList.add('hidden');
+        }
+
+        
+        function searchJobs(query) {
+            resetUI();
+
+            if (!query.trim()) {
+                initialMessage.classList.remove('hidden');
+                initialMessage.textContent = "Please enter a job title or keyword to search.";
+                return;
+            }
+
+           
+            loadingOverlay.classList.remove('hidden');
+
+            const lowerCaseQuery = query.toLowerCase();
+
+            
+            setTimeout(() => {
+               
+                const filteredJobs = mockJobs.filter(job => 
+                    job.title.toLowerCase().includes(lowerCaseQuery) || 
+                    job.company_name.toLowerCase().includes(lowerCaseQuery) ||
+                    job.category.toLowerCase().includes(lowerCaseQuery)
+                );
+                
+               
+                loadingOverlay.classList.add('hidden');
+                renderJobs(filteredJobs, query);
+
+            }, 500); 
+        }
+
+        
+        function renderJobs(jobs, query) {
+            
+            if (jobs.length === 0) {
+                initialMessage.classList.remove('hidden');
+                initialMessage.textContent = `No mock jobs found for "${query}". Try a different keyword! (Using static data to ensure function.)`;
+                return;
+            }
+
+            const totalJobsCount = jobs.length;
+
+            const totalJobsMessage = `
+                <div class="text-lg font-medium text-gray-700 mb-6 border-b border-gray-200 pb-3">
+                    Showing <span class="font-extrabold text-primary">${totalJobsCount}</span> results matching "<span class="font-extrabold text-primary">${query}</span>"
+                    <span class="text-sm text-gray-500 ml-2">(Data is hardcoded to bypass network issues)</span>
+                </div>
+            `;
+
+
+            const cardHTML = jobs.map(job => `
+                <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition duration-300 transform hover:-translate-y-1 border-t-4 border-primary/50 flex flex-col">
+                    <div class="flex items-start justify-between">
+                        <div class="flex-1 min-w-0 pr-4">
+                            <!-- Job Title links to the details page -->
+                            <a href="job_details.html?id=${job.id}" target="_blank" rel="noopener noreferrer" 
+                               class="block text-xl font-extrabold text-gray-900 hover:text-primary transition duration-150 mb-1 leading-snug truncate-text-2" title="${job.title}">
+                                ${job.title || 'No Title Provided'}
+                            </a>
+                            <p class="text-sm text-gray-500 mb-4 font-medium">${job.company_name || 'N/A'}</p>
+                        </div>
+                        <!-- Company Logo -->
+                        <img class="company-logo rounded-full border border-gray-200 ml-4 flex-shrink-0"
+                             src="${job.company_logo || 'https://placehold.co/48x48/6366f1/ffffff?text=C'}"
+                             onerror="this.onerror=null;this.src='https://placehold.co/48x48/6366f1/ffffff?text=C';"
+                             alt="${job.company_name} Logo">
+                    </div>
+
+                    <!-- Tags -->
+                    <div class="flex flex-wrap space-x-2 mb-4">
+                        ${getCategoryTag(job.category)}
+                        ${getTypeTag(job.job_type)}
+                    </div>
+
+                    <!-- Location -->
+                    <div class="flex items-center text-base text-gray-600 mb-6">
+                        <i data-lucide="map-pin" class="w-5 h-5 mr-2 text-secondary flex-shrink-0"></i>
+                        <span class="font-medium">${job.candidate_required_location || 'Worldwide'}</span>
+                    </div>
+
+                    <!-- Apply Button links to the details page -->
+                    <a href="job_details.html?id=${job.id}" target="_blank" rel="noopener noreferrer"
+                       class="mt-auto w-full inline-flex items-center justify-center px-4 py-3 border border-transparent text-base font-semibold rounded-lg shadow-xl text-white bg-primary hover:bg-indigo-700 transition duration-150 ease-in-out">
+                        View Details & Apply <i data-lucide="arrow-right" class="w-5 h-5 ml-2"></i>
+                    </a>
+                </div>
+            `).join('');
+
+            const cardGrid = `
+                <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8">
+                    ${cardHTML}
+                </div>
+            `;
+            
+            
+            resultsContainer.innerHTML = totalJobsMessage + cardGrid;
+            
+           
+            lucide.createIcons();
+        }
+
+       
+        let debounceTimer;
+        function handleSearch(event) {
+            clearTimeout(debounceTimer);
+            const query = searchInput.value;
+
+            
+            if (event.type === 'click' || (event.type === 'keyup' && event.key === 'Enter')) {
+                searchJobs(query);
+            } else {
+                 
+                 debounceTimer = setTimeout(() => {
+                    
+                    if (query.length > 0) {
+                        initialMessage.classList.remove('hidden');
+                        initialMessage.textContent = `Press Enter or click 'Search' to find jobs for "${query}".`;
+                    } else {
+                        initialMessage.classList.remove('hidden');
+                        initialMessage.textContent = "Please enter a job title or keyword to search.";
+                    }
+                    resultsContainer.innerHTML = '';
+                }, 500);
+            }
+        }
+
+        
+        searchInput.addEventListener('keyup', handleSearch);
+
+        
+        window.onload = () => {
+             
+             searchJobs(searchInput.value);
+        };
+    </script>
+</body>
+</html>
