@@ -8,15 +8,24 @@
 </head>
 <body>
   <h1>2048</h1>
-<div id="score-container">
-  <div id="score-board">
-    <span>Score:</span> <span id="score">0</span>
+
+  <div id="score-container">
+    <div id="score-board">
+      <span>Score:</span> <span id="score">0</span>
+    </div>
+    <button id="restart-btn">Restart</button>
   </div>
-  <button id="restart-btn">Restart</button>
-</div>
+
   <div id="game-container" aria-label="2048 game board"></div>
+  <section id="how-to-play" style="max-width: 400px; margin: 20px auto; text-align: center; font-family: sans-serif; font-size: 0.95rem; color: #333;">
+    <h2 style="margin-bottom: 10px;">How to Play</h2>
+    <p style="line-height: 1.6;">
+      Use your <strong>arrow keys</strong> (<kbd>↑</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd>) to move the tiles.  
+      When two tiles with the same number touch, they <strong>merge into one!</strong>  
+      Try to reach the <strong>2048 tile</strong> to win the game.
+    </p>
+  </section>
 
   <script src="script.js"></script>
-  
 </body>
 </html>

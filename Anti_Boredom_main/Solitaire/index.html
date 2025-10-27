@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Klondike Solitaire</title>
     <link rel="stylesheet" href="style.css">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
     <header>
@@ -38,6 +41,25 @@
             <div class="pile"></div>
         </section>
     </main>
+
+    <!-- ✅ New Tailwind-styled "How to Play" Section -->
+    <section class="mt-10 bg-gray-900 text-gray-200 py-10 px-6 text-center">
+        <h2 class="text-3xl font-bold text-yellow-400 mb-6">🃏 How to Play Klondike Solitaire</h2>
+        <div class="max-w-3xl mx-auto text-lg leading-relaxed">
+            <p class="mb-4">
+                The goal of Klondike Solitaire is to move all the cards into the four foundation piles, 
+                each built up from Ace to King in the same suit.
+            </p>
+            <ul class="list-disc list-inside text-left inline-block text-base text-gray-300">
+                <li>Build tableau piles in descending order, alternating colors (red on black, black on red).</li>
+                <li>Only Kings can be placed in empty tableau spaces.</li>
+                <li>Flip cards from the stock pile to reveal new ones.</li>
+                <li>Move cards between piles following the standard solitaire rules.</li>
+                <li>Use the <b>Undo</b> button to take back your last move.</li>
+            </ul>
+            <p class="mt-6 text-yellow-300 font-semibold">Win by building all four foundations as fast as possible!</p>
+        </div>
+    </section>
 
     <script src="script.js"></script>
 </body>
