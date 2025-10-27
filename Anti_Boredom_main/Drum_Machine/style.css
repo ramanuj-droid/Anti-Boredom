@@ -1,0 +1,55 @@
+body {
+  font-family: sans-serif;
+  text-align: center;
+  background: #111;
+  color: #fff;
+}
+
+h1 {
+  margin-top: 20px;
+}
+
+.grid {
+  display: grid;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.row {
+  display: flex;
+  gap: 5px;
+}
+
+.pad {
+  width: 45px;
+  height: 45px;
+  border: none;
+  background: #333;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.pad.active {
+  background: #f39c12;
+}
+
+.controls {
+  margin-top: 20px;
+}
+
+button {
+  margin: 5px;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  background: #f39c12;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+button:hover {
+  background: #e67e22;
+}
