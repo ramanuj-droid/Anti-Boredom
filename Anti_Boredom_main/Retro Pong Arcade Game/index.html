@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retro Pong</title>
+    <!-- We'll use custom CSS for that classic arcade look --><style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+        
+        body {
+            background-color: #1a1a1a;
+            color: #ffffff;
+            font-family: 'Press Start 2P', cursive;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #00ff00; /* Neon green */
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #00ff00;
+        }
+
+        #gameCanvas {
+            border: 4px solid #00ff00;
+            background-color: #000000;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+            /* Set a base aspect ratio for the canvas */
+            width: 90vw;
+            max-width: 600px;
+            aspect-ratio: 4/3; /* Classic Pong aspect ratio */
+            touch-action: none; /* Disable default touch behavior */
+        }
+
+        .score-board {
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            justify-content: space-around;
+            margin: 15px 0;
+            font-size: 1.5rem;
+            color: #ff00ff; /* Neon pink for scores */
+            text-shadow: 0 0 8px #ff00ff;
+        }
+
+        .instructions {
+            margin-top: 20px;
+            font-size: 0.75rem;
+            color: #ffffff;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        .button-style {
+            background-color: #4f46e5;
+            color: white;
+            padding: 10px 20px;
+            border: 2px solid #4f46e5;
+            border-radius: 5px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.8rem;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.1s ease;
+        }
+
+        .button-style:hover {
+            background-color: #6366f1;
+            box-shadow: 0 5px 20px rgba(99, 102, 241, 0.5);
+        }
+        
+        .message-box {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.9);
+            border: 3px solid #00ff00;
+            box-shadow: 0 0 25px #00ff00;
+            padding: 25px;
+            text-align: center;
+            z-index: 1000;
+            font-size: 1rem;
+            display: none; /* Hidden by default */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        <h1>PONG ARCADE</h1>
+        
+        <div class="score-board">
+            <span id="score-p1">P1: 0</span>
+            <span id="score-p2">P2: 0</span>
+        </div>
+
+        <canvas id="gameCanvas"></canvas>
+
+        <button id="start-button" class="button-style mt-6">START GAME</button>
+        
+        <div class="instructions">
+            <p>Player 1 (Left): **W** (Up) / **S** (Down) or **Left Side Touch**</p>
+            <p>Player 2 (Right): **&uarr;** (Up) / **&darr;** (Down) or **Right Side Touch**</p>
+        </div>
+    </div>
+
+    <!-- Custom Message Box for Game State --><div id="message-box" class="message-box">
+        <p id="message-text"></p>
+        <button id="message-button" class="button-style mt-4">Close</button>
+    </div>
+
+
+    <script>
+        // --- Game Setup ---
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const scoreP1Display = document.getElementById('score-p1');
+        const scoreP2Display = document.getElementById('score-p2');
+        const startButton = document.getElementById('start-button');
+        const messageBox = document.getElementById('message-box');
+        const messageText = document.getElementById('message-text');
+        const messageButton = document.getElementById('message-button');
+
+        let animationFrameId;
+        let gameRunning = false;
+        let colorChangeInterval;
+        
+        // Game Constants (will be scaled on resize)
+        const BASE_WIDTH = 600;
+        const BASE_HEIGHT = 450;
+        const PADDLE_HEIGHT_RATIO = 0.15; // 15% of canvas height
+        const PADDLE_WIDTH_RATIO = 0.02;  // 2% of canvas width
+        const BALL_SIZE_RATIO = 0.02;     // INCREASED from 0.01 for larger ball
+        const INITIAL_SPEED = 3; 
+
+        // Game State
+        let scaleFactor = 1;
+        let score = { p1: 0, p2: 0 };
+        const paddleSpeed = 6; 
+        const maxScore = 5;
+        let ballColor = '#FFFFFF'; // Initial ball color
+        const COLOR_CHANGE_TIME = 20000; // 20 seconds
+
+        let player1 = {
+            x: 0,
+            y: 0,
+            width: 0,
+            height: 0,
+            dy: 0 // velocity
+        };
+
+        let player2 = {
+            x: 0,
+            y: 0,
+            width: 0,
+            height: 0,
+            dy: 0
+        };
+
+        let ball = {
+            x: 0,
+            y: 0,
+            size: 0,
+            dx: 0, // velocity x
+            dy: 0  // velocity y
+        };
+
+        // --- Utility Functions ---
+
+        /**
+         * Generates a random vibrant color.
+         * @returns {string} Hex color string.
+         */
+        function getRandomColor() {
+            const hue = Math.floor(Math.random() * 360);
+            return `hsl(${hue}, 100%, 70%)`; // Vibrant, light color
+        }
+
+        /**
+         * Changes the ball color.
+         */
+        function changeBallColor() {
+            ballColor = getRandomColor();
+        }
+
+        /**
+         * Shows a custom message box instead of using alert().
+         * @param {string} text The message to display.
+         * @param {function} callback Function to run when the button is clicked.
+         * @param {string} buttonText The text for the button (default 'OK').
+         */
+        function showMessage(text, callback = null, buttonText = 'OK') {
+            messageText.innerHTML = text;
+            messageButton.textContent = buttonText;
+            messageBox.style.display = 'block';
+
+            // Clear previous listener
+            messageButton.onclick = null; 
+            messageButton.onclick = () => {
+                messageBox.style.display = 'none';
+                if (callback) {
+                    callback();
+                }
+            };
+        }
+
+        /**
+         * Resizes the canvas and recalculates all game element dimensions.
+         */
+        function resizeGame() {
+            const parentWidth = canvas.parentNode.clientWidth;
+            const targetWidth = Math.min(parentWidth, BASE_WIDTH);
+            
+            // Maintain 4:3 aspect ratio
+            const targetHeight = targetWidth * 0.75; 
+
+            canvas.width = targetWidth;
+            canvas.height = targetHeight;
+            scaleFactor = canvas.width / BASE_WIDTH;
+            
+            // Recalculate dimensions based on the new canvas size
+            const PADDLE_W = canvas.width * PADDLE_WIDTH_RATIO;
+            const PADDLE_H = canvas.height * PADDLE_HEIGHT_RATIO;
+            const BALL_S = canvas.width * BALL_SIZE_RATIO;
+
+            // Update game object dimensions
+            player1.width = player2.width = PADDLE_W;
+            player1.height = player2.height = PADDLE_H;
+            ball.size = BALL_S;
+        }
+
+        /**
+         * Resets the ball to the center and gives it a random initial direction.
+         */
+        function resetBall(servingPlayer = 1) {
+            ball.x = canvas.width / 2;
+            ball.y = canvas.height / 2;
+            
+            // Determine initial direction (always towards the serving player's opponent)
+            let angle = Math.random() * (Math.PI / 2) - Math.PI / 4; // Angle between -45 and 45 degrees
+            
+            if (servingPlayer === 2) {
+                // Serve towards P1 (left)
+                angle += Math.PI; // Add 180 degrees
+            }
+            
+            ball.dx = Math.cos(angle) * INITIAL_SPEED * scaleFactor;
+            ball.dy = Math.sin(angle) * INITIAL_SPEED * scaleFactor;
+
+            // Ensure vertical speed is not too flat (avoids long, boring horizontal bounces)
+            if (Math.abs(ball.dy) < 2 * scaleFactor) {
+                ball.dy = (ball.dy < 0 ? -1 : 1) * 2 * scaleFactor;
+            }
+        }
+
+        /**
+         * Initializes or resets the game state (score, positions).
+         */
+        function initGame() {
+            resizeGame(); // Initial sizing
+
+            score.p1 = 0;
+            score.p2 = 0;
+            updateScoreDisplay();
+
+            // Initial paddle positions
+            player1.x = player1.width * 2;
+            player1.y = canvas.height / 2 - player1.height / 2;
+
+            player2.x = canvas.width - player2.width * 3;
+            player2.y = canvas.height / 2 - player2.height / 2;
+            
+            resetBall(1); // P1 serves first
+            ballColor = '#FFFFFF'; // Reset ball color to white
+            draw(); // Initial draw before the loop starts
+        }
+        
+        /**
+         * Starts the main game loop.
+         */
+        function startGame() {
+            if (gameRunning) return;
+            gameRunning = true;
+            startButton.textContent = 'Restart Game';
+            initGame();
+            gameLoop();
+
+            // Start ball color changing
+            clearInterval(colorChangeInterval); // Clear any existing interval
+            colorChangeInterval = setInterval(changeBallColor, COLOR_CHANGE_TIME);
+        }
+
+        /**
+         * Stops the game and clears intervals.
+         */
+        function stopGame() {
+            gameRunning = false;
+            cancelAnimationFrame(animationFrameId);
+            clearInterval(colorChangeInterval);
+        }
+
+        // --- Game Loop Functions ---
+
+        function update() {
+            if (!gameRunning) return;
+            
+            // 1. Move Paddles
+            player1.y += player1.dy * scaleFactor;
+            player2.y += player2.dy * scaleFactor;
+
+            // Prevent paddles from going out of bounds
+            player1.y = Math.max(0, Math.min(canvas.height - player1.height, player1.y));
+            player2.y = Math.max(0, Math.min(canvas.height - player2.height, player2.y));
+
+            // 2. Move Ball
+            ball.x += ball.dx;
+            ball.y += ball.dy;
+
+            // 3. Wall Collision (Top/Bottom)
+            if (ball.y < 0 || ball.y + ball.size > canvas.height) {
+                ball.dy *= -1; // Reverse vertical direction
+            }
+
+            // 4. Paddle Collision (Player 1 - Left)
+            if (ball.x < player1.x + player1.width && 
+                ball.x > player1.x && // Prevent ball from getting stuck behind paddle
+                ball.y + ball.size > player1.y && 
+                ball.y < player1.y + player1.height) 
+            {
+                // Collision detected
+                ball.dx *= -1.05; // Reverse and slightly increase speed
+                
+                // Calculate reflection angle based on where the ball hit the paddle
+                let hitPoint = (ball.y + ball.size / 2) - (player1.y + player1.height / 2);
+                let normalizedHit = hitPoint / (player1.height / 2); // Value between -1 and 1
+                
+                // Max reflection angle of 60 degrees (in radians)
+                let maxAngle = Math.PI / 3; 
+                let newAngle = normalizedHit * maxAngle;
+                
+                // Re-calculate dx and dy based on new angle and current speed magnitude
+                let speedMagnitude = Math.sqrt(ball.dx * ball.dx + ball.dy * ball.dy);
+                
+                // Ensure ball moves right
+                ball.dx = speedMagnitude * Math.cos(newAngle); 
+                ball.dy = speedMagnitude * Math.sin(newAngle);
+                
+                // Bump ball slightly out of the paddle to prevent sticking
+                ball.x = player1.x + player1.width;
+            }
+
+            // 5. Paddle Collision (Player 2 - Right)
+            if (ball.x + ball.size > player2.x && 
+                ball.x + ball.size < player2.x + player2.width && // Prevent ball getting stuck behind paddle
+                ball.y + ball.size > player2.y && 
+                ball.y < player2.y + player2.height) 
+            {
+                // Collision detected
+                ball.dx *= -1.05; // Reverse and slightly increase speed
+
+                // Calculate reflection angle
+                let hitPoint = (ball.y + ball.size / 2) - (player2.y + player2.height / 2);
+                let normalizedHit = hitPoint / (player2.height / 2); 
+
+                let maxAngle = Math.PI / 3; 
+                let newAngle = normalizedHit * maxAngle;
+                
+                let speedMagnitude = Math.sqrt(ball.dx * ball.dx + ball.dy * ball.dy);
+                
+                // Ensure ball moves left
+                ball.dx = speedMagnitude * Math.cos(Math.PI - newAngle);
+                ball.dy = speedMagnitude * Math.sin(newAngle);
+                
+                // Bump ball slightly out of the paddle
+                ball.x = player2.x - ball.size;
+            }
+
+            // 6. Scoring (Left Wall)
+            if (ball.x < 0) {
+                score.p2++;
+                handleScore(2);
+            }
+
+            // 7. Scoring (Right Wall)
+            if (ball.x + ball.size > canvas.width) {
+                score.p1++;
+                handleScore(1);
+            }
+        }
+        
+        /**
+         * Handles the game state after a point is scored.
+         * @param {number} winningPlayer The player who scored (1 or 2).
+         */
+        function handleScore(winningPlayer) {
+            updateScoreDisplay();
+            
+            // Check for game win
+            if (score.p1 >= maxScore || score.p2 >= maxScore) {
+                stopGame(); // Stop game loop and color changes
+                const winner = score.p1 >= maxScore ? "Player 1" : "Player 2";
+                showMessage(
+                    `<span style="color:#00ff00; font-size: 1.2rem;">${winner} Wins!</span><br>Final Score: ${score.p1} - ${score.p2}`,
+                    startGame, // Restart game on button click
+                    'PLAY AGAIN'
+                );
+                return;
+            }
+
+            // Reset ball for the next point
+            resetBall(winningPlayer); 
+        }
+
+        /**
+         * Updates the score display elements.
+         */
+        function updateScoreDisplay() {
+            scoreP1Display.textContent = `P1: ${score.p1}`;
+            scoreP2Display.textContent = `P2: ${score.p2}`;
+        }
+
+        /**
+         * Draws all game elements to the canvas.
+         */
+        function draw() {
+            // Clear the canvas
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Set the drawing color
+            ctx.fillStyle = '#ffffff';
+
+            // Draw center line (Dotted)
+            ctx.beginPath();
+            ctx.setLineDash([10 * scaleFactor, 10 * scaleFactor]);
+            ctx.strokeStyle = '#333333';
+            ctx.lineWidth = 2 * scaleFactor;
+            ctx.moveTo(canvas.width / 2, 0);
+            ctx.lineTo(canvas.width / 2, canvas.height);
+            ctx.stroke();
+            ctx.setLineDash([]); // Reset line style
+
+            // Draw Paddles
+            ctx.fillRect(player1.x, player1.y, player1.width, player1.height);
+            ctx.fillRect(player2.x, player2.y, player2.width, player2.height);
+
+            // Draw Ball (square for classic look)
+            ctx.fillStyle = ballColor; // Use current ball color
+            ctx.fillRect(ball.x, ball.y, ball.size, ball.size);
+        }
+
+        /**
+         * Main game loop function.
+         */
+        function gameLoop() {
+            update();
+            draw();
+
+            if (gameRunning) {
+                animationFrameId = requestAnimationFrame(gameLoop);
+            }
+        }
+
+        // --- Input Handling (Keyboard) ---
+
+        document.addEventListener('keydown', (e) => {
+            if (!gameRunning) return;
+            // Player 1 (W/S)
+            if (e.key === 'w' || e.key === 'W') {
+                player1.dy = -paddleSpeed;
+            } else if (e.key === 's' || e.key === 'S') {
+                player1.dy = paddleSpeed;
+            }
+            // Player 2 (Arrow Keys)
+            if (e.key === 'ArrowUp') {
+                player2.dy = -paddleSpeed;
+            } else if (e.key === 'ArrowDown') {
+                player2.dy = paddleSpeed;
+            }
+        });
+
+        document.addEventListener('keyup', (e) => {
+            if (!gameRunning) return;
+            // Player 1 stop
+            if ((e.key === 'w' || e.key === 'W') && player1.dy < 0) {
+                player1.dy = 0;
+            } else if ((e.key === 's' || e.key === 'S') && player1.dy > 0) {
+                player1.dy = 0;
+            }
+            // Player 2 stop
+            if (e.key === 'ArrowUp' && player2.dy < 0) {
+                player2.dy = 0;
+            } else if (e.key === 'ArrowDown' && player2.dy > 0) {
+                player2.dy = 0;
+            }
+        });
+
+        // --- Input Handling (Touch/Mobile) ---
+        let touchStartP1 = null;
+        let touchStartP2 = null;
+
+        canvas.addEventListener('touchstart', (e) => {
+            if (!gameRunning) return;
+            e.preventDefault();
+            const rect = canvas.getBoundingClientRect();
+            
+            for (let touch of e.changedTouches) {
+                const touchX = touch.clientX - rect.left;
+                const touchY = touch.clientY - rect.top;
+
+                // Determine which side of the screen was touched
+                if (touchX < canvas.width / 2) {
+                    // Left side touch (Player 1)
+                    if (touchStartP1 === null) {
+                        touchStartP1 = { id: touch.identifier, y: touchY };
+                        player1.dy = 0; // Stop movement on new tap
+                    }
+                } else {
+                    // Right side touch (Player 2)
+                    if (touchStartP2 === null) {
+                        touchStartP2 = { id: touch.identifier, y: touchY };
+                        player2.dy = 0; // Stop movement on new tap
+                    }
+                }
+            }
+        });
+
+        canvas.addEventListener('touchmove', (e) => {
+            if (!gameRunning) return;
+            e.preventDefault();
+            const rect = canvas.getBoundingClientRect();
+            
+            for (let touch of e.changedTouches) {
+                const touchY = touch.clientY - rect.top;
+
+                // Player 1 movement
+                if (touchStartP1 && touch.identifier === touchStartP1.id) {
+                    const deltaY = touchY - touchStartP1.y;
+                    if (Math.abs(deltaY) > 5) { // Only start moving after a small drag
+                        player1.dy = deltaY > 0 ? paddleSpeed : -paddleSpeed;
+                    } else {
+                        player1.dy = 0;
+                    }
+                    touchStartP1.y = touchY; // Update starting point for next move event
+                }
+
+                // Player 2 movement
+                if (touchStartP2 && touch.identifier === touchStartP2.id) {
+                    const deltaY = touchY - touchStartP2.y;
+                    if (Math.abs(deltaY) > 5) { // Only start moving after a small drag
+                        player2.dy = deltaY > 0 ? paddleSpeed : -paddleSpeed;
+                    } else {
+                        player2.dy = 0;
+                    }
+                    touchStartP2.y = touchY; // Update starting point for next move event
+                }
+            }
+        });
+
+        canvas.addEventListener('touchend', (e) => {
+            if (!gameRunning) return;
+            e.preventDefault();
+            
+            for (let touch of e.changedTouches) {
+                // Check if the touch that ended belonged to P1 or P2
+                if (touchStartP1 && touch.identifier === touchStartP1.id) {
+                    player1.dy = 0;
+                    touchStartP1 = null;
+                }
+                if (touchStartP2 && touch.identifier === touchStartP2.id) {
+                    player2.dy = 0;
+                    touchStartP2 = null;
+                }
+            }
+        });
+
+        // --- Initialization and Event Binding ---
+
+        window.onload = function() {
+            // Bind start/restart button
+            startButton.addEventListener('click', startGame);
+
+            // Bind window resize event
+            window.addEventListener('resize', () => {
+                resizeGame();
+                // Ensure positions are reset correctly on resize
+                player1.y = canvas.height / 2 - player1.height / 2;
+                player2.y = canvas.height / 2 - player2.height / 2;
+                // Since the loop isn't running, we need a manual draw
+                if (!gameRunning) {
+                    draw();
+                }
+            });
+
+            // Set up initial state (ready to start)
+            initGame();
+            showMessage(
+                '<span style="color:#00ff00; font-size: 1.2rem;">Welcome to Pong!</span><br>First to 5 points wins.<br><br>Press START to begin.', 
+                null, 
+                'CLOSE'
+            );
+        };
+    </script>
+</body>
+</html>
