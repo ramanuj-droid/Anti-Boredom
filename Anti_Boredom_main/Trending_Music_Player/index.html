@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trending Music Player</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://is5-ssl.mzstatic.com">
+    <link rel="preconnect" href="https://audio-ssl.itunes.apple.com">
+    <meta name="description" content="Listen to trending song previews by genre. Powered by iTunes Search API.">
+</head>
+<body>
+    <header class="app-header" role="banner">
+        <h1>Trending Music Player</h1>
+        <p class="subtitle">Discover previews by genre. No sign-in required.</p>
+    </header>
+
+    <main id="app" class="app" role="main">
+        <nav class="genre-tabs" aria-label="Genres" role="tablist">
+            <!-- Tabs injected by script -->
+        </nav>
+
+        <section id="genreSections" class="sections" aria-live="polite">
+            <!-- Sections per genre injected by script -->
+        </section>
+    </main>
+
+    <footer class="player" aria-label="Audio player">
+        <div class="now-playing">
+            <img id="npArtwork" alt="Artwork" src="" />
+            <div class="meta">
+                <div id="npTitle" class="title" title="Title">—</div>
+                <div id="npArtist" class="artist" title="Artist">—</div>
+            </div>
+        </div>
+        <div class="controls">
+            <button id="prevBtn" class="icon-btn" aria-label="Previous" title="Previous" disabled>
+                ◄◄
+            </button>
+            <button id="playPauseBtn" class="icon-btn primary" aria-label="Play" title="Play" disabled>
+                ►
+            </button>
+            <button id="nextBtn" class="icon-btn" aria-label="Next" title="Next" disabled>
+                ►►
+            </button>
+        </div>
+        <div class="progress">
+            <span id="currentTime" class="time">0:00</span>
+            <input id="seekBar" type="range" min="0" max="100" value="0" aria-label="Seek" disabled />
+            <span id="duration" class="time">0:30</span>
+        </div>
+        <audio id="audio" preload="none" crossorigin="anonymous"></audio>
+    </footer>
+
+    <template id="songCardTemplate">
+        <article class="song-card" tabindex="0" role="button" aria-pressed="false">
+            <div class="thumb-wrap">
+                <img class="thumb" alt="Artwork" />
+                <button class="play-overlay" aria-hidden="true">►</button>
+            </div>
+            <div class="song-meta">
+                <div class="song-title"></div>
+                <div class="song-artist"></div>
+            </div>
+        </article>
+    </template>
+
+    <script src="script.js" defer></script>
+</body>
+</html>
+
+
