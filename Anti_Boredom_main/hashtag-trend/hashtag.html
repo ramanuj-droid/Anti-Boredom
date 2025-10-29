@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trending Hashtags</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Inter font -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <!-- Load Phosphor Icons (for search icon) -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        /* Use Inter font */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Custom scrollbar for trends list */
+        .trends-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+        .trends-scrollbar::-webkit-scrollbar-track {
+            background: #1f2937; /* gray-800 */
+            border-radius: 10px;
+        }
+        .trends-scrollbar::-webkit-scrollbar-thumb {
+            background: #4b5563; /* gray-600 */
+            border-radius: 10px;
+        }
+        .trends-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #6b7280; /* gray-500 */
+        }
+        
+        /* Loading bar animation for refresh */
+        .loading-bar {
+            animation: loading 10s linear infinite;
+        }
+        @keyframes loading {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white h-full flex items-center justify-center p-4">
+
+    <div class="w-full max-w-md mx-auto bg-gray-800 shadow-2xl rounded-lg overflow-hidden" style="height: 700px; max-height: 90vh;">
+        
+        <!-- Header -->
+        <header class="p-6 border-b border-gray-700">
+            <h1 class="text-3xl font-bold text-center text-blue-400">Trending Hashtags</h1>
+            <p class="text-center text-gray-400 text-sm mt-1">Real-time trends (simulated)</p>
+        </header>
+
+        <!-- Search Bar -->
+        <div class="p-4 border-b border-gray-700">
+            <div class="relative">
+                <input type="text" id="search-bar" class="w-full bg-gray-700 text-white placeholder-gray-400 p-3 pl-10 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Check if a hashtag is trending...">
+                <div class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                    <i class="ph ph-magnifying-glass text-xl"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Trends List -->
+        <div id="trends-list-container" class="trends-scrollbar overflow-y-auto h-full p-6 flex flex-col" style="height: calc(100% - 200px);">
+            <!-- Trends will be injected here by JS -->
+        </div>
+
+        <!-- Footer / Refresh Indicator -->
+        <footer class="p-4 bg-gray-800 border-t border-gray-700">
+            <p class="text-xs text-gray-500 text-center mb-2">
+                Auto-refreshing in 10 seconds...
+            </p>
+            <div class="w-full bg-gray-700 rounded-full h-1">
+                <div id="refresh-bar" class="loading-bar bg-blue-600 h-1 rounded-full"></div>
+            </div>
+        </footer>
+    </div>
+
+    <script type(module)>
+        // --- DOM Elements ---
+        const searchBar = document.getElementById('search-bar');
+        const trendsListContainer = document.getElementById('trends-list-container');
+        const refreshBar = document.getElementById('refresh-bar');
+
+        // --- Mock Data ---
+        // A large pool of potential hashtags to simulate real-time changes
+        const hashtagPool = [
+            '#TechNews', '#AI', '#JavaScript', '#WebDev', '#Python', '#ReactJS', '#Crypto', '#NFT',
+            '#Health', '#Fitness', '#Motivation', '#SelfCare', '#WFH', '#RemoteWork', '#Productivity',
+            '#Gaming', '#EldenRing', '#PS5', '#Xbox', '#PCGaming', '#IndieGame', '#MovieNight',
+            '#NewMusic', '#Trending', '#Viral', '#SpaceX', '#NASA', '#Science', '#ClimateChange',
+            '#EconTwitter', '#Stocks', '#DayTrading', '#Investing', '#WorldNews', '#Breaking'
+        ];
+
+        let currentTrends = []; // To store the currently displayed trends
+
+        // --- Core Functions ---
+
+        /**
+         * Simulates fetching new trending data.
+         */
+        function fetchTrends() {
+            console.log("Fetching new trends...");
+            
+            // 1. Create a new set of trends
+            const newTrends = new Set();
+            while (newTrends.size < 15) {
+                const randomTag = hashtagPool[Math.floor(Math.random() * hashtagPool.length)];
+                newTrends.add(randomTag);
+            }
+
+            // 2. Convert to array and add random post counts
+            currentTrends = Array.from(newTrends).map((tag, index) => ({
+                name: tag,
+                posts: Math.floor(Math.random() * 50000) + 1000 // Random post count between 1k and 51k
+            }));
+
+            // 3. Sort by post count (descending)
+            currentTrends.sort((a, b) => b.posts - a.posts);
+
+            // 4. Render the new trends
+            renderTrends();
+            
+            // 5. Apply search filter if any text is present
+            const currentQuery = searchBar.value;
+            if (currentQuery) {
+                filterTrends(currentQuery);
+            }
+
+            // 6. Reset refresh bar animation
+            refreshBar.classList.remove('loading-bar');
+            void refreshBar.offsetWidth; // Trigger reflow
+            refreshBar.classList.add('loading-bar');
+        }
+
+        /**
+         * Renders the currentTrends array into the DOM.
+         */
+        function renderTrends() {
+            trendsListContainer.innerHTML = ''; // Clear existing list
+            
+            currentTrends.forEach((trend, index) => {
+                const li = document.createElement('li');
+                li.className = 'trend-item flex justify-between items-center py-3 border-b border-gray-700/50';
+                
+                li.innerHTML = `
+                    <div>
+                        <span class="text-sm text-gray-400">${index + 1}. Trending</span>
+                        <p class="text-lg font-semibold">${trend.name}</p>
+                    </div>
+                    <span class="text-md text-gray-300 font-medium">${formatPostCount(trend.posts)} posts</span>
+                `;
+                
+                trendsListContainer.appendChild(li);
+            });
+        }
+
+        /**
+         * Filters the visible trends based on search input.
+         * @param {string} query - The search query from the input bar.
+         */
+        function filterTrends(query) {
+            const lowerCaseQuery = query.toLowerCase().replace('#', '');
+            const allItems = document.querySelectorAll('.trend-item');
+            let visibleCount = 0;
+
+            allItems.forEach(item => {
+                const trendName = item.querySelector('p').textContent.toLowerCase();
+                
+                if (trendName.includes(lowerCaseQuery)) {
+                    item.style.display = 'flex';
+                    visibleCount++;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            // Show a "no results" message if needed
+            let noResultsMsg = trendsListContainer.querySelector('.no-results');
+            if (visibleCount === 0 && !noResultsMsg) {
+                const p = document.createElement('p');
+                p.className = 'no-results text-center text-gray-400 p-4';
+                p.textContent = 'No matching trends found.';
+                trendsListContainer.appendChild(p);
+            } else if (visibleCount > 0 && noResultsMsg) {
+                noResultsMsg.remove();
+            }
+        }
+        
+        /**
+         * Formats a number into a more readable post count (e.g., 12.5k).
+         * @param {number} num - The number of posts.
+         */
+        function formatPostCount(num) {
+            if (num >= 1000) {
+                return (num / 1000).toFixed(1) + 'k';
+            }
+            return num.toString();
+        }
+
+        // --- Event Listeners ---
+
+        // Search bar input
+        searchBar.addEventListener('keyup', (e) => {
+            filterTrends(e.target.value);
+        });
+
+        // Auto-refresh timer (every 10 seconds)
+        setInterval(fetchTrends, 10000);
+
+        // Initial Load
+        document.addEventListener('DOMContentLoaded', fetchTrends);
+
+    </script>
+</body>
+</html>
