@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guess the Element</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Inter font -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <style>
+        /* Use Inter font */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        /* Simple animation for feedback */
+        .feedback-pop {
+            animation: pop 0.3s ease-out;
+        }
+        @keyframes pop {
+            0% { transform: scale(0.9); opacity: 0; }
+            70% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Hide number input arrows */
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white h-full flex items-center justify-center p-4">
+
+    <div class="w-full max-w-2xl mx-auto">
+        <header class="text-center mb-6">
+            <h1 class="text-4xl font-bold text-blue-400">Guess the Element!</h1>
+        </header>
+
+        <!-- Game Info Bar -->
+        <div class="flex justify-between items-center bg-gray-800 p-4 rounded-lg shadow-md mb-6">
+            <div>
+                <span class="text-lg font-semibold">Score: </span>
+                <span id="score" class="text-2xl font-bold text-green-400">0</span>
+            </div>
+            <button id="start-button" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition-all shadow-lg">Start Game</button>
+            <div>
+                <span class="text-lg font-semibold">Time: </span>
+                <span id="timer" class="text-2xl font-bold text-red-400">60</span>
+            </div>
+        </div>
+
+        <!-- Game Card -->
+        <div id="game-card" class="bg-gray-800 p-6 rounded-lg shadow-xl hidden">
+            <!-- Clues -->
+            <div class="mb-4">
+                <h2 class="text-lg font-semibold text-gray-400 mb-2">Category:</h2>
+                <p id="clue-category" class="text-xl font-medium bg-gray-700 p-3 rounded-md"></p>
+            </div>
+            <div class="mb-4">
+                <h2 class="text-lg font-semibold text-gray-400 mb-2">Properties:</h2>
+                <p id="clue-properties" class="text-md bg-gray-700 p-3 rounded-md min-h-[50px]"></p>
+            </div>
+
+            <!-- Hints -->
+            <div class="mb-4">
+                <h2 class="text-lg font-semibold text-gray-400 mb-2">Hints (cost points!):</h2>
+                <div class="flex flex-col sm:flex-row gap-2">
+                    <button id="hint-1" data-hint-level="1" class="hint-button flex-1 bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-semibold py-2 px-4 rounded-lg transition-all">Show Group/Period (-2 pts)</button>
+                    <button id="hint-2" data-hint-level="2" class="hint-button flex-1 bg-yellow-600 hover:bg-yellow-700 text-gray-900 font-semibold py-2 px-4 rounded-lg transition-all">Show Atomic # (-4 pts)</button>
+                </div>
+                <div id="hints-display" class="mt-3 text-yellow-300 min-h-[24px]"></div>
+            </div>
+
+            <!-- Guess Input -->
+            <div class="mb-4">
+                <label for="guess-input" class="block text-lg font-semibold text-gray-400 mb-2">Your Guess:</label>
+                <input type="text" id="guess-input" class="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg text-white text-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="e.g., Hydrogen" autocomplete="off">
+            </div>
+            <button id="guess-button" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition-all text-lg shadow-lg">Submit Guess</button>
+
+            <!-- Feedback -->
+            <div id="feedback" class="mt-4 text-center text-xl font-bold min-h-[30px]"></div>
+        </div>
+
+        <!-- Leaderboard -->
+        <div class="bg-gray-800 p-6 rounded-lg shadow-xl mt-6">
+            <h2 class="text-2xl font-bold text-center mb-4 text-blue-400">Leaderboard</h2>
+            <div id="auth-info" class="text-center text-sm text-gray-400 mb-4">
+                Loading your Player ID...
+            </div>
+            <ol id="leaderboard-list" class="list-decimal list-inside space-y-2">
+                <li class="text-gray-500">No scores yet. Play a game!</li>
+            </ol>
+        </div>
+
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        // Firebase Imports
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { 
+            getAuth, 
+            signInAnonymously, 
+            signInWithCustomToken, 
+            onAuthStateChanged 
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { 
+            getFirestore, 
+            collection, 
+            addDoc, 
+            query, 
+            onSnapshot, 
+            serverTimestamp,
+            setLogLevel
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // --- ELEMENT DATA (Local JSON) ---
+        const elementsData = [
+            { "name": "Hydrogen", "atomicNumber": 1, "symbol": "H", "period": 1, "group": 1, "category": "diatomic nonmetal", "summary": "A colorless, odorless, tasteless, flammable gaseous substance. It is the simplest and most abundant element in the universe." },
+            { "name": "Helium", "atomicNumber": 2, "symbol": "He", "period": 1, "group": 18, "category": "noble gas", "summary": "A colorless, odorless, tasteless, non-toxic, inert, monatomic gas. It has the lowest boiling point of all elements." },
+            { "name": "Lithium", "atomicNumber": 3, "symbol": "Li", "period": 2, "group": 1, "category": "alkali metal", "summary": "A soft, silvery-white alkali metal. It is the least dense solid element and is highly reactive and flammable." },
+            { "name": "Carbon", "atomicNumber": 6, "symbol": "C", "period": 2, "group": 14, "category": "polyatomic nonmetal", "summary": "A nonmetallic element that forms the basis of all life. It can form more compounds than any other element." },
+            { "name": "Nitrogen", "atomicNumber": 7, "symbol": "N", "period": 2, "group": 15, "category": "diatomic nonmetal", "summary": "A colorless, odorless, tasteless gas that constitutes about 78% of the Earth's atmosphere." },
+            { "name": "Oxygen", "atomicNumber": 8, "symbol": "O", "period": 2, "group": 16, "category": "diatomic nonmetal", "summary": "A highly reactive nonmetal and an oxidizing agent that readily forms oxides with most elements. Essential for respiration." },
+            { "name": "Fluorine", "atomicNumber": 9, "symbol": "F", "period": 2, "group": 17, "category": "halogen", "summary": "A pale yellow, highly corrosive, flammable gas. It is the most electronegative and reactive of all elements." },
+            { "name": "Neon", "atomicNumber": 10, "symbol": "Ne", "period": 2, "group": 18, "category": "noble gas", "summary": "A colorless, odorless, inert monatomic gas. It gives a distinct reddish-orange glow when used in low-voltage glow lamps." },
+            { "name": "Sodium", "atomicNumber": 11, "symbol": "Na", "period": 3, "group": 1, "category": "alkali metal", "summary": "A soft, silvery-white, highly reactive metal. It is a key component of table salt (NaCl)." },
+            { "name": "Magnesium", "atomicNumber": 12, "symbol": "Mg", "period": 3, "group": 2, "category": "alkaline earth metal", "summary": "A shiny gray solid which is relatively strong and lightweight. It is used in alloys and fireworks." },
+            { "name": "Aluminum", "atomicNumber": 13, "symbol": "Al", "period": 3, "group": 13, "category": "post-transition metal", "summary": "A silvery-white, soft, non-magnetic and ductile metal. Known for its low density and resistance to corrosion." },
+            { "name": "Silicon", "atomicNumber": 14, "symbol": "Si", "period": 3, "group": 14, "category": "metalloid", "summary": "A hard, brittle crystalline solid with a blue-grey metallic luster. It is the basis of most semiconductors." },
+            { "name": "Phosphorus", "atomicNumber": 15, "symbol": "P", "period": 3, "group": 15, "category": "polyatomic nonmetal", "summary": "Exists in two major forms, white and red. It is essential for life and found in DNA and matches." },
+            { "name": "Sulfur", "atomicNumber": 16, "symbol": "S", "period": 3, "group": 16, "category": "polyatomic nonmetal", "summary": "A bright yellow, crystalline solid at room temperature. It has a distinct smell (often compared to rotten eggs)." },
+            { "name": "Chlorine", "atomicNumber": 17, "symbol": "Cl", "period": 3, "group": 17, "category": "halogen", "summary": "A greenish-yellow gas. It is a strong oxidizing agent used in disinfectants and for water purification." },
+            { "name": "Argon", "atomicNumber": 18, "symbol": "Ar", "period": 3, "group": 18, "category": "noble gas", "summary": "The third-most abundant gas in the Earth's atmosphere. Used in light bulbs to protect the filament." },
+            { "name": "Iron", "atomicNumber": 26, "symbol": "Fe", "period": 4, "group": 8, "category": "transition metal", "summary": "A strong, magnetic, silvery-gray metal. It is the most common element on Earth by mass, forming much of Earth's outer and inner core." },
+            { "name": "Gold", "atomicNumber": 79, "symbol": "Au", "period": 6, "group": 11, "category": "transition metal", "summary": "A bright, slightly reddish-yellow, dense, soft, malleable, and ductile metal. Highly valued for its color and rarity." },
+            { "name": "Mercury", "atomicNumber": 80, "symbol": "Hg", "period": 6, "group": 12, "category": "transition metal", "summary": "The only metallic element that is liquid at standard conditions for temperature and pressure. It is very dense and toxic." },
+            { "name": "Uranium", "atomicNumber": 92, "symbol": "U", "period": 7, "group": -1, "category": "actinide", "summary": "A silvery-grey metal in the actinide series. It is weakly radioactive and is the primary fuel for nuclear reactors." }
+        ];
+
+        // --- DOM Elements ---
+        const scoreEl = document.getElementById('score');
+        const timerEl = document.getElementById('timer');
+        const startButton = document.getElementById('start-button');
+        const gameCard = document.getElementById('game-card');
+        
+        const clueCategoryEl = document.getElementById('clue-category');
+        const cluePropertiesEl = document.getElementById('clue-properties');
+        const hintsDisplayEl = document.getElementById('hints-display');
+        const hintButtons = document.querySelectorAll('.hint-button');
+        
+        const guessInput = document.getElementById('guess-input');
+        const guessButton = document.getElementById('guess-button');
+        const feedbackEl = document.getElementById('feedback');
+        
+        const authInfoEl = document.getElementById('auth-info');
+        const leaderboardListEl = document.getElementById('leaderboard-list');
+
+        // --- Firebase Globals ---
+        let app, db, auth;
+        let userId;
+        let appId;
+        let leaderboardCollection;
+
+        // --- Game State ---
+        let currentElement = null;
+        let score = 0;
+        let timeLeft = 60;
+        let timerId = null;
+        let hintsUsed = 0;
+        let gameInProgress = false;
+
+        // --- Firebase Initialization ---
+        function initializeFirebase() {
+            try {
+                // Get config and app ID from global scope (provided by environment)
+                const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+                appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+                if (!firebaseConfig.apiKey) {
+                    console.error("Firebase config is missing.");
+                    authInfoEl.textContent = "Error: Could not connect to leaderboard.";
+                    return;
+                }
+
+                app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+                setLogLevel('Debug'); // Optional: for detailed logs
+
+                // Set up leaderboard collection path
+                leaderboardCollection = collection(db, `artifacts/${appId}/public/data/leaderboard`);
+
+                // Set up Auth
+                setupAuthListener();
+
+            } catch (e) {
+                console.error("Error initializing Firebase:", e);
+                authInfoEl.textContent = "Error: Firebase initialization failed.";
+            }
+        }
+
+        function setupAuthListener() {
+            onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    userId = user.uid;
+                    authInfoEl.textContent = `Your Player ID: ${userId}`;
+                    loadLeaderboard(); // Load leaderboard once authenticated
+                } else {
+                    // No user, try to sign in
+                    try {
+                        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                            await signInWithCustomToken(auth, __initial_auth_token);
+                        } else {
+                            await signInAnonymously(auth);
+                        }
+                    } catch (error) {
+                        console.error("Authentication error:", error);
+                        authInfoEl.textContent = "Could not connect to leaderboard.";
+                    }
+                }
+            });
+        }
+
+        // --- Game Logic ---
+        function startGame() {
+            score = 0;
+            timeLeft = 60;
+            gameInProgress = true;
+            
+            scoreEl.textContent = score;
+            timerEl.textContent = timeLeft;
+            startButton.textContent = "Restart Game";
+            startButton.classList.replace("bg-blue-600", "bg-gray-600");
+            
+            gameCard.classList.remove('hidden');
+            guessInput.disabled = false;
+            guessButton.disabled = false;
+            
+            loadNextElement();
+            startTimer();
+        }
+
+        function startTimer() {
+            if (timerId) clearInterval(timerId);
+            timerId = setInterval(() => {
+                timeLeft--;
+                timerEl.textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    endGame();
+                }
+            }, 1000);
+        }
+
+        function endGame() {
+            clearInterval(timerId);
+            gameInProgress = false;
+            guessInput.disabled = true;
+            guessButton.disabled = true;
+            startButton.textContent = "Start Game";
+            startButton.classList.replace("bg-gray-600", "bg-blue-600");
+            
+            showFeedback(`Game Over! Final Score: ${score}`, "neutral");
+            saveScore(score);
+        }
+
+        function loadNextElement() {
+            currentElement = elementsData[Math.floor(Math.random() * elementsData.length)];
+            hintsUsed = 0;
+
+            clueCategoryEl.textContent = currentElement.category;
+            cluePropertiesEl.textContent = currentElement.summary;
+            
+            hintsDisplayEl.innerHTML = "";
+            guessInput.value = "";
+            feedbackEl.innerHTML = "";
+            
+            hintButtons.forEach(btn => {
+                btn.disabled = false;
+                btn.classList.remove("opacity-50", "cursor-not-allowed");
+            });
+        }
+
+        function handleGuess() {
+            if (!gameInProgress) return;
+
+            const userGuess = guessInput.value.trim().toLowerCase();
+            if (!userGuess) return;
+
+            if (userGuess === currentElement.name.toLowerCase()) {
+                // Correct guess
+                let pointsGained = 10 - (hintsUsed * 2); // Base 10, -2 per hint level used
+                score += pointsGained;
+                scoreEl.textContent = score;
+                showFeedback(`Correct! It was ${currentElement.name}. +${pointsGained} points!`, "correct");
+                
+                setTimeout(loadNextElement, 1500); // Load next after 1.5s
+            } else {
+                // Incorrect guess
+                showFeedback("Incorrect. Try again or use a hint.", "incorrect");
+            }
+        }
+
+        function showHint(e) {
+            const level = parseInt(e.target.dataset.hintLevel);
+            let hintText = "";
+            let cost = 0;
+
+            if (level === 1 && hintsUsed < 1) {
+                hintText = `Group: ${currentElement.group}, Period: ${currentElement.period}`;
+                cost = 2;
+                hintsUsed = 1;
+                // Disable this button
+                e.target.disabled = true;
+                e.target.classList.add("opacity-50", "cursor-not-allowed");
+            } else if (level === 2 && hintsUsed < 2) {
+                hintText = `Atomic Number: ${currentElement.atomicNumber}`;
+                cost = 4;
+                hintsUsed = 2;
+                // Disable both buttons
+                hintButtons.forEach(btn => {
+                    btn.disabled = true;
+                    btn.classList.add("opacity-50", "cursor-not-allowed");
+                });
+            }
+
+            if (hintText) {
+                hintsDisplayEl.innerHTML += `<p>${hintText}</p>`;
+                score -= cost;
+                score = Math.max(0, score); // Don't go below 0
+                scoreEl.textContent = score;
+                showFeedback(`Hint used. -${cost} points.`, "neutral");
+            }
+        }
+
+        function showFeedback(message, type) {
+            feedbackEl.textContent = message;
+            feedbackEl.classList.remove("text-green-400", "text-red-400", "text-gray-400", "feedback-pop");
+            
+            if (type === "correct") {
+                feedbackEl.classList.add("text-green-400");
+            } else if (type === "incorrect") {
+                feedbackEl.classList.add("text-red-400");
+            } else {
+                feedbackEl.classList.add("text-gray-400");
+            }
+            
+            // Add pop animation
+            feedbackEl.classList.add("feedback-pop");
+            // Remove animation class after it finishes to allow re-trigger
+            setTimeout(() => feedbackEl.classList.remove("feedback-pop"), 300);
+        }
+
+        // --- Firestore Leaderboard ---
+        async function saveScore(finalScore) {
+            if (!db || !userId) {
+                console.log("Firestore not ready, score not saved.");
+                return;
+            }
+            
+            try {
+                await addDoc(leaderboardCollection, {
+                    userId: userId,
+                    score: finalScore,
+                    timestamp: serverTimestamp()
+                });
+                console.log("Score saved!");
+            } catch (e) {
+                console.error("Error adding document: ", e);
+            }
+        }
+
+        function loadLeaderboard() {
+            if (!leaderboardCollection) return;
+
+            // Use onSnapshot for real-time updates
+            const q = query(leaderboardCollection);
+            
+            onSnapshot(q, (querySnapshot) => {
+                let scores = [];
+                querySnapshot.forEach((doc) => {
+                    scores.push(doc.data());
+                });
+
+                // Sort scores in JavaScript (descending)
+                // As per guidelines, avoid orderBy to prevent index issues
+                scores.sort((a, b) => b.score - a.score);
+
+                // Get top 10
+                const topScores = scores.slice(0, 10);
+
+                // Display them
+                displayLeaderboard(topScores);
+
+            }, (error) => {
+                console.error("Error loading leaderboard: ", error);
+                leaderboardListEl.innerHTML = "<li>Error loading leaderboard.</li>";
+            });
+        }
+        
+        function displayLeaderboard(scores) {
+            leaderboardListEl.innerHTML = ""; // Clear list
+            
+            if (scores.length === 0) {
+                 leaderboardListEl.innerHTML = "<li class='text-gray-500'>No scores yet. Play a game!</li>";
+                 return;
+            }
+
+            scores.forEach((entry, index) => {
+                const li = document.createElement('li');
+                li.className = "flex justify-between items-center p-2 rounded " + (index % 2 === 0 ? 'bg-gray-700' : 'bg-gray-700/50');
+                
+                // Truncate UserID for display, but show full ID on hover
+                const userDisplay = `${entry.userId.substring(0, 8)}...`;
+                
+                li.innerHTML = `
+                    <span class="font-medium text-gray-300" title="${entry.userId}">
+                        ${index + 1}. ${userDisplay}
+                    </span>
+                    <span class="font-bold text-lg text-green-400">${entry.score}</span>
+                `;
+                leaderboardListEl.appendChild(li);
+            });
+        }
+
+
+        // --- Event Listeners ---
+        startButton.addEventListener('click', startGame);
+        guessButton.addEventListener('click', handleGuess);
+        guessInput.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') {
+                handleGuess();
+            }
+        });
+        hintButtons.forEach(btn => {
+            btn.addEventListener('click', showHint);
+        });
+        
+        // Initialize Firebase on DOM load
+        document.addEventListener('DOMContentLoaded', initializeFirebase);
+
+    </script>
+</body>
+</html>

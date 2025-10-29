@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trending Music Player</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Inter font -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <style>
+        /* Use Inter font */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Custom scrollbar for playlist */
+        .playlist-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+        .playlist-scrollbar::-webkit-scrollbar-track {
+            background: #1f2937; /* gray-800 */
+            border-radius: 10px;
+        }
+        .playlist-scrollbar::-webkit-scrollbar-thumb {
+            background: #4b5563; /* gray-600 */
+            border-radius: 10px;
+        }
+        .playlist-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #6b7280; /* gray-500 */
+        }
+
+        /* Loading spinner */
+        .loader {
+            border: 4px solid #374151; /* gray-700 */
+            border-top: 4px solid #3b82f6; /* blue-500 */
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white h-full flex items-center justify-center p-4">
+
+    <div class="w-full max-w-4xl mx-auto bg-gray-800 shadow-2xl rounded-lg overflow-hidden flex flex-col md:flex-row" style="height: 700px; max-height: 90vh;">
+
+        <!-- Main Player (Left Side on Desktop) -->
+        <div class="w-full md:w-1/2 p-6 flex flex-col justify-between bg-gradient-to-b from-blue-900/50 to-gray-800">
+            <div>
+                <h2 class="text-sm text-blue-300 font-semibold uppercase tracking-wider mb-2">Now Playing</h2>
+                <!-- Album Art -->
+                <div class="aspect-square bg-gray-700 rounded-lg shadow-lg mb-4 overflow-hidden">
+                    <img id="player-album-art" src="https://placehold.co/400x400/1f2937/6b7280?text=Music" alt="Album Art" class="w-full h-full object-cover">
+                </div>
+                
+                <!-- Song Info -->
+                <div class="text-center">
+                    <h3 id="player-song-title" class="text-2xl font-bold truncate">Select a Song</h3>
+                    <p id="player-artist-name" class="text-lg text-gray-400 truncate">From the list</p>
+                </div>
+            </div>
+
+            <!-- Player Controls -->
+            <div class="mt-6">
+                <!-- Audio Element (hidden) -->
+                <audio id="audio-player"></audio>
+
+                <!-- Progress Bar (visual only, for simplicity) -->
+                <div class="bg-gray-700 rounded-full h-1.5 mb-4">
+                    <div id="progress-bar" class="bg-blue-500 h-1.5 rounded-full" style="width: 0%"></div>
+                </div>
+
+                <!-- Control Buttons -->
+                <div class="flex items-center justify-center space-x-6">
+                    <!-- Previous Button -->
+                    <button id="prev-button" class="text-gray-400 hover:text-white transition-colors">
+                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path d="M8.445 14.832A1 1 0 0010 14.03V5.97a1 1 0 00-1.555-.832L2.302 9.206a1 1 0 000 1.664l6.143 4.062zM11.555 5.138A1 1 0 0113 5.97v8.06a1 1 0 01-1.445.894l-6.143-4.062a1 1 0 010-1.788l6.143-4.062z"></path></svg>
+                    </button>
+                    <!-- Play/Pause Button -->
+                    <button id="play-pause-button" class="bg-blue-600 hover:bg-blue-500 text-white rounded-full w-16 h-16 flex items-center justify-center shadow-lg transition-all">
+                        <!-- Play Icon -->
+                        <svg id="play-icon" class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8.006v3.988a1 1 0 001.555.832l3.197-2.004a1 1 0 000-1.664l-3.197-1.99z" clip-rule="evenodd"></path></svg>
+                        <!-- Pause Icon (hidden by default) -->
+                        <svg id="pause-icon" class="w-8 h-8 hidden" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8 6a2 2 0 00-2 2v4a2 2 0 002 2h1a2 2 0 002-2V8a2 2 0 00-2-2H8z" clip-rule="evenodd"></path></svg>
+                    </button>
+                    <!-- Next Button -->
+                    <button id="next-button" class="text-gray-400 hover:text-white transition-colors">
+                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path d="M11.555 5.168A1 1 0 0113 5.97v8.06a1 1 0 01-1.445.832l-6.143-3.992a1 1 0 010-1.664l6.143-4.062zM8.445 14.862A1 1 0 0010 14.03V5.97a1 1 0 00-1.555-.894l-6.143 4.062a1 1 0 000 1.788l6.143 4.062z"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Playlist (Right Side on Desktop) -->
+        <div class="w-full md:w-1/2 p-6 flex flex-col">
+            <h2 class="text-2xl font-bold mb-4">Top Trending Tracks</h2>
+            <!-- Loading Spinner -->
+            <div id="loader" class="flex justify-center items-center h-full">
+                <div class="loader"></div>
+            </div>
+            <!-- Playlist Container -->
+            <div id="playlist-container" class="playlist-scrollbar overflow-y-auto h-full hidden">
+                <!-- Playlist items will be injected here by JS -->
+            </div>
+        </div>
+
+    </div>
+    
+    <!-- Footer -->
+    <footer class="absolute bottom-4 text-center w-full text-gray-500 text-sm">
+        Music previews provided by Deezer API.
+    </footer>
+
+    <script type="module">
+        // --- DOM Elements ---
+        const audio = document.getElementById('audio-player');
+        const playerAlbumArt = document.getElementById('player-album-art');
+        const playerSongTitle = document.getElementById('player-song-title');
+        const playerArtistName = document.getElementById('player-artist-name');
+        
+        const progressBar = document.getElementById('progress-bar');
+        
+        const prevButton = document.getElementById('prev-button');
+        const playPauseButton = document.getElementById('play-pause-button');
+        const playIcon = document.getElementById('play-icon');
+        const pauseIcon = document.getElementById('pause-icon');
+        const nextButton = document.getElementById('next-button');
+
+        const loader = document.getElementById('loader');
+        const playlistContainer = document.getElementById('playlist-container');
+
+        // --- App State ---
+        let playlist = [];
+        let currentTrackIndex = 0;
+        let isPlaying = false;
+        
+        // --- API URL ---
+        // We use allorigins.win as a proxy to bypass CORS issues with the Deezer API.
+        const apiUrl = 'https://api.allorigins.win/raw?url=https://api.deezer.com/chart/0/tracks';
+
+        // --- Core Functions ---
+
+        /**
+         * Fetches trending music from the Deezer API.
+         */
+        async function fetchTrendingMusic() {
+            try {
+                const response = await fetch(apiUrl);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                
+                if (data && data.data) {
+                    playlist = data.data; // Store the array of tracks
+                    renderPlaylist();
+                    loadTrack(0); // Load the first track by default
+                    loader.classList.add('hidden'); // Hide loader
+                    playlistContainer.classList.remove('hidden'); // Show playlist
+                } else {
+                    showError("Could not parse music data.");
+                }
+            } catch (error) {
+                console.error("Error fetching trending music:", error);
+                showError("Could not load music. Please try again later.");
+            }
+        }
+
+        /**
+         * Renders the fetched playlist into the DOM.
+         */
+        function renderPlaylist() {
+            playlistContainer.innerHTML = ''; // Clear existing list
+            
+            playlist.forEach((track, index) => {
+                const li = document.createElement('li');
+                li.className = 'flex items-center p-3 rounded-lg hover:bg-gray-700 cursor-pointer transition-colors';
+                li.dataset.index = index; // Store index for click handling
+
+                li.innerHTML = `
+                    <img src="${track.album.cover_small}" alt="${track.album.title}" class="w-12 h-12 rounded shadow-md mr-4">
+                    <div class="flex-1 min-w-0">
+                        <p class="text-md font-medium truncate">${track.title}</p>
+                        <p class="text-sm text-gray-400 truncate">${track.artist.name}</p>
+                    </div>
+                    <span class="text-sm text-gray-500">${formatDuration(track.duration)}</span>
+                `;
+                
+                // Add click listener to play the track
+                li.addEventListener('click', () => {
+                    loadTrack(index);
+                });
+                
+                playlistContainer.appendChild(li);
+            });
+        }
+
+        /**
+         * Loads a specific track into the player.
+         * @param {number} index - The index of the track in the playlist array.
+         */
+        function loadTrack(index) {
+            if (index < 0 || index >= playlist.length) return;
+            
+            currentTrackIndex = index;
+            const track = playlist[index];
+
+            playerAlbumArt.src = track.album.cover_medium;
+            playerSongTitle.textContent = track.title;
+            playerArtistName.textContent = track.artist.name;
+            audio.src = track.preview; // This is the 30-second preview URL
+
+            // Highlight the active track in the playlist
+            document.querySelectorAll('#playlist-container li').forEach((li, i) => {
+                if (i === index) {
+                    li.classList.add('bg-blue-900/50');
+                } else {
+                    li.classList.remove('bg-blue-900/50');
+                }
+            });
+
+            playSong(); // Automatically play the new track
+        }
+
+        /**
+         * Toggles between play and pause.
+         */
+        function togglePlayPause() {
+            if (isPlaying) {
+                pauseSong();
+            } else {
+                playSong();
+            }
+        }
+
+        /**
+         * Plays the current audio track.
+         */
+        function playSong() {
+            audio.play().catch(e => console.error("Error playing audio:", e));
+            isPlaying = true;
+            playIcon.classList.add('hidden');
+            pauseIcon.classList.remove('hidden');
+        }
+
+        /**
+         * Pauses the current audio track.
+         */
+        function pauseSong() {
+            audio.pause();
+            isPlaying = false;
+            playIcon.classList.remove('hidden');
+            pauseIcon.classList.add('hidden');
+        }
+
+        /**
+         * Loads and plays the next track in the playlist.
+         */
+        function nextTrack() {
+            let newIndex = currentTrackIndex + 1;
+            if (newIndex >= playlist.length) {
+                newIndex = 0; // Loop back to the start
+            }
+            loadTrack(newIndex);
+        }
+
+        /**
+         * Loads and plays the previous track in the playlist.
+         */
+        function prevTrack() {
+            let newIndex = currentTrackIndex - 1;
+            if (newIndex < 0) {
+                newIndex = playlist.length - 1; // Loop to the end
+            }
+            loadTrack(newIndex);
+        }
+
+        /**
+         * Updates the progress bar as the song plays.
+         */
+        function updateProgress() {
+            if (audio.duration > 0) {
+                const progressPercent = (audio.currentTime / audio.duration) * 100;
+                progressBar.style.width = `${progressPercent}%`;
+            }
+        }
+
+        /**
+         * Displays an error message in the loader/playlist area.
+         * @param {string} message - The error message to display.
+         */
+        function showError(message) {
+            loader.classList.add('hidden');
+            playlistContainer.classList.remove('hidden');
+            playlistContainer.innerHTML = `<p class="text-center text-red-400 p-4">${message}</p>`;
+        }
+
+        /**
+         * Formats duration from seconds to "MM:SS".
+         * @param {number} seconds - The duration in seconds.
+         */
+        function formatDuration(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+        }
+
+        // --- Event Listeners ---
+        
+        // Player Controls
+        playPauseButton.addEventListener('click', togglePlayPause);
+        nextButton.addEventListener('click', nextTrack);
+        prevButton.addEventListener('click', prevTrack);
+        
+        // Audio Element Events
+        audio.addEventListener('timeupdate', updateProgress);
+        audio.addEventListener('ended', nextTrack); // Auto-play next song
+        audio.addEventListener('error', () => {
+            console.error("Error with audio element.");
+            // Optionally skip to next track or show an error
+            nextTrack(); 
+        });
+
+        // Initial Load
+        document.addEventListener('DOMContentLoaded', fetchTrendingMusic);
+
+    </script>
+</body>
+</html>

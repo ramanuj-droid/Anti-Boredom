@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Would You Rather Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Would You Rather? 🤔</h1>
+        <p class="subtitle">Make your choice and see what others picked!</p>
+
+        <div class="question-container">
+            <div class="question" id="question"></div>
+            <div class="options" id="options"></div>
+        </div>
+
+        <div class="buttons">
+            <button class="next-btn" onclick="skipQuestion()">Skip Question →</button>
+            <button class="reset-btn" onclick="restartGame()">Restart Game</button>
+        </div>
+
+        <div class="stats">
+            <h3>Progress</h3>
+            <p>Question: <strong id="questionsAnswered">1 of 10</strong></p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
