@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Element Guessing Game</title>
+    <link rel="stylesheet" href="style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <meta name="description" content="Guess the chemical element from clues. Hints, timer, score, and leaderboard." />
+</head>
+<body>
+    <div class="bg-decor" aria-hidden="true">
+        <div class="blob b1"></div>
+        <div class="blob b2"></div>
+        <div class="grid-overlay"></div>
+    </div>
+    <header class="header">
+        <h1 class="headline">⚗️ Element Guessing Game</h1>
+        <p class="tagline">Guess the element from the clues. Beat the clock!</p>
+    </header>
+
+    <main class="container">
+        <section class="hud">
+            <div class="hud-item">
+                <span class="label">Score</span>
+                <span id="score" class="value">0</span>
+            </div>
+            <div class="hud-item">
+                <span class="label">Streak</span>
+                <span id="streak" class="value">0</span>
+            </div>
+            <div class="hud-item">
+                <span class="label">Time</span>
+                <span id="timer" class="value">60</span>
+            </div>
+            <div class="hud-item">
+                <label for="difficulty" class="label">Difficulty</label>
+                <select id="difficulty" aria-label="Difficulty">
+                    <option value="easy">Easy</option>
+                    <option value="medium" selected>Medium</option>
+                    <option value="hard">Hard</option>
+                </select>
+            </div>
+        </section>
+        <div class="timerbar-wrap" aria-hidden="true">
+            <div id="timerBar" class="timerbar"></div>
+        </div>
+
+        <section class="card glow" aria-live="polite">
+            <h2 class="round-title">Who am I?</h2>
+            <ul id="clues" class="clues"></ul>
+
+            <form id="guessForm" class="guess-form" autocomplete="off">
+                <input id="guessInput" type="text" placeholder="Type element name or symbol" aria-label="Your guess"/>
+                <button id="submitBtn" type="submit" class="btn primary pulse">Guess</button>
+                <button id="hintBtn" type="button" class="btn subtle" title="Get a hint">Hint</button>
+                <button id="skipBtn" type="button" class="btn subtle" title="Skip this element">Skip</button>
+            </form>
+
+            <div id="feedback" class="feedback" role="status" aria-live="assertive"></div>
+        </section>
+
+        <section class="leaderboard card glass">
+            <h3>Leaderboard</h3>
+            <ol id="leaderboardList" class="lb-list"></ol>
+            <button id="clearLbBtn" class="btn danger small">Clear Leaderboard</button>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <span>Data from public periodic table sources. This is a learning game.</span>
+    </footer>
+
+    <template id="clueItemTemplate">
+        <li class="clue-item"></li>
+    </template>
+
+    <script src="script.js" defer></script>
+    <canvas id="confetti" class="confetti" aria-hidden="true"></canvas>
+    </body>
+    </html>
+
+
