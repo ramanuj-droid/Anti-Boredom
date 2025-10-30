@@ -190,6 +190,7 @@
         </div>
         <h1 class="title">Anti‑Boredom</h1>
         <p class="tag">Mini‑games, tools & experiments — stay curious</p>
+        <p class="tip" id="funTip" style="margin: 7px 0 0 0; font-size: 1rem; color: #caf0f8; opacity: 0.92; min-height: 1.3em; text-align: center;"></p>
         <div class="loader" aria-hidden>
           <span></span><span></span><span></span>
         </div>
@@ -302,6 +303,25 @@
           .getElementById("intro")
           .addEventListener("click", skip, { passive: true });
         document.addEventListener("keydown", skip, { passive: true });
+
+        // Fun Tips Carousel
+        const tips = [
+          "🕹️ Try the 2048 or Snake game—perfect for 2-minute breaks!",
+          "🎵 Music-Player even supports custom tracks. Try it!",
+          "🤖 Design a robot in Robot_Designer and screenshot your wackiest bot.",
+          "📚 Need a laugh? Generate a random fact or joke!",
+          "💡 Stuck? Take our Boredom Quiz and get wild new ideas.",
+          "⚡ Edit or add your own mini-game right now—see Contribution Guide in the repo!",
+        ];
+        const tipElem = document.getElementById("funTip");
+        if (tipElem) {
+          let i = 0;
+          tipElem.textContent = tips[0];
+          setInterval(() => {
+            i = (i+1) % tips.length;
+            tipElem.textContent = tips[i];
+          }, 3600);
+        }
       })();
     </script>
   </body>
