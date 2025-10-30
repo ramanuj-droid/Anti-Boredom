@@ -53,3 +53,18 @@ button {
 button:hover {
   background: #e67e22;
 }
+
+.docs {
+  max-width: 600px;
+  margin: 20px auto;
+  text-align: left;
+  background: #222;
+  padding: 12px 16px;
+  border-radius: 8px;
+}
+.docs h2 {
+  margin: 0 0 8px;
+}
+.docs ul {
+  padding-left: 18px;
+}
