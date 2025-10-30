@@ -177,6 +177,14 @@
     </style>
   </head>
   <body>
+    <div id="greeting" style="text-align:center;font-size:1.1em;color:#dbeafe;margin:16px 0 0 0;"></div>
+    <a href="https://github.com/ramanuj-droid/Anti-Boredom" style="
+      position:fixed;top:0;right:0;z-index:10000;background:#7b5cff;
+      color:#fff;padding:6px 18px 6px 18px;font-size:14px;transform:rotate(44deg) translate(48px,-38px);
+      border-radius:8px 8px 0 0;text-decoration:none;font-family:sans-serif;box-shadow:0 4px 16px #0002;">
+      ⭐ Fork Me!
+    </a>
+    <button id="backTop" style="position:fixed;right:18px;bottom:48px;padding:10px 16px;border:none;border-radius:999px;background:rgba(123,92,255,0.87);color:#fff;font-size:16px;box-shadow:0 4px 22px #0001;cursor:pointer;display:none;z-index:99;transition:background .2s,opacity .5s;" aria-label="Back to top">↑</button>
     <div class="intro" id="intro">
       <canvas id="starfield"></canvas>
       <div class="pulse" aria-hidden></div>
@@ -190,6 +198,8 @@
         </div>
         <h1 class="title">Anti‑Boredom</h1>
         <p class="tag">Mini‑games, tools & experiments — stay curious</p>
+        <p class="tip" id="funTip" style="margin: 7px 0 0 0; font-size: 1rem; color: #caf0f8; opacity: 0.92; min-height: 1.3em; text-align: center;"></p>
+        <div id="moodLight" style="width:60px;height:16px;margin:10px auto 0;border-radius:8px;box-shadow:0 0 12px #0005;"></div>
         <div class="loader" aria-hidden>
           <span></span><span></span><span></span>
         </div>
@@ -297,6 +307,30 @@
           .getElementById("intro")
           .addEventListener("click", skip, { passive: true });
         document.addEventListener("keydown", skip, { passive: true });
+
+        // Mood Light
+        const mood = document.getElementById('moodLight');
+        if(mood) {
+          function rndColor(){
+            return `hsl(${Math.floor(Math.random()*360)},87%,54%)`;
+          }
+          mood.style.background = rndColor();
+          setInterval(() => { mood.style.background = rndColor(); }, 2200);
+        }
+
+        // Greeting by time
+        const greeting = document.getElementById('greeting');
+        if(greeting){
+          const h = new Date().getHours();
+          greeting.textContent = h<12?'🌅 Good Morning!':h<18?'☀️ Good Afternoon!':'🌙 Good Evening!';
+        }
+
+        // Back to Top button
+        const btn=document.getElementById('backTop');
+        window.addEventListener('scroll',()=>{
+          if(window.scrollY>160){btn.style.display='block';}else{btn.style.display='none';}
+        });
+        btn.onclick=()=>{window.scrollTo({top:0,behavior:'smooth'});}
       })();
     </script>
   </body>
