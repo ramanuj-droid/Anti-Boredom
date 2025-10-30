@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Guitar Recorder</title>
+    <!-- Load Tailwind CSS for layout and button styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for the guitar design */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Main container for the guitar */
+        .guitar {
+            position: relative;
+            width: 20rem; /* Use rem for scalability */
+            height: 50rem;
+            margin: 3rem auto;
+        }
+
+        /* Guitar Body */
+        .guitar-body {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20rem;
+            height: 25rem;
+            background: radial-gradient(circle at 50% 50%, #d2691e, #8b4513); /* Wood gradient */
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3), inset 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+
+        /* Soundhole */
+        .guitar-body::before {
+            content: '';
+            position: absolute;
+            top: 6rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 7rem;
+            height: 7rem;
+            background: #111;
+            border-radius: 50%;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Bridge */
+        .guitar-body::after {
+            content: '';
+            position: absolute;
+            bottom: 5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6rem;
+            height: 1.5rem;
+            background: #3a2a1a;
+            border-radius: 0.25rem;
+            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Guitar Neck */
+        .guitar-neck {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 3.5rem;
+            height: 30rem;
+            background: #5c3c1f;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            z-index: 2;
+        }
+
+        /* Fretboard */
+        .fretboard {
+            position: absolute;
+            top: 5rem; /* Start below the headstock */
+            left: 0;
+            width: 100%;
+            height: 25rem; /* Neck height minus headstock */
+            background: linear-gradient(to bottom,
+                #333 0.1rem, transparent 0.1rem,
+                transparent 3rem, #ccc 3rem, #ccc 3.1rem, transparent 3.1rem,
+                transparent 5.8rem, #ccc 5.8rem, #ccc 5.9rem, transparent 5.9rem,
+                transparent 8.4rem, #ccc 8.4rem, #ccc 8.5rem, transparent 8.5rem,
+                transparent 10.8rem, #ccc 10.8rem, #ccc 10.9rem, transparent 10.9rem,
+                transparent 13rem, #ccc 13rem, #ccc 13.1rem, transparent 13.1rem,
+                transparent 15rem, #ccc 15rem, #ccc 15.1rem, transparent 15.1rem,
+                transparent 16.8rem, #ccc 16.8rem, #ccc 16.9rem, transparent 16.9rem,
+                transparent 18.5rem, #ccc 18.5rem, #ccc 18.6rem, transparent 18.6rem
+            );
+            background-color: #2a2a2a;
+        }
+
+        /* Headstock */
+        .headstock {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 5rem;
+            height: 6rem;
+            background: #5c3c1f;
+            border-radius: 0.25rem 0.25rem 0 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Tuning Pegs */
+        .tuner {
+            position: absolute;
+            width: 0.8rem;
+            height: 0.8rem;
+            background: #e0e0e0;
+            border: 1px solid #888;
+            border-radius: 50%;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        }
+        .tuner.left-1 { top: 0.5rem; left: -0.5rem; }
+        .tuner.left-2 { top: 2rem; left: -0.5rem; }
+        .tuner.left-3 { top: 3.5rem; left: -0.5rem; }
+        .tuner.right-1 { top: 0.5rem; right: -0.5rem; }
+        .tuner.right-2 { top: 2rem; right: -0.5rem; }
+        .tuner.right-3 { top: 3.5rem; right: -0.5rem; }
+
+        /* Strings */
+        .strings {
+            position: absolute;
+            top: 5rem; /* Start at the top of the fretboard */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2.5rem;
+            height: 40rem; /* Run down to the bridge */
+            z-index: 3;
+            display: flex;
+            justify-content: space-between;
+        }
+        .string {
+            width: 1px;
+            height: 100%;
+            background: #d0d0d0;
+            box-shadow: 0 0 3px rgba(255, 255, 255, 0.3);
+        }
+        .string:nth-child(2) { width: 1.5px; }
+        .string:nth-child(3) { width: 1.5px; }
+        .string:nth-child(4) { width: 2px; }
+        .string:nth-child(5) { width: 2px; }
+        .string:nth-child(6) { width: 2.5px; }
+
+        /* Recording Button Styling */
+        #recordButton {
+            transition: all 0.3s ease;
+        }
+        
+        #recordButton.recording {
+            background-color: #dc2626; /* red-600 */
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7);
+            }
+            70% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 10px rgba(220, 38, 38, 0);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(220, 38, 38, 0);
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen flex flex-col items-center justify-center p-6">
+
+    <div classs="w-full max-w-lg text-center">
+        <h1 class="text-3xl font-bold mb-4">CSS Guitar Recorder</h1>
+        <p class="text-lg text-gray-600 dark:text-gray-400 mb-8">Click the button to record a tune!</p>
+
+        <!-- Guitar Design -->
+        <div class="guitar">
+            <div class="headstock">
+                <div class="tuner left-1"></div>
+                <div class="tuner left-2"></div>
+                <div class="tuner left-3"></div>
+                <div class="tuner right-1"></div>
+                <div class="tuner right-2"></div>
+                <div class="tuner right-3"></div>
+            </div>
+            <div class="guitar-neck">
+                <div class="fretboard"></div>
+            </div>
+            <div class="guitar-body"></div>
+            <div class="strings">
+                <div class="string"></div>
+                <div class="string"></div>
+                <div class="string"></div>
+                <div class="string"></div>
+                <div class="string"></div>
+                <div class="string"></div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="flex flex-col items-center space-y-4 mt-8">
+            <button id="recordButton" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full shadow-lg flex items-center space-x-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                </svg>
+                <span id="recordText">Record</span>
+            </button>
+            <div id="audioPlayback" class="w-full max-w-md">
+                <!-- Audio player will be inserted here -->
+            </div>
+            <p id="statusMessage" class="text-gray-500 dark:text-gray-400 h-4"></p>
+        </div>
+    </div>
+
+    <script>
+        const recordButton = document.getElementById('recordButton');
+        const recordText = document.getElementById('recordText');
+        const statusMessage = document.getElementById('statusMessage');
+        const audioPlayback = document.getElementById('audioPlayback');
+
+        let isRecording = false;
+        let mediaRecorder;
+        let audioChunks = [];
+
+        recordButton.addEventListener('click', async () => {
+            if (isRecording) {
+                // Stop recording
+                mediaRecorder.stop();
+                isRecording = false;
+                recordButton.classList.remove('recording');
+                recordText.textContent = 'Record';
+                statusMessage.textContent = 'Processing audio...';
+            } else {
+                // Start recording
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    mediaRecorder = new MediaRecorder(stream);
+                    audioChunks = []; // Clear previous recording
+
+                    mediaRecorder.ondataavailable = event => {
+                        audioChunks.push(event.data);
+                    };
+
+                    mediaRecorder.onstop = () => {
+                        const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                        const audioUrl = URL.createObjectURL(audioBlob);
+                        
+                        // Clear old audio player if exists
+                        audioPlayback.innerHTML = '';
+                        
+                        // Create new audio player
+                        const audioPlayer = document.createElement('audio');
+                        audioPlayer.controls = true;
+                        audioPlayer.src = audioUrl;
+                        audioPlayback.appendChild(audioPlayer);
+                        
+                        statusMessage.textContent = 'Recording finished. Press play to listen.';
+                        
+                        // Clean up stream tracks
+                        stream.getTracks().forEach(track => track.stop());
+                    };
+
+                    mediaRecorder.start();
+                    isRecording = true;
+                    recordButton.classList.add('recording');
+                    recordText.textContent = 'Stop';
+                    statusMessage.textContent = 'Recording...';
+                    audioPlayback.innerHTML = ''; // Clear old player
+
+                } catch (err) {
+                    console.error('Error accessing microphone:', err);
+                    statusMessage.textContent = 'Error: Could not access microphone.';
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -5,6 +5,14 @@
 **Beat boredom anytime!**
 Anti-Boredom is your ultimate hub to play mini-games, explore fun facts, take quick quizzes, and learn something new — all in one place. Perfect for a quick break or when you just want to have fun!
 
+# Anti-Boredom
+<p align="center">
+  <img src="https://img.shields.io/github/license/ramanuj-droid/Anti-Boredom?style=flat-square" />
+  <img src="https://img.shields.io/github/stars/ramanuj-droid/Anti-Boredom?style=flat-square" />
+  <img src="https://img.shields.io/github/forks/ramanuj-droid/Anti-Boredom?style=flat-square" />
+  <img src="https://img.shields.io/badge/hacktoberfest-accepted-brightgreen?style=flat-square" />
+</p>
+
 ## ║ 🌟 Features ║
 
   * **Mini Games:** Mines, Snake, flag guess, Memory Game, and more.
@@ -175,6 +183,12 @@ We welcome contributions of all kinds! You can:
 
 
 ## ║ 🧑‍💻 Contributors ║
+
+<p align="center">
+  <a href="https://github.com/ramanuj-droid/Anti-Boredom/graphs/contributors">
+    <img src="https://contrib.rocks/image?repo=ramanuj-droid/Anti-Boredom" />
+  </a>
+</p>
 
 Thank you to all the wonderful people who have contributed to Anti-Boredom!
 
