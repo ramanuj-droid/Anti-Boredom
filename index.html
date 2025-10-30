@@ -199,6 +199,9 @@
       <div class="skip" id="skip">Click or press any key to skip</div>
       
     </div>
+    <button id="cbModeBtn" style="position:fixed;top:16px;left:16px;z-index:150;background:#262626;color:#fff;padding:7px 14px;border:none;border-radius:8px;font-size:.95em;font-weight:600;box-shadow:0 2px 12px #0001;cursor:pointer;">Colorblind Mode</button>
+    <style id="cbStyle"></style>
+    <div id="offlineNotice" style="display:none;position:fixed;top:0;left:0;right:0;background:#ffef96;color:#333;padding:7px 0;text-align:center;z-index:99999;font-weight:600;box-shadow:0 2px 6px #0002;">🚫 You are offline</div>
 
     <script>
       // Small starfield and timed redirect. Click/press to skip.
@@ -322,6 +325,27 @@
             tipElem.textContent = tips[i];
           }, 3600);
         }
+
+        // Offline notice
+        window.addEventListener('offline',()=>{document.getElementById('offlineNotice').style.display='block';});
+        window.addEventListener('online',()=>{document.getElementById('offlineNotice').style.display='none';});
+
+        // Colorblind mode toggle
+        const btn = document.getElementById('cbModeBtn');
+        const cbStyle = document.getElementById('cbStyle');
+        let enabled = false;
+        btn.onclick = function(){
+          enabled = !enabled;
+          btn.style.background = enabled ? '#7dd3fc' : '#262626';
+          btn.style.color = enabled ? '#000' : '#fff';
+          cbStyle.innerHTML = enabled ? `
+            body, .intro { background: #ffffff !important; color: #111 !important; }
+            .logo { background: #f59e42 !important; filter: none !important; }
+            .pulse, .loader span, .progress .bar { background: #333 !important; }
+            a,button { color: #1346d0 !important; }
+            .skip,.loader { background: #e0eaff !important; color: #1346d0 !important; }
+          ` : '';
+        };
       })();
     </script>
   </body>
