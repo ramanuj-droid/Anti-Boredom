@@ -203,27 +203,30 @@
       // Small starfield and timed redirect. Click/press to skip.
       (function () {
         const redirectTo = "Anti_Boredom_main/index.html";
-        const duration = 3500; // ms (3.5s)
+        const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const duration = prefersReduced ? 600 : 3500; // shorter for reduced motion
         const canvas = document.getElementById("starfield");
+        if (!canvas) { location.href = redirectTo; return; }
         const ctx = canvas.getContext("2d");
+        if (!ctx) { location.href = redirectTo; return; }
         let stars = [];
 
         function resize() {
           const dpr = Math.max(1, window.devicePixelRatio || 1);
-          canvas.width = innerWidth * dpr;
-          canvas.height = innerHeight * dpr;
-          canvas.style.width = innerWidth + "px";
-          canvas.style.height = innerHeight + "px";
+          canvas.width = window.innerWidth * dpr;
+          canvas.height = window.innerHeight * dpr;
+          canvas.style.width = window.innerWidth + "px";
+          canvas.style.height = window.innerHeight + "px";
           ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         }
 
         function initStars() {
           stars = [];
-          const count = Math.round((innerWidth + innerHeight) / 12);
+          const count = Math.round((window.innerWidth + window.innerHeight) / 12);
           for (let i = 0; i < count; i++) {
             stars.push({
-              x: Math.random() * innerWidth,
-              y: Math.random() * innerHeight,
+              x: Math.random() * window.innerWidth,
+              y: Math.random() * window.innerHeight,
               z: Math.random() * 1.2 + 0.2,
               r: Math.random() * 1.2 + 0.2,
             });
@@ -231,20 +234,22 @@
         }
 
         function draw(t) {
-          ctx.clearRect(0, 0, innerWidth, innerHeight);
+          ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
           // subtle gradient
-          const g = ctx.createLinearGradient(0, 0, 0, innerHeight);
+          const g = ctx.createLinearGradient(0, 0, 0, window.innerHeight);
           g.addColorStop(0, "rgba(20,22,40,0.08)");
           g.addColorStop(1, "rgba(0,0,0,0.25)");
           ctx.fillStyle = g;
-          ctx.fillRect(0, 0, innerWidth, innerHeight);
+          ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
 
           for (let i = 0; i < stars.length; i++) {
             const s = stars[i];
-            s.x += 0.02 * s.z * (1 + Math.sin(t / 6000));
-            s.y += 0.01 * s.z;
-            if (s.x > innerWidth) s.x = 0;
-            if (s.y > innerHeight) s.y = 0;
+            if (!prefersReduced) {
+              s.x += 0.02 * s.z * (1 + Math.sin(t / 6000));
+              s.y += 0.01 * s.z;
+            }
+            if (s.x > window.innerWidth) s.x = 0;
+            if (s.y > window.innerHeight) s.y = 0;
             ctx.beginPath();
             ctx.fillStyle = "rgba(255,255,255," + 0.4 * s.z + ")";
             ctx.arc(s.x, s.y, s.r * s.z, 0, Math.PI * 2);
