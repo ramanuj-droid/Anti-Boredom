@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whack-a-Mole Game 🔨</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="game-card">
+            <div class="header">
+                <h1>🔨 Whack-a-Mole</h1>
+                <p class="subtitle">Hit as many moles as you can!</p>
+            </div>
+
+            <div class="stats-container">
+                <div class="stat-box">
+                    <p class="stat-label">Score</p>
+                    <p class="stat-value" id="score">0</p>
+                </div>
+                <div class="stat-box">
+                    <p class="stat-label">Time Left</p>
+                    <p class="stat-value time" id="timeLeft">30s</p>
+                </div>
+                <div class="stat-box">
+                    <p class="stat-label">High Score</p>
+                    <p class="stat-value high" id="highScore">0</p>
+                </div>
+            </div>
+
+            <div class="game-board" id="gameBoard">
+                <div class="hole" data-index="0">
+                    <div class="mole">🦫</div>
+                    <div class="whack-effect">💥</div>
+                </div>
+                <div class="hole" data-index="1">
+                    <div class="mole">🦫</div>
+                    <div class="whack-effect">💥</div>
+                </div>
+                <div class="hole" data-index="2">
+                    <div class="mole">🦫</div>
+                    <div class="whack-effect">💥</div>
+                </div>
+                <div class="hole" data-index="3">
+                    <div class="mole">🦫</div>
+                    <div class="whack-effect">💥</div>
+                </div>
+                <div class="hole" data-index="4">
+                    <div class="mole">🦫</div>
+                    <div class="whack-effect">💥</div>
+                </div>
+                <div class="hole" data-index="5">
+                    <div class="mole">🦫</div>
+                    <div class="whack-effect">💥</div>
+                </div>
+                <div class="hole" data-index="6">
+                    <div class="mole">🦫</div>
+                    <div class="whack-effect">💥</div>
+                </div>
+                <div class="hole" data-index="7">
+                    <div class="mole">🦫</div>
+                    <div class="whack-effect">💥</div>
+                </div>
+                <div class="hole" data-index="8">
+                    <div class="mole">🦫</div>
+                    <div class="whack-effect">💥</div>
+                </div>
+            </div>
+
+            <div class="button-container">
+                <button id="startButton" class="start-button">🎮 Start Game</button>
+            </div>
+
+            <div id="gameOverScreen" class="game-over hidden">
+                <h2>Game Over!</h2>
+                <p class="final-score">Final Score: <span id="finalScore">0</span></p>
+                <p id="newHighScore" class="new-high-score hidden">🎉 New High Score!</p>
+                <button id="playAgainButton" class="start-button">🔄 Play Again</button>
+            </div>
+
+            <p id="helpText" class="help-text hidden">Click the moles quickly before they hide!</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
