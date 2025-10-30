@@ -94,24 +94,24 @@ const fallbackSportsData = {
   cricket: [
     {
       id: 4,
-      homeTeam: "India",
-      awayTeam: "Australia",
-      homeScore: "287/4",
-      awayScore: "156",
+      homeTeam: "IndiaW",
+      awayTeam: "AustraliaW",
+      homeScore: "Yet to Bat",
+      awayScore: "25/1",
       status: "LIVE",
-      time: "Day 2",
-      league: "Test Match",
+      time: "5.1 overs",
+      league: "Semi-Final CWCW2025",
       isLive: true,
     },
     {
       id: 5,
-      homeTeam: "England",
-      awayTeam: "Pakistan",
-      homeScore: "245",
-      awayScore: "198/7",
+      homeTeam: "South Africa A",
+      awayTeam: "India A",
+      homeScore: "225/5",
+      awayScore: "-",
       status: "LIVE",
-      time: "45.2 overs",
-      league: "ODI",
+      time: "Day 1",
+      league: "Unofficial Test",
       isLive: true,
     },
   ],
@@ -544,34 +544,24 @@ async function loadSportsData() {
         matches = fallbackSportsData[currentSport] || [];
     }
 
-    currentMatches = matches; // Store matches for modal access
-    displayMatches(matches);
-    displayStats();
-    displayFeaturedMatches();
-    displayLiveCommentary();
-    displayUpcomingMatches();
-    displayNewsUpdates();
-    hideLoading();
-    updateLastUpdated();
-    updateApiStatus(true);
+    if (data) {
+            currentMatches = data;
+            displayMatches(data);
+            displayStats();
+            updateLastUpdated();
+            updateApiStatus(true, currentSport);
+        } else {
+            throw new Error('No data received');
+        }
   } catch (error) {
-    console.error("Error loading sports data:", error);
-    // Fall back to mock data on error
-    const fallbackData = fallbackSportsData[currentSport] || [];
-    currentMatches = fallbackData; // Store fallback matches for modal access
-    displayMatches(fallbackData);
-    displayStats();
-    displayFeaturedMatches();
-    displayLiveCommentary();
-    displayUpcomingMatches();
-    displayNewsUpdates();
-    hideLoading();
-    updateLastUpdated();
-    updateApiStatus(false);
-
-    // Show error message to user
-    showErrorMessage("Unable to load live data. Showing demo data instead.");
-  }
+        console.error('Error loading sports data:', error);
+        // Fallback to mock data
+        currentMatches = fallbackSportsData[currentSport];
+        displayMatches(fallbackSportsData[currentSport]);
+        updateApiStatus(false);
+    } finally {
+        hideLoading();
+    }
 }
 
 // Show loading indicator
@@ -703,7 +693,30 @@ function displayFeaturedMatches() {
     )
     .join("");
 }
-
+async function checkApiStatus() {
+    try {
+        const API_KEY = 'your_api_key';
+        const response = await fetch(
+            'https://api.cricapi.com/v1/currentMatches',
+            {
+                method: 'GET',
+                headers: {
+                    'api-key': API_KEY
+                }
+            }
+        );
+        
+        if (!response.ok) {
+            throw new Error('API not responding');
+        }
+        
+        const data = await response.json();
+        return data.status === 'success';
+    } catch (error) {
+        console.error('API Status Check Error:', error);
+        return false;
+    }
+}
 // Display live commentary
 function displayLiveCommentary() {
   const commentaryContainer = document.getElementById("commentaryContainer");
@@ -951,12 +964,53 @@ function updateApiStatus(isUsingRealApi) {
 
 // Start auto refresh
 function startAutoRefresh() {
-  // Refresh every 30 seconds
-  refreshInterval = setInterval(() => {
-    if (!isLoading) {
-      loadSportsData();
+    if (refreshInterval) {
+        clearInterval(refreshInterval);
     }
-  }, 30000);
+
+    // Refresh every 30 seconds
+    refreshInterval = setInterval(() => {
+        if (!isLoading) {
+            loadSportsData();
+        }
+    }, 30000);
+
+    // Additional refresh for live matches every 15 seconds
+    setInterval(() => {
+        if (!isLoading && document.querySelector('.match-card.live')) {
+            refreshLiveMatches();
+        }
+    }, 15000);
+}
+async function refreshLiveMatches() {
+    try {
+        const liveMatches = document.querySelectorAll('.match-card.live');
+        if (liveMatches.length === 0) return;
+
+        let freshData;
+        switch (currentSport) {
+            case 'football':
+                freshData = await fetchFootballData();
+                break;
+            case 'cricket':
+                freshData = await fetchCricketData();
+                break;
+            default:
+                return;
+        }
+
+        if (!freshData) return;
+
+        liveMatches.forEach(card => {
+            const matchId = card.dataset.matchId;
+            const updatedMatch = freshData.find(m => m.id.toString() === matchId);
+            if (updatedMatch) {
+                updateMatchCard(card, updatedMatch);
+            }
+        });
+    } catch (error) {
+        console.error('Error refreshing live matches:', error);
+    }
 }
 
 // Stop auto refresh
@@ -1019,113 +1073,97 @@ document.head.appendChild(style);
 
 // Fetch Football data from a free API
 async function fetchFootballData() {
-  try {
-    // Using TheSportsDB API (free, no auth required)
+    const API_KEY = 'your_api_key';
+    const today = new Date().toISOString().split('T')[0];
+    
     const response = await fetch(
-      "https://www.thesportsdb.com/api/v1/json/3/latestsoccer.php"
+        `https://api.football-data.org/v4/matches?dateFrom=${today}&dateTo=${today}`,
+        {
+            headers: {
+                'X-Auth-Token': API_KEY,
+                'Accept': 'application/json'
+            }
+        }
     );
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(`Football API error: ${response.status}`);
     }
 
     const data = await response.json();
-
-    // Transform API data to our format
-    if (data.teams && data.teams.length > 0) {
-      return data.teams.slice(0, 6).map((match, index) => ({
-        id: index + 1,
-        homeTeam: match.strHomeTeam || "Team A",
-        awayTeam: match.strAwayTeam || "Team B",
-        homeScore: parseInt(match.intHomeScore) || 0,
-        awayScore: parseInt(match.intAwayScore) || 0,
-        status: match.strStatus === "Match Finished" ? "FT" : "LIVE",
-        time: match.strProgress || "FT",
-        league: match.strLeague || "Football League",
-        isLive: match.strStatus !== "Match Finished",
-      }));
-    }
-
-    // If no data, try alternative free API
-    const altResponse = await fetch(
-      "https://api.football-data.org/v4/matches/today",
-      {
-        headers: {
-          "X-Auth-Token": SPORTS_API_CONFIG?.FOOTBALL_API_KEY || "demo",
-        },
-      }
-    );
-
-    if (altResponse.ok) {
-      const altData = await altResponse.json();
-      return (
-        altData.matches?.slice(0, 6).map((match) => ({
-          id: match.id,
-          homeTeam: match.homeTeam.name,
-          awayTeam: match.awayTeam.name,
-          homeScore: match.score.fullTime.home || 0,
-          awayScore: match.score.fullTime.away || 0,
-          status: match.status === "IN_PLAY" ? "LIVE" : match.status,
-          time: match.minute ? `${match.minute}'` : "Scheduled",
-          league: match.competition.name,
-          isLive: match.status === "IN_PLAY",
-        })) || []
-      );
-    }
-
-    throw new Error("No football data available");
-  } catch (error) {
-    console.error("Football API error:", error);
-    // Return fallback data with live simulation
-    return fallbackSportsData.football.map((match) => ({
-      ...match,
-      homeScore: match.homeScore + Math.floor(Math.random() * 2),
-      awayScore: match.awayScore + Math.floor(Math.random() * 2),
+    return data.matches.map(match => ({
+        id: match.id,
+        homeTeam: match.homeTeam.name,
+        awayTeam: match.awayTeam.name,
+        homeScore: match.score.fullTime.home ?? match.score.halfTime.home ?? 0,
+        awayScore: match.score.fullTime.away ?? match.score.halfTime.away ?? 0,
+        status: match.status === 'IN_PLAY' ? 'LIVE' : match.status,
+        time: match.minute ? `${match.minute}'` : match.status,
+        league: match.competition.name,
+        isLive: match.status === 'IN_PLAY'
     }));
-  }
 }
 
 // Fetch Cricket data using a free API
 async function fetchCricketData() {
-  try {
-    // Try TheSportsDB API for cricket (free, no auth required)
-    const response = await fetch(
-      "https://www.thesportsdb.com/api/v1/json/3/searchevents.php?e=Cricket"
-    );
+    try {
+        const API_KEY = 'your_api_key';
+        const response = await fetch(
+            'https://api.cricapi.com/v1/currentMatches',
+            {
+                method: 'GET',
+                headers: {
+                    'apikey': API_KEY
+                },
+                params: {
+                    offset: 0,
+                    search: "India Women,Australia Women"
+                }
+            }
+        );
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+        if (!response.ok) {
+            throw new Error(`Cricket API error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log('Cricket API response:', data); // Debug log
+
+        if (!data.data || data.data.length === 0) {
+            console.log('No live cricket matches found');
+            return fallbackSportsData.cricket;
+        }
+
+        return data.data.map(match => ({
+            id: match.id,
+            homeTeam: match.teams?.[0] || match.teamInfo?.[0]?.name || 'Team A',
+            awayTeam: match.teams?.[1] || match.teamInfo?.[1]?.name || 'Team B',
+            homeScore: match.score?.[0]?.inning || '0',
+            awayScore: match.score?.[1]?.inning || '0',
+            status: match.matchStarted ? 'LIVE' : match.status,
+            time: match.status || 'In Progress',
+            league: match.name || match.series_id || 'Cricket Match',
+            isLive: match.matchStarted
+        }));
+
+    } catch (error) {
+        console.error('Cricket API error:', error);
+        console.log('Falling back to demo data');
+        return fallbackSportsData.cricket;
     }
+}
 
-    const data = await response.json();
-
-    // Transform API data to our format
-    if (data.event && data.event.length > 0) {
-      return data.event.slice(0, 4).map((match, index) => ({
-        id: index + 1,
-        homeTeam: match.strHomeTeam || "Team A",
-        awayTeam: match.strAwayTeam || "Team B",
-        homeScore: match.intHomeScore || "0/0",
-        awayScore: match.intAwayScore || "0/0",
-        status: match.strStatus === "Match Finished" ? "FT" : "LIVE",
-        time: match.strProgress || "Day 1",
-        league: match.strLeague || "Cricket Match",
-        isLive: match.strStatus !== "Match Finished",
-      }));
+// Add this function to handle loading states
+function updateLoadingState(sport, isLoading) {
+    const container = document.getElementById('scoresContainer');
+    if (isLoading) {
+        container.innerHTML = `
+            <div class="loading-state">
+                <div class="spinner"></div>
+                <p>Loading ${sport} matches...</p>
+            </div>
+        `;
     }
-
-    throw new Error("No cricket data available");
-  } catch (error) {
-    console.error("Cricket API error:", error);
-    // Return enhanced fallback data with live simulation
-    return fallbackSportsData.cricket.map((match) => ({
-      ...match,
-      homeScore: `${
-        parseInt(match.homeScore.split("/")[0]) + Math.floor(Math.random() * 20)
-      }/${Math.floor(Math.random() * 6)}`,
-      awayScore: match.awayScore,
-    }));
-  }
 }
 
 // Fetch Basketball data using balldontlie API (free, no auth required)
@@ -1372,4 +1410,4 @@ function showErrorMessage(message) {
       errorDiv.remove();
     }
   }, 5000);
-}
+        }
