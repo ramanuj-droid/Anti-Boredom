@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jigsaw Puzzle Game 🧩</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Difficulty Selection Screen -->
+    <div id="difficultyScreen" class="screen">
+        <div class="game-card">
+            <h1>🧩 Jigsaw Puzzle</h1>
+            <p class="subtitle">Choose your difficulty level</p>
+            
+            <div class="difficulty-buttons">
+                <button class="difficulty-btn easy" data-level="easy">
+                    🟢 Easy (3x3)
+                </button>
+                <button class="difficulty-btn medium" data-level="medium">
+                    🟡 Medium (4x4)
+                </button>
+                <button class="difficulty-btn hard" data-level="hard">
+                    🔴 Hard (5x5)
+                </button>
+            </div>
+
+            <div id="bestTimeDisplay" class="best-time hidden">
+                <p class="stat-label">Best Time</p>
+                <p class="stat-value" id="bestTimeValue">--:--</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="gameScreen" class="screen hidden">
+        <div class="game-card large">
+            <div class="header-bar">
+                <h1 class="game-title">🧩 Jigsaw Puzzle</h1>
+                <button id="changeLevelBtn" class="change-level-btn">Change Level</button>
+            </div>
+
+            <div class="stats-container">
+                <div class="stat-box">
+                    <p class="stat-label">Moves</p>
+                    <p class="stat-value" id="moves">0</p>
+                </div>
+                <div class="stat-box">
+                    <p class="stat-label">Time</p>
+                    <p class="stat-value time" id="timer">0:00</p>
+                </div>
+                <div class="stat-box">
+                    <p class="stat-label">Best</p>
+                    <p class="stat-value best" id="bestTime">--:--</p>
+                </div>
+            </div>
+
+            <div class="puzzle-container">
+                <div id="puzzleBoard" class="puzzle-board"></div>
+            </div>
+
+            <div id="completionScreen" class="completion-screen hidden">
+                <div class="completion-content">
+                    <h2>✅ Puzzle Complete! 🎉</h2>
+                    <p class="completion-stat">Time: <span id="finalTime">0:00</span></p>
+                    <p class="completion-stat">Moves: <span id="finalMoves">0</span></p>
+                    <p id="newBestMessage" class="new-best hidden">🏆 New Best Time!</p>
+                </div>
+            </div>
+
+            <div class="button-container">
+                <button id="newGameBtn" class="action-btn primary">
+                    🔄 New Game
+                </button>
+                <button id="mainMenuBtn" class="action-btn secondary">
+                    ⬅️ Main Menu
+                </button>
+            </div>
+
+            <p class="help-text">Click two pieces to swap them. Match all pieces to their correct positions!</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
