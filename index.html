@@ -198,6 +198,43 @@
       <div class="skip" id="skip">Click or press any key to skip</div>
       
     </div>
+    <!-- Mini Game Thumbnails Example at landing -->
+    <div id="gameThumbnails" style="display:flex;flex-direction:row;justify-content:center;gap:20px;margin:32px 0 12px 0;flex-wrap:wrap;">
+      <a href="Anti_Boredom_main/2048_game/index.html" title="2048" style="text-align:center;text-decoration:none;color:#fff;font-size:14px;">
+        <svg width="52" height="52" viewBox="0 0 52 52"><rect width="52" height="52" rx="14" fill="#e9c46a"/><text x="50%" y="58%" text-anchor="middle" style="font-family:sans-serif;fill:#8d7b4a;font-size:19px;" dominant-baseline="middle">2048</text></svg><br>2048
+      </a>
+      <a href="Anti_Boredom_main/snake_game/index.html" title="Snake" style="text-align:center;text-decoration:none;color:#fff;font-size:14px;">
+        <svg width="52" height="52" viewBox="0 0 52 52"><rect width="52" height="52" rx="14" fill="#4ade80"/><circle cx="23" cy="26" r="10" fill="#166534" /><circle cx="35" cy="26" r="4" fill="#bbf7d0" /></svg><br>Snake
+      </a>
+      <a href="Anti_Boredom_main/Tic_Tac_Toe/index.html" title="Tic Tac Toe" style="text-align:center;text-decoration:none;color:#fff;font-size:14px;">
+        <svg width="52" height="52" viewBox="0 0 52 52"><rect width="52" height="52" rx="14" fill="#c7d2fe"/><text x="50%" y="55%" text-anchor="middle" style="font-family:sans-serif;fill:#312e81;font-size:22px;">⭕❌</text></svg><br>Tic Tac Toe
+      </a>
+      <a href="Anti_Boredom_main/Emoji_Riddle_Game/index.html" title="Emoji Riddle" style="text-align:center;text-decoration:none;color:#fff;font-size:14px;">
+        <svg width="52" height="52" viewBox="0 0 52 52"><rect width="52" height="52" rx="14" fill="#fbbf24"/><text x="50%" y="55%" text-anchor="middle" style="font-family:sans-serif;fill:#78350f;font-size:24px;">😉</text></svg><br>Emoji Riddle
+      </a>
+      <a href="Anti_Boredom_main/Guess_The_Flag/index.html" title="Guess the Flag" style="text-align:center;text-decoration:none;color:#fff;font-size:14px;">
+        <svg width="52" height="52" viewBox="0 0 52 52"><rect width="52" height="52" rx="14" fill="#7dd3fc"/><rect x="18" y="14" width="16" height="12" fill="#fff" stroke="#2563eb" stroke-width="2" /><rect x="18" y="26" width="16" height="8" fill="#ef4444" /><rect x="18" y="14" width="16" height="20" fill="none" stroke="#082f49" stroke-width="2" /></svg><br>Flag Guess
+      </a>
+    </div>
+    <button onclick="goRandom()" style="position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#6ee7b7;padding:10px 18px;border:none;border-radius:12px;font-size:1.1em;font-weight:700;box-shadow:0 2px 8px #0003;cursor:pointer;z-index:1002;">🎲 Random Game</button>
+    <a href="https://github.com/ramanuj-droid/Anti-Boredom/issues/new?title=Bug+report&body=Game:+[Name]%0D%0ADescribe+the+problem..." target="_blank" 
+      style="position:fixed;bottom:16px;left:16px;background:#fffbe6;border-radius:50%;padding:8px 10px;
+      box-shadow:0 2px 8px #0002;font-size:1.2em;text-decoration:none;z-index:1000;"
+      aria-label="Report a bug">🐞</a>
+    <div id="helpOverlay" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(20,18,48,0.82);color:#fff;padding:0;
+      font-size:1.15em;font-family:sans-serif;align-items:center;justify-content:center;flex-direction:column;gap:20px;" tabindex="-1">
+      <div style="background:rgba(40,36,66,0.98);border-radius:16px;min-width:270px;max-width:92vw;padding:32px 25px 16px 25px;box-shadow:0 6px 32px #0008;text-align:center;">
+        <h2 style="margin-top:0;font-size:1.2em">🔑 Shortcuts & Guide</h2>
+        <ul style="text-align:left;margin:0 0 12px 0;padding:0;list-style-type:none;">
+          <li><b>Any key / Click</b>: Skip intro</li>
+          <li><b>Backspace/Esc</b>: Close overlays</li>
+          <li><b>?</b>: Show this help</li>
+          <li><b>B O R E D</b>: Surprise easter egg</li>
+          <li><b>↑</b>: Back to Top (after scrolling)</li>
+        </ul>
+        <button id="closeHelp" style="margin-top:6px;padding:6px 14px;background:#7b5cff;color:#fff;border:none;border-radius:6px;font-size:.98em;cursor:pointer;">Close</button>
+      </div>
+    </div>
 
     <script>
       // Small starfield and timed redirect. Click/press to skip.
@@ -297,6 +334,36 @@
           .getElementById("intro")
           .addEventListener("click", skip, { passive: true });
         document.addEventListener("keydown", skip, { passive: true });
+
+        // Help overlay for '?'
+        const help=document.getElementById('helpOverlay');
+        const close=document.getElementById('closeHelp');
+        window.addEventListener('keydown',function(e){
+          if(document.activeElement.tagName==='INPUT'||document.activeElement.tagName==='TEXTAREA')return;
+          if(e.key==='?'||e.key==='/'&&e.shiftKey){e.preventDefault();openHelp();}
+          if((e.key==='Escape'||e.key==='Backspace')&&help&&help.style.display==='flex'){closeHelp();}
+        });
+        function openHelp(){
+          if(help){help.style.display='flex';help.focus();}
+        }
+        function closeHelp(){
+          if(help){help.style.display='none';}
+        }
+        if(close){close.onclick=closeHelp;}
+        if(help){help.addEventListener('click',function(e){if(e.target===help)closeHelp();});}
+
+        // Random Game button function
+        window.goRandom = function() {
+          const games = [
+            'Anti_Boredom_main/2048_game/index.html',
+            'Anti_Boredom_main/snake_game/index.html',
+            'Anti_Boredom_main/Tic_Tac_Toe/index.html',
+            'Anti_Boredom_main/Guess_The_Flag/index.html',
+            'Anti_Boredom_main/Quick_Quiz/index.html',
+            'Anti_Boredom_main/Emoji_Riddle_Game/index.html'
+          ];
+          location.href = games[Math.floor(Math.random()*games.length)];
+        }
       })();
     </script>
   </body>
