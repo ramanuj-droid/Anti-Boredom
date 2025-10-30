@@ -1,3 +1,5 @@
+// Game Javascript Logic
+
 const counterDOM = document.getElementById("counter");
 const endDOM = document.getElementById("end");
 
