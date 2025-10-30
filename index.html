@@ -190,6 +190,7 @@
         </div>
         <h1 class="title">Anti‑Boredom</h1>
         <p class="tag">Mini‑games, tools & experiments — stay curious</p>
+        <p class="tip" id="funTip" style="margin: 7px 0 0 0; font-size: 1rem; color: #caf0f8; opacity: 0.92; min-height: 1.3em; text-align: center;"></p>
         <div class="loader" aria-hidden>
           <span></span><span></span><span></span>
         </div>
@@ -240,27 +241,30 @@
       // Small starfield and timed redirect. Click/press to skip.
       (function () {
         const redirectTo = "Anti_Boredom_main/index.html";
-        const duration = 3500; // ms (3.5s)
+        const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const duration = prefersReduced ? 600 : 3500; // shorter for reduced motion
         const canvas = document.getElementById("starfield");
+        if (!canvas) { location.href = redirectTo; return; }
         const ctx = canvas.getContext("2d");
+        if (!ctx) { location.href = redirectTo; return; }
         let stars = [];
 
         function resize() {
           const dpr = Math.max(1, window.devicePixelRatio || 1);
-          canvas.width = innerWidth * dpr;
-          canvas.height = innerHeight * dpr;
-          canvas.style.width = innerWidth + "px";
-          canvas.style.height = innerHeight + "px";
+          canvas.width = window.innerWidth * dpr;
+          canvas.height = window.innerHeight * dpr;
+          canvas.style.width = window.innerWidth + "px";
+          canvas.style.height = window.innerHeight + "px";
           ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         }
 
         function initStars() {
           stars = [];
-          const count = Math.round((innerWidth + innerHeight) / 12);
+          const count = Math.round((window.innerWidth + window.innerHeight) / 12);
           for (let i = 0; i < count; i++) {
             stars.push({
-              x: Math.random() * innerWidth,
-              y: Math.random() * innerHeight,
+              x: Math.random() * window.innerWidth,
+              y: Math.random() * window.innerHeight,
               z: Math.random() * 1.2 + 0.2,
               r: Math.random() * 1.2 + 0.2,
             });
@@ -268,20 +272,22 @@
         }
 
         function draw(t) {
-          ctx.clearRect(0, 0, innerWidth, innerHeight);
+          ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
           // subtle gradient
-          const g = ctx.createLinearGradient(0, 0, 0, innerHeight);
+          const g = ctx.createLinearGradient(0, 0, 0, window.innerHeight);
           g.addColorStop(0, "rgba(20,22,40,0.08)");
           g.addColorStop(1, "rgba(0,0,0,0.25)");
           ctx.fillStyle = g;
-          ctx.fillRect(0, 0, innerWidth, innerHeight);
+          ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
 
           for (let i = 0; i < stars.length; i++) {
             const s = stars[i];
-            s.x += 0.02 * s.z * (1 + Math.sin(t / 6000));
-            s.y += 0.01 * s.z;
-            if (s.x > innerWidth) s.x = 0;
-            if (s.y > innerHeight) s.y = 0;
+            if (!prefersReduced) {
+              s.x += 0.02 * s.z * (1 + Math.sin(t / 6000));
+              s.y += 0.01 * s.z;
+            }
+            if (s.x > window.innerWidth) s.x = 0;
+            if (s.y > window.innerHeight) s.y = 0;
             ctx.beginPath();
             ctx.fillStyle = "rgba(255,255,255," + 0.4 * s.z + ")";
             ctx.arc(s.x, s.y, s.r * s.z, 0, Math.PI * 2);
@@ -335,34 +341,23 @@
           .addEventListener("click", skip, { passive: true });
         document.addEventListener("keydown", skip, { passive: true });
 
-        // Help overlay for '?'
-        const help=document.getElementById('helpOverlay');
-        const close=document.getElementById('closeHelp');
-        window.addEventListener('keydown',function(e){
-          if(document.activeElement.tagName==='INPUT'||document.activeElement.tagName==='TEXTAREA')return;
-          if(e.key==='?'||e.key==='/'&&e.shiftKey){e.preventDefault();openHelp();}
-          if((e.key==='Escape'||e.key==='Backspace')&&help&&help.style.display==='flex'){closeHelp();}
-        });
-        function openHelp(){
-          if(help){help.style.display='flex';help.focus();}
-        }
-        function closeHelp(){
-          if(help){help.style.display='none';}
-        }
-        if(close){close.onclick=closeHelp;}
-        if(help){help.addEventListener('click',function(e){if(e.target===help)closeHelp();});}
-
-        // Random Game button function
-        window.goRandom = function() {
-          const games = [
-            'Anti_Boredom_main/2048_game/index.html',
-            'Anti_Boredom_main/snake_game/index.html',
-            'Anti_Boredom_main/Tic_Tac_Toe/index.html',
-            'Anti_Boredom_main/Guess_The_Flag/index.html',
-            'Anti_Boredom_main/Quick_Quiz/index.html',
-            'Anti_Boredom_main/Emoji_Riddle_Game/index.html'
-          ];
-          location.href = games[Math.floor(Math.random()*games.length)];
+        // Fun Tips Carousel
+        const tips = [
+          "🕹️ Try the 2048 or Snake game—perfect for 2-minute breaks!",
+          "🎵 Music-Player even supports custom tracks. Try it!",
+          "🤖 Design a robot in Robot_Designer and screenshot your wackiest bot.",
+          "📚 Need a laugh? Generate a random fact or joke!",
+          "💡 Stuck? Take our Boredom Quiz and get wild new ideas.",
+          "⚡ Edit or add your own mini-game right now—see Contribution Guide in the repo!",
+        ];
+        const tipElem = document.getElementById("funTip");
+        if (tipElem) {
+          let i = 0;
+          tipElem.textContent = tips[0];
+          setInterval(() => {
+            i = (i+1) % tips.length;
+            tipElem.textContent = tips[i];
+          }, 3600);
         }
       })();
     </script>

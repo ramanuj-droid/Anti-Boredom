@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Brainvita (Peg Solitaire)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      background: #f6f6f9;
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 400px;
+      margin: 24px auto;
+      border-radius: 14px;
+      box-shadow: 0 2px 8px #ccc;
+      background: #fff;
+      padding: 18px;
+    }
+    h2 {
+      text-align: center;
+      color: #1959a8;
+      margin: 8px 0 18px 0;
+    }
+    .info-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      font-size: 18px;
+    }
+    .board {
+      display: grid;
+      grid-template-columns: repeat(7, 38px);
+      gap: 5px;
+      justify-content: center;
+      margin-bottom: 12px;
+      background: #eaeaea;
+      padding: 10px;
+      border-radius: 12px;
+    }
+    .cell {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #f8f9fa;
+      border: 2px solid #ddd;
+      cursor: default;
+      outline: none;
+      transition: background 0.18s, border 0.18s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 21px;
+    }
+    .cell.peg {
+      cursor: pointer;
+      color: #1959a8;
+      font-weight: bold;
+    }
+    .cell.selected {
+      background: #c7eaff;
+      border: 2px solid #1959a8;
+    }
+    .cell.highlight {
+      background: #ffd700;
+      border: 2px solid #c09000;
+      cursor: pointer;
+    }
+    .cell.empty { color: #bbb; }
+    .cell.invalid { background: transparent; border: none; pointer-events: none; }
+    button#undo {
+      padding: 4px 14px;
+      background: #eee;
+      color: #333;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 15px;
+      margin-left: 6px;
+      transition: background 0.2s;
+    }
+    button#undo:active,
+    button#undo:hover {
+      background: #1959a8;
+      color: white;
+    }
+    button#undo:disabled {
+      background: #ddd;
+      color: #888;
+      cursor: not-allowed;
+    }
+    #status {
+      min-height: 32px;
+      font-weight: bold;
+      text-align: center;
+      color: #b00020;
+      margin-bottom: 10px;
+    }
+    #status.win { color: #1959a8; }
+    ul.hints {
+      margin: 10px 0 0 2px;
+      color: #777;
+      font-size: 14px;
+    }
+    @media (max-width:500px) {
+      .container { max-width: 96vw; }
+      .board { grid-template-columns: repeat(7, 10vw); }
+      .cell { width: 10vw; height: 10vw; }
+    }
+  </style>
+</head>
+<body>
+<div class="container" aria-live="polite">
+  <h2>Brainvita (Peg Solitaire)</h2>
+  <div class="info-bar">
+    <span id="moveCounter" aria-label="Move counter">Moves: 0</span>
+    <button id="undo" aria-label="Undo last move" disabled>Undo</button>
+  </div>
+  <div id="board" class="board" role="grid" aria-label="Peg Solitaire board"></div>
+  <div id="status"></div>
+  <ul class="hints">
+    <li>Select a peg to see valid moves</li>
+    <li>Click yellow to move, Undo to revert</li>
+    <li>Win: one peg left in center!</li>
+  </ul>
+</div>
+<script>
+const BOARD_SIZE = 7, EMPTY = 0, PEG = 1, INVALID = -1;
+const initialBoard = [
+  [INVALID, INVALID, PEG, PEG, PEG, INVALID, INVALID],
+  [INVALID, INVALID, PEG, PEG, PEG, INVALID, INVALID],
+  [PEG, PEG, PEG, PEG, PEG, PEG, PEG],
+  [PEG, PEG, PEG, EMPTY, PEG, PEG, PEG],
+  [PEG, PEG, PEG, PEG, PEG, PEG, PEG],
+  [INVALID, INVALID, PEG, PEG, PEG, INVALID, INVALID],
+  [INVALID, INVALID, PEG, PEG, PEG, INVALID, INVALID],
+];
+
+let board = initialBoard.map(row => [...row]);
+let selected = null;
+let highlighted = [];
+let history = [];
+let moveCount = 0;
+let status = "";
+
+const boardDiv = document.getElementById('board');
+const moveCounter = document.getElementById('moveCounter');
+const statusDiv = document.getElementById('status');
+const undoBtn = document.getElementById('undo');
+
+function renderBoard() {
+  boardDiv.innerHTML = "";
+  for (let x = 0; x < BOARD_SIZE; x++) {
+    for (let y = 0; y < BOARD_SIZE; y++) {
+      const cell = board[x][y];
+      const btn = document.createElement('button');
+      btn.className = 'cell';
+      btn.setAttribute('role','gridcell');
+      btn.setAttribute('tabindex', cell !== INVALID ? 0 : -1);
+      btn.setAttribute('aria-label',
+        cell===PEG ? `Peg at (${x+1},${y+1})` :
+        cell===EMPTY ? `Empty hole at (${x+1},${y+1})` : "Invalid position");
+      if (cell === INVALID) btn.classList.add('invalid');
+
+      // Valid cells highlighting
+      if (cell === PEG) {
+        btn.classList.add('peg');
+      }
+      if (selected && selected[0]===x && selected[1]===y) {
+        btn.classList.add('selected');
+      }
+      if (highlighted.find(([hx,hy])=>hx===x && hy===y)) {
+        btn.classList.add('highlight');
+      }
+      btn.onclick = () => {
+        if (cell === PEG) handleSelect(x, y);
+        else if (highlighted.find(([hx, hy])=>hx===x && hy===y)) handleMove(x, y);
+      };
+      btn.innerHTML =
+         cell === PEG ? "●" : cell === EMPTY ? "" : "";
+      boardDiv.appendChild(btn);
+    }
+  }
+  moveCounter.innerText = "Moves: " + moveCount;
+  undoBtn.disabled = history.length === 0;
+  statusDiv.innerText = status;
+  statusDiv.className = status.includes("Win") ? "win" : "";
+}
+
+function isValidMove(x, y, dx, dy) {
+  // Valid move: source PEG, target EMPTY, jumped cell PEG, all inside bounds
+  const nx = x + dx, ny = y + dy, mx = x + dx/2, my = y + dy/2;
+  return nx>=0 && nx<BOARD_SIZE &&
+         ny>=0 && ny<BOARD_SIZE &&
+         board[x][y] === PEG &&
+         board[mx][my] === PEG &&
+         board[nx][ny] === EMPTY;
+}
+
+function handleSelect(x, y) {
+  if (board[x][y] !== PEG) return;
+  selected = [x, y];
+  highlighted = [];
+  [[0,2],[0,-2],[2,0],[-2,0]].forEach(([dx,dy]) => {
+    if (isValidMove(x, y, dx, dy)) {
+      highlighted.push([x+dx, y+dy]);
+    }
+  });
+  renderBoard();
+}
+
+function handleMove(nx, ny) {
+  if (!selected) return;
+  const [x, y] = selected, dx = nx-x, dy = ny-y;
+  if (!isValidMove(x, y, dx, dy)) return;
+  // Save history for Undo
+  history.push({
+    board: board.map(row=>[...row]),
+    moveCount
+  });
+  // Do move
+  const mx = x + dx/2, my = y + dy/2;
+  board[x][y] = EMPTY;
+  board[mx][my] = EMPTY;
+  board[nx][ny] = PEG;
+  moveCount++;
+  selected = null;
+  highlighted = [];
+  checkGameOver();
+  renderBoard();
+}
+
+undoBtn.onclick = function() {
+  if (!history.length) return;
+  const last = history.pop();
+  board = last.board.map(row=>[...row]);
+  moveCount = last.moveCount;
+  selected = null;
+  highlighted = [];
+  status = "";
+  renderBoard();
+};
+
+function countPegs() {
+  return board.flat().filter(c=>c===PEG).length;
+}
+
+function checkGameOver() {
+  let movesPossible = false;
+  for (let x = 0; x < BOARD_SIZE; x++) {
+    for (let y = 0; y < BOARD_SIZE; y++) {
+      if (board[x][y] === PEG) {
+        [[0,2],[0,-2],[2,0],[-2,0]].forEach(([dx,dy]) => {
+          if (isValidMove(x, y, dx, dy)) movesPossible = true;
+        });
+      }
+    }
+  }
+  const remaining = countPegs();
+  if (!movesPossible) {
+    if (remaining === 1 && board[3][3] === PEG) {
+      status = "🎉 You Win! Only one peg in the center!";
+    } else {
+      status = "😢 No more moves! Game Over.";
+    }
+  } else status = "";
+}
+
+renderBoard();
+</script>
+</body>
+</html>
