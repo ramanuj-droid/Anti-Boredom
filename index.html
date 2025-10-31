@@ -421,6 +421,27 @@
             }, 400);
           }, 3600);
         }
+
+        // Offline notice
+        window.addEventListener('offline',()=>{document.getElementById('offlineNotice').style.display='block';});
+        window.addEventListener('online',()=>{document.getElementById('offlineNotice').style.display='none';});
+
+        // Colorblind mode toggle
+        const btn = document.getElementById('cbModeBtn');
+        const cbStyle = document.getElementById('cbStyle');
+        let enabled = false;
+        btn.onclick = function(){
+          enabled = !enabled;
+          btn.style.background = enabled ? '#7dd3fc' : '#262626';
+          btn.style.color = enabled ? '#000' : '#fff';
+          cbStyle.innerHTML = enabled ? `
+            body, .intro { background: #ffffff !important; color: #111 !important; }
+            .logo { background: #f59e42 !important; filter: none !important; }
+            .pulse, .loader span, .progress .bar { background: #333 !important; }
+            a,button { color: #1346d0 !important; }
+            .skip,.loader { background: #e0eaff !important; color: #1346d0 !important; }
+          ` : '';
+        };
       })();
 
       // === Dark Mode Toggle Logic ===
