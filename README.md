@@ -5,6 +5,8 @@
 **Beat boredom anytime!**
 Anti-Boredom is your ultimate hub to play mini-games, explore fun facts, take quick quizzes, and learn something new — all in one place. Perfect for a quick break or when you just want to have fun!
 
+## ║ https://bore-no-more-ten.vercel.app/ ║
+
 # Anti-Boredom
 <p align="center">
   <img src="https://img.shields.io/github/license/ramanuj-droid/Anti-Boredom?style=flat-square" />
