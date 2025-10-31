@@ -116,6 +116,7 @@ All games and features reside in their own dedicated folders for easy maintenanc
 | **Vote_on_topics** | **< A fun, interactive voting app with 5 categories\>** |
 | **Whos_the_pokemon** | **< Interactive Pokémon guessing game.\>** |
 | **army-base-builder** | **< Interactive army base builder game\>** |
+| **EchoTrace** | **< It's a great test of memory and precision.\>** |
 | **casino-game-suite** | **< Interactive mini casino games with points and animations\>** |
 | **celebrity-news-feed** | **< Celebrity news app\>** |
 | **fantasy-team-builder** | **< Managing one-time and repeatable tasks efficiently.\>** |
